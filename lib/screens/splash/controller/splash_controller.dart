@@ -7,13 +7,13 @@ class SplashController extends GetxController {
 
   @override
   void onInit() {
-    _delay();
     super.onInit();
+    _delayNavigation();
   }
 
-  void _delay() {
+  void _delayNavigation() {
     _logger.i("SPLASH");
-    Future.delayed(const Duration(seconds: 10), () {
+    Future.delayed(const Duration(seconds: 3), () {
       Get.offNamed(AppRoute.teamFcListScreen);
     });
   }

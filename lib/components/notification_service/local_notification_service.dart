@@ -1,4 +1,5 @@
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 
 void backgroundNotificationResponseHandler(
     NotificationResponse notification) async {
@@ -36,6 +37,9 @@ class LocalNotificationService {
       onDidReceiveBackgroundNotificationResponse:
           backgroundNotificationResponseHandler,
     );
+
+    // Listen for foreground messages from Firebase
+    FirebaseMessaging.onMessage.listen(_handleFirebaseMessage);
   }
 
   Future<void> showLocalNotification({
@@ -58,11 +62,29 @@ class LocalNotificationService {
     return const NotificationDetails(
       iOS: DarwinNotificationDetails(),
       android: AndroidNotificationDetails(
-        'channelId',
-        'channelName',
+        'push_notification_id',
+        'push_notification_name',
         importance: Importance.max,
         priority: Priority.high,
       ),
     );
+  }
+
+  void _handleFirebaseMessage(RemoteMessage message) {
+    String? title = message.notification?.title;
+    String? body = message.notification?.body;
+    String? payload = message.data['route']; 
+
+    showLocalNotification(
+      id: DateTime.now().millisecondsSinceEpoch ~/ 1000, 
+      title: title,
+      body: body,
+      payload: payload,
+    );
+  }
+
+  static Future<void> firebaseMessagingBackgroundHandler(
+      RemoteMessage message) async {
+    print("Handling background message: ${message.messageId}");
   }
 }

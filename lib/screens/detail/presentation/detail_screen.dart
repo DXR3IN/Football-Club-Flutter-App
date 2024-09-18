@@ -155,9 +155,14 @@ class _DetailScreenState extends State<DetailScreen> {
 
   Widget contentDesc() {
     return Center(
-      child: Text(
-        "Description: \n\n${widget.data!.desc!}",
-        style: const TextStyle(color: Colors.black),
+      child: Container(
+        margin: EdgeInsets.all(10),
+        padding: EdgeInsets.all(5),
+        color: Colors.grey,
+        child: Text(
+          "Description: \n\n${widget.data!.desc!}",
+          style: const TextStyle(color: Colors.black),
+        ),
       ),
     );
   }

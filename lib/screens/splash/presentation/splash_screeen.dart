@@ -11,14 +11,7 @@ class SplashScreeen extends StatefulWidget {
 }
 
 class _SplashScreeenState extends State<SplashScreeen> {
-  final _controller = SplashController();
-
-  @override
-  void initState() {
-    super.initState();
-    _controller.onInit();
-    Get.put(SplashController());
-  }
+  final SplashController _controller = Get.put(SplashController());
 
   @override
   void dispose() {
@@ -28,9 +21,19 @@ class _SplashScreeenState extends State<SplashScreeen> {
 
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(
+    return Scaffold(
       body: Center(
-        child: Text("Splash Screen"),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: const [
+            Text(
+              "Premier League",
+              style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+            ),
+            SizedBox(height: 20),
+            CircularProgressIndicator(),
+          ],
+        ),
       ),
     );
   }
