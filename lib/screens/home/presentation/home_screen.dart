@@ -139,8 +139,16 @@ class _HomeScreenState extends State<HomeScreen> {
         child: Container(
           padding: const EdgeInsets.all(10),
           decoration: const BoxDecoration(
-            color: Colors.amberAccent,
+            color: Colors.white,
             borderRadius: BorderRadius.all(Radius.circular(10)),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black26,
+                blurRadius: 6.0,
+                spreadRadius: 2.0,
+                offset: Offset(3, 3),
+              ),
+            ],
           ),
           child: Column(
             children: [
