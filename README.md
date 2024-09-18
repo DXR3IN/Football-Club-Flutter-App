@@ -52,6 +52,8 @@ The app includes notification functionality using Firebase Cloud Messaging. User
 
 <img src="https://github.com/user-attachments/assets/e0796f2f-8bad-4d1c-9a9e-df625421260d" alt="Background and Terminate Notification" width="300"/>
 
+<img src="https://github.com/user-attachments/assets/4e780351-1a77-4da5-9b77-46859bf1464e" alt="Background and Terminate Notification" width="300"/>
+
 ## Features
 
 - **State Management**: Uses MobX and Flutter MobX for reactive state management.
