@@ -104,11 +104,17 @@ class _DetailScreenState extends State<DetailScreen> {
     return Container(
       child: Column(
         children: [
-          Text("Formed Year: ${widget.data!.formedYear}"),
+          Text(
+            "Formed Year: ${widget.data!.formedYear}",
+            style: TextStyle(fontSize: 18),
+          ),
           const SizedBox(
             height: 8,
           ),
-          Text("Stadium: ${widget.data!.stadium!}")
+          Text(
+            "Stadium: ${widget.data!.stadium!}",
+            style: TextStyle(fontSize: 18),
+          )
         ],
       ),
     );
@@ -156,8 +162,7 @@ class _DetailScreenState extends State<DetailScreen> {
   Widget contentDesc() {
     return Center(
       child: Container(
-        margin: EdgeInsets.all(10),
-        padding: EdgeInsets.all(5),
+        padding: EdgeInsets.all(10),
         color: Colors.grey,
         child: Text(
           "Description: \n\n${widget.data!.desc!}",

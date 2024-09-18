@@ -66,48 +66,61 @@ class _FavoriteScreenState extends State<FavoriteScreen> {
 
     return GestureDetector(
       onTap: () => _onTapItemFootball(footballClub),
-      child: GridTile(
-        child: Column(
-          children: [
-            Container(
-              padding: const EdgeInsets.all(10),
-              decoration: const BoxDecoration(
-                color: Colors.amberAccent,
-                borderRadius: BorderRadius.all(Radius.circular(10)),
-              ),
-              child: Hero(
-                tag: footballClub.team ?? 'default-tag',
-                child: CachedNetworkImage(
-                  width: 120,
-                  height: 120,
-                  imageUrl: imageUrl,
-                  placeholder: (context, url) =>
-                      const Center(child: CircularProgressIndicator()),
-                  errorWidget: (context, url, error) => const Icon(Icons.error),
-                  fit: BoxFit.cover,
-                ),
-              ),
+      child: Stack(
+        children: [
+          Container(
+            padding: const EdgeInsets.all(10),
+            decoration: const BoxDecoration(
+              color: Colors.amberAccent,
+              borderRadius: BorderRadius.all(Radius.circular(10)),
             ),
-            const SizedBox(
-              height: 5,
-            ),
-            Row(
+            child: Column(
               children: [
+                Container(
+                  padding: const EdgeInsets.all(10),
+                  decoration: const BoxDecoration(
+                    borderRadius: BorderRadius.all(Radius.circular(10)),
+                  ),
+                  child: Hero(
+                    tag: footballClub.team ?? 'default-tag',
+                    child: CachedNetworkImage(
+                      width: 120,
+                      height: 120,
+                      imageUrl: imageUrl,
+                      placeholder: (context, url) =>
+                          const Center(child: CircularProgressIndicator()),
+                      errorWidget: (context, url, error) =>
+                          const Icon(Icons.error),
+                      fit: BoxFit.cover,
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 5),
                 Container(
                   padding: const EdgeInsets.all(5),
                   child: Center(
-                    child: Text(footballClub.team!),
+                    child: Text(
+                      footballClub.team!,
+                      style: TextStyle(
+                        fontSize: 15,
+                      ),
+                    ),
                   ),
-                ),
-                IconButton(
-                  icon: const Icon(Icons.delete, color: Colors.red),
-                  onPressed: () =>
-                      _favoriteController.removeFromFavorites(footballClub),
                 ),
               ],
             ),
-          ],
-        ),
+          ),
+          Positioned(
+            right: 0,
+            top: 0,
+            child: IconButton(
+              iconSize: 30,
+              icon: const Icon(Icons.delete, color: Colors.red),
+              onPressed: () =>
+                  _favoriteController.removeFromFavorites(footballClub),
+            ),
+          ),
+        ],
       ),
     );
   }

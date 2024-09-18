@@ -136,35 +136,42 @@ class _HomeScreenState extends State<HomeScreen> {
         _controller.onTapItemFootBall(footballClub);
       },
       child: GridTile(
-        child: Column(
-          children: [
-            Container(
-              padding: const EdgeInsets.all(10),
-              decoration: const BoxDecoration(
-                color: Colors.amberAccent,
-                borderRadius: BorderRadius.all(Radius.circular(10)),
-              ),
-              child: Hero(
-                tag: footballClub.team ?? 'default-tag',
-                child: CachedNetworkImage(
-                  width: 120,
-                  height: 120,
-                  imageUrl: imageUrl,
-                  placeholder: (context, url) =>
-                      const Center(child: CircularProgressIndicator()),
-                  errorWidget: (context, url, error) => const Icon(Icons.error),
-                  fit: BoxFit.cover,
+        child: Container(
+          padding: const EdgeInsets.all(10),
+          decoration: const BoxDecoration(
+            color: Colors.amberAccent,
+            borderRadius: BorderRadius.all(Radius.circular(10)),
+          ),
+          child: Column(
+            children: [
+              Container(
+                padding: const EdgeInsets.all(10),
+                decoration: const BoxDecoration(
+                  borderRadius: BorderRadius.all(Radius.circular(10)),
+                ),
+                child: Hero(
+                  tag: footballClub.team ?? 'default-tag',
+                  child: CachedNetworkImage(
+                    width: 120,
+                    height: 120,
+                    imageUrl: imageUrl,
+                    placeholder: (context, url) =>
+                        const Center(child: CircularProgressIndicator()),
+                    errorWidget: (context, url, error) =>
+                        const Icon(Icons.error),
+                    fit: BoxFit.cover,
+                  ),
                 ),
               ),
-            ),
-            const SizedBox(height: 5),
-            Container(
-              padding: const EdgeInsets.all(5),
-              child: Center(
-                child: Text(footballClub.team!),
-              ),
-            )
-          ],
+              const SizedBox(height: 5),
+              Container(
+                padding: const EdgeInsets.all(5),
+                child: Center(
+                  child: Text(footballClub.team!),
+                ),
+              )
+            ],
+          ),
         ),
       ),
     );

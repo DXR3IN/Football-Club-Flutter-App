@@ -6,7 +6,7 @@ import 'package:premiere_league_v2/screens/home/presentation/home_screen.dart';
 import 'package:premiere_league_v2/screens/splash/presentation/splash_screeen.dart';
 
 class AppRoute {
-  static const String splashScreen = "/";
+  // static const String splashScreen = "/";
   static const String teamFcListScreen = '/teamFcListScreen';
   static const String teamFcDetailScreen = '/teamFcDetailScreen';
   static const String favTeamFcScreen = '/favTeamFcScreen';
@@ -19,8 +19,8 @@ class AppRoute {
   static Widget getPage(RouteSettings settings) {
     var route = settings.name;
     switch (route) {
-      case splashScreen:
-        return const SplashScreeen();
+      // case splashScreen:
+      //   return const SplashScreeen();
       case teamFcListScreen:
         return const HomeScreen();
       case teamFcDetailScreen:
