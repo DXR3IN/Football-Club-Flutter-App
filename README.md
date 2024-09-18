@@ -30,30 +30,27 @@ This is a demo Flutter app that demonstrates various features including a main s
 
 The main screen displays a grid of football teams fetched from an API. Users can search for teams, view team details, and navigate to the favorite screen.
 
-(![Main Screen](https://github.com/user-attachments/assets/6b07bf1b-e04b-4f3f-9bae-d7102b7c15fe)
-) 
+<img src="https://github.com/user-attachments/assets/6b07bf1b-e04b-4f3f-9bae-d7102b7c15fe" alt="Main Screen" width="300"/>
 
 ### Detail Screen
 
 On the detail screen, users can view more information about a selected football team, including its stats and other details. Users can also add the team to their favorites.
 
-![Detail Screen](https://github.com/user-attachments/assets/47ae9db4-9ec0-4bfd-bee5-49796748c226)
-
+<img src="https://github.com/user-attachments/assets/47ae9db4-9ec0-4bfd-bee5-49796748c226" alt="Detail Screen" width="300"/>
 
 ### Favorite Screen
 
 The favorite screen displays a list of all teams that the user has marked as favorites. Users can remove teams from their favorites, and the list will update in real-time.
 
-![Favorite Screen](https://github.com/user-attachments/assets/92671f3c-57a3-4499-8772-4e4e3204fb7e)
-
+<img src="https://github.com/user-attachments/assets/92671f3c-57a3-4499-8772-4e4e3204fb7e" alt="Favorite Screen" width="300"/>
 
 ### Notification
 
 The app includes notification functionality using Firebase Cloud Messaging. Users receive push notifications for updates or important announcements. Local notifications are also used to alert users of actions within the app.
 
-![Foreground Notification](https://github.com/user-attachments/assets/88be45f7-d91d-4d34-a007-106ba82a189a)
+<img src="https://github.com/user-attachments/assets/88be45f7-d91d-4d34-a007-106ba82a189a" alt="Foreground Notification" width="300"/>
 
-![Background and Terminate Notification](https://github.com/user-attachments/assets/e0796f2f-8bad-4d1c-9a9e-df625421260d)
+<img src="https://github.com/user-attachments/assets/e0796f2f-8bad-4d1c-9a9e-df625421260d" alt="Background and Terminate Notification" width="300"/>
 
 ## Features
 
