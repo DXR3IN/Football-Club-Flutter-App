@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
-import 'package:premiere_league_v2/components/model/club_model.dart';
+import 'package:premiere_league_v2/screens/detail/model/club_model.dart';
 import 'package:premiere_league_v2/screens/detail/controller/detail_controller.dart';
 
 class FavoriteButton extends StatelessWidget {
@@ -14,13 +14,14 @@ class FavoriteButton extends StatelessWidget {
       builder: (context) {
         bool isFavorite = _controller.isFavorite.value;
         return IconButton(
-            icon: Icon(
-              isFavorite ? Icons.favorite : Icons.favorite_border,
-              color: isFavorite ? Colors.red : null,
-            ),
-            onPressed: () {
-              _controller.toggleFavorite(team);
-            });
+          icon: Icon(
+            isFavorite ? Icons.favorite : Icons.favorite_border,
+            color: isFavorite ? Colors.red : null,
+          ),
+          onPressed: () async {
+            await _controller.favoriteCommand.execute(team);
+          },
+        );
       },
     );
   }

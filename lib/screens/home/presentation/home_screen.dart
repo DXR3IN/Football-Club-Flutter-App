@@ -4,8 +4,7 @@ import 'package:premiere_league_v2/components/config/app_const.dart';
 import 'package:premiere_league_v2/components/widget/app_observer_builder_widget.dart';
 import 'package:premiere_league_v2/main.dart';
 import 'package:premiere_league_v2/screens/home/controller/home_controller.dart';
-
-import '../../../components/model/club_model.dart';
+import 'package:premiere_league_v2/screens/home/model/home_club_model.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -17,7 +16,7 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   final _controller = HomeController(getIt.get());
   final TextEditingController _searchController = TextEditingController();
-  List<ClubModel> _filteredTeams = [];
+  List<HomeClubModel> _filteredTeams = [];
 
   @override
   void initState() {
@@ -25,7 +24,7 @@ class _HomeScreenState extends State<HomeScreen> {
     _controller.dummyTeamFCCommand.execute();
     _searchController.addListener(() {
       final data = _controller.dummyTeamFCCommand.onData;
-      if (data is List<ClubModel>) {
+      if (data is List<HomeClubModel>) {
         _filterTeams(data);
       }
     });
@@ -37,7 +36,7 @@ class _HomeScreenState extends State<HomeScreen> {
     super.dispose();
   }
 
-  void _filterTeams(List<ClubModel> listTeam) {
+  void _filterTeams(List<HomeClubModel> listTeam) {
     final query = _searchController.text.toLowerCase();
     setState(() {
       _filteredTeams = listTeam
@@ -113,7 +112,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   Widget _loading() => const Center(child: CircularProgressIndicator());
 
-  Widget _contentBody(List<ClubModel> listTeam) {
+  Widget _contentBody(List<HomeClubModel> listTeam) {
     final displayList =
         _searchController.text.isEmpty ? listTeam : _filteredTeams;
 
@@ -127,13 +126,13 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  Widget _itemCardFC(ClubModel footballClub) {
+  Widget _itemCardFC(HomeClubModel footballClub) {
     final imageUrl = footballClub.badge ?? '';
 
     return GestureDetector(
       onTap: () {
-        // Navigate to the detail screen without affecting the favorite status
-        _controller.onTapItemFootBall(footballClub);
+        logger.i("id team is : ${footballClub.idTeam}");
+        _controller.onTapItemFootBall(footballClub.team!);
       },
       child: GridTile(
         child: Container(
@@ -157,18 +156,14 @@ class _HomeScreenState extends State<HomeScreen> {
                 decoration: const BoxDecoration(
                   borderRadius: BorderRadius.all(Radius.circular(10)),
                 ),
-                child: Hero(
-                  tag: footballClub.team ?? 'default-tag',
-                  child: CachedNetworkImage(
-                    width: 120,
-                    height: 120,
-                    imageUrl: imageUrl,
-                    placeholder: (context, url) =>
-                        const Center(child: CircularProgressIndicator()),
-                    errorWidget: (context, url, error) =>
-                        const Icon(Icons.error),
-                    fit: BoxFit.cover,
-                  ),
+                child: CachedNetworkImage(
+                  width: 120,
+                  height: 120,
+                  imageUrl: imageUrl,
+                  placeholder: (context, url) =>
+                      const Center(child: CircularProgressIndicator()),
+                  errorWidget: (context, url, error) => const Icon(Icons.error),
+                  fit: BoxFit.cover,
                 ),
               ),
               const SizedBox(height: 5),

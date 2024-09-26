@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:logger/logger.dart';
-import 'package:premiere_league_v2/components/model/club_model.dart';
+import 'package:premiere_league_v2/screens/detail/model/club_model.dart';
+import 'package:premiere_league_v2/screens/favorite/model/fav_club_model.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class FavoriteHelper {
@@ -18,23 +19,23 @@ class FavoriteHelper {
     final prefs = await SharedPreferences.getInstance();
     List<String> favorites = prefs.getStringList(FAVORITES_KEY) ?? [];
     favorites.removeWhere(
-        (team) => ClubModel.fromJson(jsonDecode(team)).idTeam == idTeam);
+        (team) => FavClubModel.fromJson(jsonDecode(team)).idTeam == idTeam);
     await prefs.setStringList(FAVORITES_KEY, favorites);
   }
 
-  Future<List<ClubModel>> getFavoriteTeams() async {
+  Future<List<FavClubModel>> getFavoriteTeams() async {
     final prefs = await SharedPreferences.getInstance();
     List<String> favorites = prefs.getStringList(FAVORITES_KEY) ?? [];
-    _logger.i("Loaded ${favorites.length} favoorite teams");
+    _logger.i("Loaded ${favorites.length} favorite teams");
     return favorites
-        .map((team) => ClubModel.fromJson(jsonDecode(team)))
+        .map((team) => FavClubModel.fromJson(jsonDecode(team)))
         .toList();
   }
 
   Future<bool> isFavorite(String idTeam) async {
     final prefs = await SharedPreferences.getInstance();
     List<String> favorites = prefs.getStringList(FAVORITES_KEY) ?? [];
-    return favorites
-        .any((team) => ClubModel.fromJson(jsonDecode(team)).idTeam == idTeam);
+    return favorites.any(
+        (team) => FavClubModel.fromJson(jsonDecode(team)).idTeam == idTeam);
   }
 }

@@ -1,80 +1,112 @@
 import 'dart:async';
-import 'package:premiere_league_v2/components/api_services/favorite_helper.dart';
-import 'package:premiere_league_v2/components/model/club_model.dart';
+import 'package:premiere_league_v2/screens/favorite/controller/favorite_helper.dart';
+import 'package:premiere_league_v2/screens/detail/model/club_model.dart';
 import 'package:premiere_league_v2/components/notification_service/local_notification_service.dart';
-
-import '../../../components/api_services/api_client.dart';
-import '../../../components/base/base_controller.dart';
-import '../../../components/util/command_query.dart';
-import '../../../components/model/player_model.dart';
-
+import 'package:premiere_league_v2/components/api_services/api_client.dart';
+import 'package:premiere_league_v2/components/base/base_controller.dart';
+import 'package:premiere_league_v2/components/util/command_query.dart';
+import 'package:premiere_league_v2/screens/detail/model/player_model.dart';
 import 'package:mobx/mobx.dart';
 
 class DetailController extends BaseController {
   final ApiClient _api;
-  final FavoriteHelper favoriteService;
-  final ClubModel team;
+  final FavoriteHelper _favoriteService;
+  final String _team;
 
-  DetailController(this._api, this.team) : favoriteService = FavoriteHelper() {
+  DetailController(this._api, this._team)
+      : _favoriteService = FavoriteHelper() {
     _initializeFavoriteStatus();
   }
 
+  // Observable properties
   final isFavorite = Observable<bool>(false);
 
-  late final dummyPlayerCommand =
-      CommandQuery.createWithParam<String, List<PlayerModel>>(_getListPlayer);
+  // Command queries
+  late final dummyDetailClubModel =
+      CommandQuery.createWithParam<String, ClubModel>(_fetchTeamById);
 
-  FutureOr<List<PlayerModel>> _getListPlayer(String id) async {
-    return _api.getApiPlayer(id).then((value) {
-      return value?.map((e) => PlayerModel.fromJson(e)).toList() ?? [];
-    });
-  }
+  late final dummyPlayerCommand =
+      CommandQuery.createWithParam<String, List<PlayerModel>>(_fetchPlayers);
 
   late final favoriteCommand =
-      CommandQuery.createWithParam<ClubModel, Future<void>>(toggleFavorite);
+      CommandQuery.createWithParam<ClubModel, Future<void>>(_toggleFavorite);
 
+  // Private methods to handle API and business logic
+  Future<ClubModel> _fetchTeamById(String team) async {
+    try {
+      final response = await _api.getApiFootballClubById(team);
+      if (response != null && response.isNotEmpty) {
+        final teamData = response[0]; 
+        print("Team name: ${teamData['name']}"); 
+
+        // Assuming you have a method to convert Map to ClubModel
+        return ClubModel.fromJson(teamData); // Use your conversion method
+      } else {
+        throw Exception("No teams found.");
+      }
+    } catch (e) {
+      throw Exception("Error fetching team: $e");
+    }
+  }
+
+  FutureOr<List<PlayerModel>> _fetchPlayers(String id) async {
+    try {
+      final response = await _api.getApiPlayer(id);
+      return response?.map((e) => PlayerModel.fromJson(e)).toList() ?? [];
+    } catch (e) {
+      throw Exception('Error fetching players: $e');
+    }
+  }
+
+  // Initialize the favorite status when the controller is created
   void _initializeFavoriteStatus() async {
-    bool favoriteStatus = await favoriteService.isFavorite(team.idTeam!);
+    final favoriteStatus = await _favoriteService.isFavorite(_team);
     runInAction(() {
       isFavorite.value = favoriteStatus;
     });
   }
 
-  Future<void> toggleFavorite(ClubModel team) async {
-    bool currentStatus = isFavorite.value;
+  // Toggle favorite status and show appropriate notification
+  Future<void> _toggleFavorite(ClubModel team) async {
+    final currentStatus = isFavorite.value;
 
     if (currentStatus) {
-      await favoriteService.removeFavorite(team.idTeam!).then(
-            (value) => Future.delayed(const Duration(seconds: 0)).then((s) {
-              print(
-                  "Attempting to show notification"); // Add this for debugging
-              LocalNotificationService().showLocalNotification(
-                id: 1,
-                body: team.team,
-                payload: "now",
-                title: "Not your favorite",
-              );
-            }),
-          );
+      await _removeFromFavorites(team);
+      _showNotification(team, 'Not your favorite', 'Removed from favorites');
     } else {
-      await favoriteService.addFavorite(team).then(
-            (value) => Future.delayed(const Duration(seconds: 1)).then((s) {
-              print(
-                  "Attempting to show notification"); // Add this for debugging
-              LocalNotificationService().showLocalNotification(
-                id: 1,
-                body: team.team,
-                payload: "now",
-                title: "Your new favorite",
-              );
-            }),
-          );
+      await _addToFavorites(team);
+      _showNotification(team, 'Your new favorite', 'Added to favorites');
     }
 
     runInAction(() {
       isFavorite.value = !currentStatus;
     });
+  }
 
-    await favoriteService.getFavoriteTeams();
+  // Helper methods for adding/removing favorites
+  Future<void> _addToFavorites(ClubModel team) async {
+    try {
+      await _favoriteService.addFavorite(team);
+    } catch (e) {
+      throw Exception('Failed to add favorite: $e');
+    }
+  }
+
+  Future<void> _removeFromFavorites(ClubModel team) async {
+    try {
+      await _favoriteService.removeFavorite(team.idTeam!);
+    } catch (e) {
+      throw Exception('Failed to remove favorite: $e');
+    }
+  }
+
+  // Helper method for showing notifications
+  void _showNotification(ClubModel team, String title, String body) {
+    LocalNotificationService().showLocalNotification(
+      id: 1,
+      title: title,
+      body: body,
+      payload: team.team,
+    );
   }
 }

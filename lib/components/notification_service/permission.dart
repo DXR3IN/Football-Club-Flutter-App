@@ -1,7 +1,9 @@
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:premiere_league_v2/main.dart';
 
 class Permission {
-  Future<void> requestPermision() async {
+  // function for requesting a permission to device
+  static Future<void> requestPermision() async {
     FirebaseMessaging messaging = FirebaseMessaging.instance;
     NotificationSettings settings = await messaging.requestPermission(
       alert: true,
@@ -14,11 +16,12 @@ class Permission {
     );
 
     if (settings.authorizationStatus == AuthorizationStatus.authorized) {
-      print('User granted permission');
-    } else if (settings.authorizationStatus == AuthorizationStatus.provisional) {
-      print('User granted provisional permission');
+      logger.i('User granted permission');
+    } else if (settings.authorizationStatus ==
+        AuthorizationStatus.provisional) {
+      logger.i('User granted provisional permission');
     } else {
-      print('User declined or has not accepted permission');
+      logger.i('User declined or has not accepted permission');
     }
   }
 }

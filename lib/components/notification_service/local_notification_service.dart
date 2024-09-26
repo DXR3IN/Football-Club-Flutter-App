@@ -1,10 +1,7 @@
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
-
-void backgroundNotificationResponseHandler(
-    NotificationResponse notification) async {
-  print('Received background notification response: $notification');
-}
+import 'package:premiere_league_v2/components/config/app_route.dart';
+import 'package:premiere_league_v2/main.dart';
 
 class LocalNotificationService {
   final FlutterLocalNotificationsPlugin notificationsPlugin =
@@ -22,7 +19,7 @@ class LocalNotificationService {
       requestBadgePermission: true,
       requestSoundPermission: true,
       onDidReceiveLocalNotification: (id, title, body, payload) async {
-        print('Received local notification: $id, $title, $body, $payload');
+        logger.i('Received local notification: $id, $title, $body, $payload');
       },
     );
 
@@ -34,21 +31,21 @@ class LocalNotificationService {
 
     await notificationsPlugin.initialize(
       initializationSettings,
+      // Handle foreground notification taps (when the app is running)
+      onDidReceiveNotificationResponse: backgroundNotificationResponseHandler,
       onDidReceiveBackgroundNotificationResponse:
           backgroundNotificationResponseHandler,
     );
-
-    // Listen for foreground messages from Firebase
-    FirebaseMessaging.onMessage.listen(_handleFirebaseMessage);
   }
 
+  // function for local notification
   Future<void> showLocalNotification({
     int id = 0,
     String? title,
     String? body,
     String? payload,
   }) async {
-    print('Showing notification: $id, $title, $body, $payload');
+    logger.i('Showing notification: $id, $title, $body, $payload');
     await notificationsPlugin.show(
       id,
       title,
@@ -70,21 +67,24 @@ class LocalNotificationService {
     );
   }
 
-  void _handleFirebaseMessage(RemoteMessage message) {
-    String? title = message.notification?.title;
-    String? body = message.notification?.body;
-    String? payload = message.data['route']; 
-
-    showLocalNotification(
-      id: DateTime.now().millisecondsSinceEpoch ~/ 1000, 
-      title: title,
-      body: body,
-      payload: payload,
-    );
-  }
-
   static Future<void> firebaseMessagingBackgroundHandler(
       RemoteMessage message) async {
-    print("Handling background message: ${message.messageId}");
+    logger.i("Handling background message: ${message.messageId}");
+  }
+}
+
+void backgroundNotificationResponseHandler(
+    NotificationResponse notification) async {
+  logger.i('Received background notification response: $notification');
+
+  if (notification.payload != null) {
+    logger.i('Navigating to detail with payload: ${notification.payload}');
+
+    // Remove all previous routes and navigate to the detail screen
+    AppNav.navigator.pushNamedAndRemoveUntil(
+      AppRoute.teamFcDetailScreen,
+      (route) => false,
+      arguments: notification.payload,
+    );
   }
 }

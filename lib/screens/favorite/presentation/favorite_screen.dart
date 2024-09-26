@@ -1,9 +1,10 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:premiere_league_v2/components/model/club_model.dart';
+import 'package:premiere_league_v2/components/config/app_route.dart';
 import 'package:premiere_league_v2/components/widget/app_observer_builder_widget.dart';
 import 'package:premiere_league_v2/main.dart';
 import 'package:premiere_league_v2/screens/favorite/controller/favorite_controller.dart';
+import 'package:premiere_league_v2/screens/favorite/model/fav_club_model.dart';
 import 'package:premiere_league_v2/screens/home/controller/home_controller.dart';
 
 class FavoriteScreen extends StatefulWidget {
@@ -20,7 +21,7 @@ class _FavoriteScreenState extends State<FavoriteScreen> {
   @override
   void initState() {
     super.initState();
-    _favoriteController.favoriteCommand.execute(); // Initial data fetch
+    _favoriteController.favoriteCommand.execute();
   }
 
   @override
@@ -35,6 +36,15 @@ class _FavoriteScreenState extends State<FavoriteScreen> {
     return AppBar(
       title: const Text("Favorite Teams"),
       centerTitle: true,
+      leading: IconButton(
+        icon: const Icon(Icons.arrow_back),
+        onPressed: () {
+          AppNav.navigator.pushNamedAndRemoveUntil(
+            AppRoute.teamFcListScreen, 
+            (route) => false, 
+          );
+        },
+      ),
     );
   }
 
@@ -43,7 +53,7 @@ class _FavoriteScreenState extends State<FavoriteScreen> {
       commandQuery: _favoriteController.favoriteCommand,
       onLoading: () => const Center(child: CircularProgressIndicator()),
       child: (data) {
-        final List<ClubModel> team = List<ClubModel>.from(data);
+        final List<FavClubModel> team = List<FavClubModel>.from(data);
 
         if (team.isEmpty) {
           return const Center(child: Text("No favorite teams yet"));
@@ -61,7 +71,7 @@ class _FavoriteScreenState extends State<FavoriteScreen> {
     );
   }
 
-  Widget _itemCardFC(ClubModel footballClub) {
+  Widget _itemCardFC(FavClubModel footballClub) {
     final imageUrl = footballClub.badge ?? '';
 
     return GestureDetector(
@@ -109,7 +119,7 @@ class _FavoriteScreenState extends State<FavoriteScreen> {
                   child: Center(
                     child: Text(
                       footballClub.team!,
-                      style: TextStyle(
+                      style: const TextStyle(
                         fontSize: 15,
                       ),
                     ),
@@ -133,9 +143,9 @@ class _FavoriteScreenState extends State<FavoriteScreen> {
     );
   }
 
-  void _onTapItemFootball(ClubModel team) {
+  void _onTapItemFootball(FavClubModel team) {
     if (team.team != null && team.badge != null) {
-      _controller.onTapItemFootBall(team);
+      _controller.onTapItemFootBall(team.team!);
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Unable to load team details')),

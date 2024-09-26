@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:premiere_league_v2/components/model/club_model.dart';
+import 'package:premiere_league_v2/screens/detail/model/club_model.dart';
 import 'package:premiere_league_v2/screens/detail/presentation/detail_screen.dart';
 import 'package:premiere_league_v2/screens/favorite/presentation/favorite_screen.dart';
 import 'package:premiere_league_v2/screens/home/presentation/home_screen.dart';
-import 'package:premiere_league_v2/screens/splash/presentation/splash_screeen.dart';
 
 class AppRoute {
   // static const String splashScreen = "/";
@@ -25,7 +24,7 @@ class AppRoute {
         return const HomeScreen();
       case teamFcDetailScreen:
         return DetailScreen(
-          data: settings.arguments as ClubModel,
+          data: settings.arguments as String,
         );
       case favTeamFcScreen:
         return const FavoriteScreen();

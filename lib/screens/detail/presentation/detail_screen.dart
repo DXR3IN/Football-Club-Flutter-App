@@ -1,19 +1,17 @@
-// import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-// import 'package:radyadigital_bola/components/widget/app_observer_builder_widget.dart';
 import 'package:ionicons/ionicons.dart';
-import 'package:premiere_league_v2/components/model/club_model.dart';
+import 'package:premiere_league_v2/components/config/app_route.dart';
+import 'package:premiere_league_v2/components/widget/app_observer_builder_widget.dart';
+import 'package:premiere_league_v2/screens/detail/model/club_model.dart';
 import 'package:premiere_league_v2/main.dart';
 import 'package:premiere_league_v2/screens/detail/controller/detail_controller.dart';
 import 'package:premiere_league_v2/screens/detail/widget/favorite_button.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:logger/logger.dart';
 
-// import '../model/player_model.dart';
-
 class DetailScreen extends StatefulWidget {
-  const DetailScreen({super.key, this.data});
-  final ClubModel? data;
+  const DetailScreen({super.key, required this.data});
+  final String data;
 
   @override
   State<DetailScreen> createState() => _DetailScreenState();
@@ -25,54 +23,62 @@ class _DetailScreenState extends State<DetailScreen> {
   @override
   void initState() {
     super.initState();
-    _controller = DetailController(getIt.get(), widget.data!);
-    _controller.dummyPlayerCommand.execute();
-    _controller.favoriteCommand.execute();
+    _controller = DetailController(getIt.get(), widget.data);
+    // _controller.dummyPlayerCommand.execute(widget.data);
+    _controller.dummyDetailClubModel.execute(widget.data);
+    // _controller.favoriteCommand.execute(widget.data);
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: appBar(),
-      body: content(),
+      appBar: _buildAppBar(),
+      body: AppObserverBuilder(
+        commandQuery: _controller.dummyDetailClubModel,
+        onLoading: () => const Center(child: CircularProgressIndicator()),
+        onError: (error) => Center(child: Text('Error: $error')),
+        child: (team) => _buildContent(team),
+      ),
     );
   }
 
-  PreferredSizeWidget appBar() => AppBar(
-        title: Text(widget.data!.team!),
-      );
+  PreferredSizeWidget _buildAppBar() {
+    return AppBar(
+      title: const Text("Detail Club"),
+      centerTitle: true,
+      leading: IconButton(
+        icon: const Icon(Icons.arrow_back),
+        onPressed: () {
+          // Navigate to the main menu, clearing the current route stack
+          AppNav.navigator.pushNamedAndRemoveUntil(
+            AppRoute.teamFcListScreen, 
+            (route) => false, 
+          );
+        },
+      ),
+    );
+  }
 
-  Widget content() {
+  Widget _buildContent(ClubModel team) {
     return SafeArea(
       child: SingleChildScrollView(
         padding: const EdgeInsets.all(10),
-        child: Container(
-          child: Column(
-            children: <Widget>[
-              headerDetail(),
-              const SizedBox(
-                height: 13,
-              ),
-              info(),
-              const SizedBox(
-                height: 13,
-              ),
-              mediaSocials(),
-              const SizedBox(
-                height: 13,
-              ),
-              contentDesc(),
-
-              // not showing on the phone, yet
-              // playerInfo()
-            ],
-          ),
+        child: Column(
+          children: <Widget>[
+            _buildHeader(team),
+            const SizedBox(height: 13),
+            _buildInfo(team),
+            const SizedBox(height: 13),
+            _buildMediaSocials(team),
+            const SizedBox(height: 13),
+            _buildDescription(team),
+          ],
         ),
       ),
     );
   }
 
-  Widget headerDetail() {
+  Widget _buildHeader(ClubModel team) {
     double width = MediaQuery.of(context).size.width;
     double height = MediaQuery.of(context).size.height;
 
@@ -80,99 +86,78 @@ class _DetailScreenState extends State<DetailScreen> {
       children: [
         Center(
           child: Hero(
-            tag: widget.data!.team!,
+            tag: team.team!,
             child: Image.network(
-              widget.data!.badge!,
+              team.badge!,
               width: width / 1.5,
               height: height / 2.5,
             ),
           ),
         ),
-        const SizedBox(
-          height: 5,
-        ),
+        const SizedBox(height: 5),
         Text(
-          widget.data!.team!,
+          team.team!,
           style: TextStyle(fontWeight: FontWeight.bold, fontSize: width / 10),
         ),
-        FavoriteButton(widget.data!, _controller),
+        FavoriteButton(team, _controller),
       ],
     );
   }
 
-  Widget info() {
-    return Container(
-      child: Column(
-        children: [
-          Text(
-            "Formed Year: ${widget.data!.formedYear}",
-            style: TextStyle(fontSize: 18),
-          ),
-          const SizedBox(
-            height: 8,
-          ),
-          Text(
-            "Stadium: ${widget.data!.stadium!}",
-            style: TextStyle(fontSize: 18),
-          )
-        ],
-      ),
-    );
-  }
-
-  Widget mediaSocials() {
-    return Container(
-      child: Center(
-        child: Column(
-          children: [
-            _mediaSocials(
-                widget.data!.instagram!, Colors.pink, Ionicons.logo_instagram),
-            _mediaSocials(
-                widget.data!.youtube!, Colors.red, Ionicons.logo_youtube),
-            _mediaSocials(
-                widget.data!.facebook!, Colors.blue, Ionicons.logo_facebook),
-          ],
+  Widget _buildInfo(ClubModel team) {
+    return Column(
+      children: [
+        Text(
+          "Formed Year: ${team.formedYear}",
+          style: const TextStyle(fontSize: 18),
         ),
-      ),
+        const SizedBox(height: 8),
+        Text(
+          "Stadium: ${team.stadium}",
+          style: const TextStyle(fontSize: 18),
+        ),
+      ],
     );
   }
 
-  Widget _mediaSocials(String url, Color color, IconData icon) {
-    if (url.isEmpty) {
-      return Container();
-    }
+  Widget _buildMediaSocials(ClubModel team) {
+    return Column(
+      children: [
+        _buildMediaItem(team.instagram!, Colors.pink, Ionicons.logo_instagram),
+        _buildMediaItem(team.youtube!, Colors.red, Ionicons.logo_youtube),
+        _buildMediaItem(team.facebook!, Colors.blue, Ionicons.logo_facebook),
+      ],
+    );
+  }
+
+  Widget _buildMediaItem(String url, Color color, IconData icon) {
+    if (url.isEmpty) return const SizedBox();
+
     return ListTile(
-      leading: Icon(
-        icon,
-        color: color,
-      ),
+      leading: Icon(icon, color: color),
       title: Text(url),
       onTap: () async {
-        final String finalUrl = "https://$url";
-        finalUrl.toString();
         try {
-          await _launchURL(finalUrl);
+          await _launchUrl("https://$url");
         } catch (e) {
-          Logger().i(e.toString());
+          Logger().i("Failed to launch URL: $e");
         }
       },
     );
   }
 
-  Widget contentDesc() {
-    return Center(
-      child: Container(
-        padding: EdgeInsets.all(10),
-        color: Colors.grey,
-        child: Text(
-          "Description: \n\n${widget.data!.desc!}",
-          style: const TextStyle(color: Colors.black),
-        ),
+  Widget _buildDescription(ClubModel team) {
+    return Container(
+      padding: const EdgeInsets.all(10),
+      color: Colors.grey[300],
+      child: Text(
+        "Description: \n\n${team.desc!}",
+        style: const TextStyle(color: Colors.black),
       ),
     );
   }
 
-  Future<void> _launchURL(String url) async {
+  Future<void> _launchUrl(String url) async {
     final Uri uri = Uri.parse(url);
     if (await canLaunchUrl(uri)) {
       await launchUrl(uri);
@@ -180,36 +165,4 @@ class _DetailScreenState extends State<DetailScreen> {
       throw 'Could not launch $url';
     }
   }
-
-  // Not showing on the phone, yet
-
-  // Widget playerInfo() {
-  //   return AppObserverBuilder(
-  //     commandQuery: _controller.dummyPlayerCommand,
-  //     onLoading: () => _loading(),
-  //     child: (data) => _contentPlayerBody(data),
-  //   );
-  // }
-
-  // Widget _loading() => const Center(child: CircularProgressIndicator());
-
-  // Widget _contentPlayerBody(List<PlayerModel> players) {
-  //   return Container(
-  //     height: 300,
-  //     child: GridView.count(
-  //       crossAxisCount: 3,
-  //       childAspectRatio: 1.0,
-  //       padding: const EdgeInsets.all(8.0),
-  //       mainAxisSpacing: 3.0,
-  //       crossAxisSpacing: 3.0,
-  //       children: players.map((player) => _itemPlayer(player)).toList(),
-  //     ),
-  //   );
-  // }
-
-  // Widget _itemPlayer(PlayerModel player) {
-  //   final playerImage = player.strThumb ?? '';
-
-  //   return GridTile(child: CachedNetworkImage(imageUrl: playerImage));
-  // }
 }
