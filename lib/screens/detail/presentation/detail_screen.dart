@@ -5,7 +5,7 @@ import 'package:premiere_league_v2/components/widget/app_observer_builder_widget
 import 'package:premiere_league_v2/screens/detail/model/club_model.dart';
 import 'package:premiere_league_v2/main.dart';
 import 'package:premiere_league_v2/screens/detail/controller/detail_controller.dart';
-import 'package:premiere_league_v2/screens/detail/widget/favorite_button.dart';
+import 'package:premiere_league_v2/components/widget/favorite_button/favorite_button.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:logger/logger.dart';
 
@@ -23,7 +23,7 @@ class _DetailScreenState extends State<DetailScreen> {
   @override
   void initState() {
     super.initState();
-    _controller = DetailController(getIt.get(), widget.data);
+    _controller = DetailController(getIt.get());
     // _controller.dummyPlayerCommand.execute(widget.data);
     _controller.dummyDetailClubModel.execute(widget.data);
     // _controller.favoriteCommand.execute(widget.data);
@@ -51,8 +51,8 @@ class _DetailScreenState extends State<DetailScreen> {
         onPressed: () {
           // Navigate to the main menu, clearing the current route stack
           AppNav.navigator.pushNamedAndRemoveUntil(
-            AppRoute.teamFcListScreen, 
-            (route) => false, 
+            AppRoute.teamFcListScreen,
+            (route) => false,
           );
         },
       ),
@@ -99,7 +99,7 @@ class _DetailScreenState extends State<DetailScreen> {
           team.team!,
           style: TextStyle(fontWeight: FontWeight.bold, fontSize: width / 10),
         ),
-        FavoriteButton(team, _controller),
+        FavoriteButton(team),
       ],
     );
   }

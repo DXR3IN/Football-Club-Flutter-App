@@ -15,7 +15,8 @@ class FavoriteScreen extends StatefulWidget {
 }
 
 class _FavoriteScreenState extends State<FavoriteScreen> {
-  final FavoriteController _favoriteController = FavoriteController();
+  final FavoriteController _favoriteController =
+      FavoriteController(getIt.get());
   final HomeController _controller = HomeController(getIt.get());
 
   @override
@@ -40,8 +41,8 @@ class _FavoriteScreenState extends State<FavoriteScreen> {
         icon: const Icon(Icons.arrow_back),
         onPressed: () {
           AppNav.navigator.pushNamedAndRemoveUntil(
-            AppRoute.teamFcListScreen, 
-            (route) => false, 
+            AppRoute.teamFcListScreen,
+            (route) => false,
           );
         },
       ),
