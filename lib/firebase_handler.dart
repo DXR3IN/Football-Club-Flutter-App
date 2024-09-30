@@ -11,6 +11,12 @@ class FirebaseHandler {
   final LocalNotificationService notificationService =
       LocalNotificationService();
 
+  // function for firebase messaging background handler
+  Future<void> _firebaseMessagingBackgroundHandler(
+      RemoteMessage message) async {
+    logger.i("Handling a background message: ${message.messageId}");
+  }
+
   // function to initialize firebase
   Future initializeFirebase() async {
     await notificationService.initNotification();
@@ -69,9 +75,13 @@ class FirebaseHandler {
     }
   }
 
-  // function for firebase messaging background handler
-  Future<void> _firebaseMessagingBackgroundHandler(
-      RemoteMessage message) async {
-    logger.i("Handling a background message: ${message.messageId}");
+  static Future<void> subscribeHandler(String teamName) async {
+    logger.i("Subscribed to ${teamName}");
+    await FirebaseMessaging.instance.subscribeToTopic(teamName);
+  }
+
+  static Future<void> unsubcribeHandler(String teamName) async {
+    logger.i("Unsubscribed to ${teamName}");
+    await FirebaseMessaging.instance.unsubscribeFromTopic(teamName);
   }
 }

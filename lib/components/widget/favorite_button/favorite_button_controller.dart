@@ -3,15 +3,13 @@ import 'package:premiere_league_v2/components/base/base_controller.dart';
 import 'package:premiere_league_v2/components/notification_service/local_notification_service.dart';
 import 'package:premiere_league_v2/components/util/command_query.dart';
 import 'package:premiere_league_v2/screens/detail/model/club_model.dart';
-import 'package:premiere_league_v2/favorite_helper.dart';
+import 'package:premiere_league_v2/favorite_handler.dart';
 
 class FavoriteButtonController extends BaseController {
-  final FavoriteHelper _favoriteHelper;
+  final FavoriteHandler _favoriteHandler;
   final String? _team;
 
-  FavoriteButtonController(this._team) : _favoriteHelper = FavoriteHelper() {
-    
-  }
+  FavoriteButtonController(this._team) : _favoriteHandler = FavoriteHandler();
 
   // Observable properties
   final isFavorite = Observable<bool>(false);
@@ -24,7 +22,7 @@ class FavoriteButtonController extends BaseController {
     if (_team == null) {
       return;
     }
-    final favoriteStatus = await _favoriteHelper.isFavorite(_team);
+    final favoriteStatus = await _favoriteHandler.isFavorite(_team);
     runInAction(() {
       isFavorite.value = favoriteStatus;
     });
@@ -50,7 +48,7 @@ class FavoriteButtonController extends BaseController {
   // Helper methods for adding/removing favorites
   Future<void> _addToFavorites(ClubModel team) async {
     try {
-      await _favoriteHelper.saveFavoriteTeam(team.idTeam!);
+      await _favoriteHandler.saveFavoriteTeam(team.team!);
     } catch (e) {
       throw Exception('Failed to add favorite: $e');
     }
@@ -58,7 +56,7 @@ class FavoriteButtonController extends BaseController {
 
   Future<void> _removeFromFavorites(ClubModel team) async {
     try {
-      await _favoriteHelper.removeFavoriteTeam(team.idTeam!);
+      await _favoriteHandler.removeFavoriteTeam(team.team!);
     } catch (e) {
       throw Exception('Failed to remove favorite: $e');
     }

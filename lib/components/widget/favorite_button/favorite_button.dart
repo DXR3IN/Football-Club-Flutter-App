@@ -19,7 +19,7 @@ class _FavoriteButtonState extends State<FavoriteButton> {
   @override
   void initState() {
     super.initState();
-    _controller = FavoriteButtonController(widget.team.idTeam);
+    _controller = FavoriteButtonController(widget.team.team);
     _controller.initializeFavoriteStatus();
   }
 
