@@ -81,9 +81,8 @@ void backgroundNotificationResponseHandler(
     logger.i('Navigating to detail with payload: ${notification.payload}');
 
     // Remove all previous routes and navigate to the detail screen
-    AppNav.navigator.pushNamedAndRemoveUntil(
+    AppNav.navigator.pushNamed(
       AppRoute.teamFcDetailScreen,
-      (route) => false,
       arguments: notification.payload,
     );
   }

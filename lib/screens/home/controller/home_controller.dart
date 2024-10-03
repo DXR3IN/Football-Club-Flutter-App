@@ -22,13 +22,18 @@ class HomeController extends BaseController {
   }
 
   // To see the detail of the football team
-  void onTapItemFootBall(String teamId) {
-    AppNav.navigator
-        .pushReplacementNamed(AppRoute.teamFcDetailScreen, arguments: teamId);
+  void onTapItemFootBall(String team, String idTeam) {
+    AppNav.navigator.pushNamed(
+      AppRoute.teamFcDetailScreen,
+      arguments: {
+        'team': team,
+        'idTeam': idTeam,
+      },
+    );
   }
 
   // go to Favorite Page
   void onTapFavScreen() {
-    AppNav.navigator.pushReplacementNamed(AppRoute.favTeamFcScreen);
+    AppNav.navigator.pushNamed(AppRoute.favTeamFcScreen);
   }
 }

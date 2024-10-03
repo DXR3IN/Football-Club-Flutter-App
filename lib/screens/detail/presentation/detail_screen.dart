@@ -1,17 +1,19 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:ionicons/ionicons.dart';
-import 'package:premiere_league_v2/components/config/app_route.dart';
 import 'package:premiere_league_v2/components/widget/app_observer_builder_widget.dart';
 import 'package:premiere_league_v2/screens/detail/model/club_model.dart';
 import 'package:premiere_league_v2/main.dart';
 import 'package:premiere_league_v2/screens/detail/controller/detail_controller.dart';
 import 'package:premiere_league_v2/components/widget/favorite_button/favorite_button.dart';
+import 'package:premiere_league_v2/screens/detail/model/equipment_model.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:logger/logger.dart';
 
 class DetailScreen extends StatefulWidget {
-  const DetailScreen({super.key, required this.data});
-  final String data;
+  const DetailScreen({super.key, required this.team, required this.idTeam});
+  final String team;
+  final String idTeam;
 
   @override
   State<DetailScreen> createState() => _DetailScreenState();
@@ -24,20 +26,25 @@ class _DetailScreenState extends State<DetailScreen> {
   void initState() {
     super.initState();
     _controller = DetailController(getIt.get());
-    // _controller.dummyPlayerCommand.execute(widget.data);
-    _controller.dummyDetailClubModel.execute(widget.data);
+    _controller.dummyEquipmentCommand.execute(widget.idTeam);
+    _controller.dummyDetailClubModel.execute(widget.team);
     // _controller.favoriteCommand.execute(widget.data);
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.grey[200],
       appBar: _buildAppBar(),
       body: AppObserverBuilder(
         commandQuery: _controller.dummyDetailClubModel,
         onLoading: () => const Center(child: CircularProgressIndicator()),
         onError: (error) => Center(child: Text('Error: $error')),
         child: (team) => _buildContent(team),
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {},
+        child: Icon(Icons.favorite),
       ),
     );
   }
@@ -46,16 +53,6 @@ class _DetailScreenState extends State<DetailScreen> {
     return AppBar(
       title: const Text("Detail Club"),
       centerTitle: true,
-      leading: IconButton(
-        icon: const Icon(Icons.arrow_back),
-        onPressed: () {
-          // Navigate to the main menu, clearing the current route stack
-          AppNav.navigator.pushNamedAndRemoveUntil(
-            AppRoute.teamFcListScreen,
-            (route) => false,
-          );
-        },
-      ),
     );
   }
 
@@ -70,7 +67,9 @@ class _DetailScreenState extends State<DetailScreen> {
             _buildInfo(team),
             const SizedBox(height: 13),
             _buildMediaSocials(team),
-            const SizedBox(height: 13),
+            const SizedBox(height: 20),
+            _buildEquipmentObserver(),
+            const SizedBox(height: 20),
             _buildDescription(team),
           ],
         ),
@@ -148,11 +147,73 @@ class _DetailScreenState extends State<DetailScreen> {
 
   Widget _buildDescription(ClubModel team) {
     return Container(
-      padding: const EdgeInsets.all(10),
-      color: Colors.grey[300],
-      child: Text(
-        "Description: \n\n${team.desc!}",
-        style: const TextStyle(color: Colors.black),
+      color: Colors.white,
+      child: Column(
+        children: [
+          CachedNetworkImage(
+            imageUrl: team.banner!,
+            fit: BoxFit.cover,
+          ),
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Text(team.desc!),
+          )
+        ],
+      ),
+    );
+  }
+
+  Widget _buildEquipmentObserver() {
+    return SizedBox(
+      height: 200,
+      child: AppObserverBuilder(
+        commandQuery: _controller.dummyEquipmentCommand,
+        onLoading: () => const Center(
+          child: CircularProgressIndicator(),
+        ),
+        onError: (message) => Container(
+          color: Colors.red,
+          child: Center(
+            child: Text(message),
+          ),
+        ),
+        child: (equipmentData) {
+          // Log the data type to check if it's what you expect
+          logger.i("EquipmentData is ${equipmentData.runtimeType}");
+
+          // Check if the data is null or empty
+          if (equipmentData == null || equipmentData.isEmpty) {
+            logger.i(
+                "Equipment is $equipmentData and runtimeType ${equipmentData.runtimeType}");
+            return const Center(child: Text("No equipment available"));
+          }
+
+          // Cast to the expected type (e.g., List<EquipmentModel>)
+          var equipmentList = equipmentData as List<EquipmentModel>;
+
+          logger.i("Equipment list has ${equipmentList.length} items");
+
+          return GridView.builder(
+            scrollDirection: Axis.horizontal,
+            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 1),
+            itemCount: equipmentList.length, // Use the length of the list
+            itemBuilder: (BuildContext context, int index) {
+              var equipment = equipmentList[index];
+              logger.i("Equipment item at index $index is ${equipment}");
+              return Stack(children: [
+                CachedNetworkImage(
+                  imageUrl: equipment.strEquipment!,
+                  fit: BoxFit.cover,
+                ),
+                Text(
+                  equipment.strSeason!,
+                  style: TextStyle(fontStyle: FontStyle.italic, fontSize: 20),
+                )
+              ]);
+            },
+          );
+        },
       ),
     );
   }

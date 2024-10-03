@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:premiere_league_v2/components/config/app_const.dart';
@@ -48,26 +50,21 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: _appBar(),
       body: _body(),
     );
   }
 
-  PreferredSizeWidget _appBar() {
-    return AppBar(
-      title: Text(AppConst.appName),
-      centerTitle: true,
-    );
-  }
-
   Widget _body() {
-    return Column(
-      children: [
+    return CustomScrollView(
+      slivers: [
+        _sliverAppBar(),
         _navBar(),
-        Expanded(
-          child: AppObserverBuilder(
+        SliverPadding(
+          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
+          sliver: AppObserverBuilder(
             commandQuery: _controller.dummyTeamFCCommand,
-            onLoading: () => _loading(),
+            onLoading: () => SliverToBoxAdapter(
+                child: Container(height: 400, child: _loading())),
             child: (data) {
               return _contentBody(data);
             },
@@ -77,11 +74,54 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
+  Widget _sliverAppBar() {
+    return SliverAppBar(
+      pinned: true,
+      floating: true,
+      expandedHeight: 200.0,
+      flexibleSpace: FlexibleSpaceBar(
+        background: Stack(
+          fit: StackFit.expand,
+          children: [
+            Image.asset(
+              "assets/banner/premier-league-banner.jpg",
+              fit: BoxFit.cover,
+            ),
+          ],
+        ),
+        title: Text(AppConst.appName),
+        centerTitle: true,
+      ),
+    );
+  }
+
   Widget _navBar() {
-    return Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: Row(
-        children: [_searchBar(), _fovorite()],
+    return SliverToBoxAdapter(
+      child: Padding(
+        padding: EdgeInsets.symmetric(horizontal: 12),
+        child: Row(
+          children: [_searchBar(), _favorite()],
+        ),
+      ),
+    );
+  }
+
+  Widget _contentBody(List<HomeClubModel> listTeam) {
+    final displayList =
+        _searchController.text.isEmpty ? listTeam : _filteredTeams;
+
+    return SliverGrid(
+      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+        crossAxisCount: 2,
+        childAspectRatio: 1.0,
+        mainAxisSpacing: 8.0,
+        crossAxisSpacing: 8.0,
+      ),
+      delegate: SliverChildBuilderDelegate(
+        (BuildContext context, int index) {
+          return _itemCardFC(displayList[index]);
+        },
+        childCount: displayList.length,
       ),
     );
   }
@@ -92,6 +132,7 @@ class _HomeScreenState extends State<HomeScreen> {
         controller: _searchController,
         decoration: InputDecoration(
           hintText: 'Search teams...',
+          fillColor: Colors.red,
           prefixIcon: const Icon(Icons.search),
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(8.0),
@@ -101,28 +142,12 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  Widget _fovorite() {
+  Widget _favorite() {
     return IconButton(
       icon: const Icon(Icons.favorite, color: Colors.red),
       onPressed: () {
         _controller.onTapFavScreen();
       },
-    );
-  }
-
-  Widget _loading() => const Center(child: CircularProgressIndicator());
-
-  Widget _contentBody(List<HomeClubModel> listTeam) {
-    final displayList =
-        _searchController.text.isEmpty ? listTeam : _filteredTeams;
-
-    return GridView.count(
-      crossAxisCount: 2,
-      childAspectRatio: 1.0,
-      padding: const EdgeInsets.all(8.0),
-      mainAxisSpacing: 8.0,
-      crossAxisSpacing: 8.0,
-      children: displayList.map((team) => _itemCardFC(team)).toList(),
     );
   }
 
@@ -132,7 +157,7 @@ class _HomeScreenState extends State<HomeScreen> {
     return GestureDetector(
       onTap: () {
         logger.i("id team is : ${footballClub.idTeam}");
-        _controller.onTapItemFootBall(footballClub.team!);
+        _controller.onTapItemFootBall(footballClub.team!, footballClub.idTeam!);
       },
       child: GridTile(
         child: Container(
@@ -156,17 +181,19 @@ class _HomeScreenState extends State<HomeScreen> {
                 decoration: const BoxDecoration(
                   borderRadius: BorderRadius.all(Radius.circular(10)),
                 ),
-                child: CachedNetworkImage(
-                  width: 120,
-                  height: 120,
-                  imageUrl: imageUrl,
-                  placeholder: (context, url) =>
-                      const Center(child: CircularProgressIndicator()),
-                  errorWidget: (context, url, error) => const Icon(Icons.error),
-                  fit: BoxFit.cover,
+                child: Hero(
+                  tag: footballClub.team!,
+                  child: CachedNetworkImage(
+                    width: 120,
+                    height: 120,
+                    imageUrl: imageUrl,
+                    placeholder: (context, url) => _loading(),
+                    errorWidget: (context, url, error) =>
+                        const Icon(Icons.error),
+                    fit: BoxFit.cover,
+                  ),
                 ),
               ),
-              const SizedBox(height: 5),
               Container(
                 padding: const EdgeInsets.all(5),
                 child: Center(
@@ -179,4 +206,6 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
     );
   }
+
+  Widget _loading() => const Center(child: CircularProgressIndicator());
 }

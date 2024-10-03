@@ -47,19 +47,15 @@ class ApiClient {
     }
   }
 
-  Future<Iterable?> getApiPlayer(String id) async {
-    final response = await _dio.get('/lookup_all_players.php?id=$id');
+  Future<Iterable?> getFcEquipment(String id) async {
+    final response = await _dio.get('/lookupequipment.php?id=$id');
 
     // Check if the response data is a Map
     if (response.data is Map<String, dynamic>) {
       final data = response.data as Map<String, dynamic>;
-      final players = data['players'];
-      if (players is Iterable) {
-        return players;
-      } else {
-        // Handle the case where 'players' is not an Iterable
-        throw const FormatException("Expected 'players' to be an Iterable");
-      }
+      final players = data['equipment'];
+
+      return players;
     } else {
       // Handle unexpected response format
       throw const FormatException(

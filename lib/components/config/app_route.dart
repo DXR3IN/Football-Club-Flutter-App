@@ -22,8 +22,10 @@ class AppRoute {
       case teamFcListScreen:
         return const HomeScreen();
       case teamFcDetailScreen:
+        final args = settings.arguments as Map<String, String>;
         return DetailScreen(
-          data: settings.arguments as String,
+          team: args['team']!,
+          idTeam: args['idTeam']!,
         );
       case favTeamFcScreen:
         return const FavoriteScreen();

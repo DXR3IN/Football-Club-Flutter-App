@@ -3,14 +3,14 @@ import 'package:flutter/material.dart';
 class AppDefaultThemeData {
   var colorPrimary50 = const Color(0xffffdddd);
   var colorPrimary100 = const Color(0xffffc0c0);
-  var colorPrimary200 = const Color(0xffff9494);
-  var colorPrimary300 = const Color(0xffff5757);
-  var colorPrimary400 = const Color(0xffff2323);
-  var colorPrimary500 = const Color(0xffed0000);
-  var colorPrimary600 = const Color(0xffd70000);
-  var colorPrimary700 = const Color(0xffb10303);
-  var colorPrimary800 = const Color(0xff920a0a);
-  var colorPrimary900 = const Color(0xff500000);
+  var colorPrimary200 = const Color.fromARGB(255, 32, 0, 83);
+  var colorPrimary300 = const Color.fromARGB(255, 81, 4, 107);
+  var colorPrimary400 = const Color.fromARGB(255, 32, 0, 83);
+  var colorPrimary500 = const Color.fromARGB(255, 32, 0, 83);
+  var colorPrimary600 = const Color.fromARGB(255, 32, 0, 83);
+  var colorPrimary700 = const Color.fromARGB(255, 32, 0, 83);
+  var colorPrimary800 = const Color.fromARGB(255, 32, 0, 83);
+  var colorPrimary900 = const Color.fromARGB(255, 32, 0, 83);
 
   var backgroundColor1 = const Color(0xffFFFFFF);
   var backgroundColor2 = const Color(0xfff2f2f2);

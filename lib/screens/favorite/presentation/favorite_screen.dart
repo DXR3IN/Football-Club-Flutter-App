@@ -1,6 +1,5 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:premiere_league_v2/components/config/app_route.dart';
 import 'package:premiere_league_v2/components/widget/app_observer_builder_widget.dart';
 import 'package:premiere_league_v2/main.dart';
 import 'package:premiere_league_v2/screens/favorite/controller/favorite_controller.dart';
@@ -37,15 +36,6 @@ class _FavoriteScreenState extends State<FavoriteScreen> {
     return AppBar(
       title: const Text("Favorite Teams"),
       centerTitle: true,
-      leading: IconButton(
-        icon: const Icon(Icons.arrow_back),
-        onPressed: () {
-          AppNav.navigator.pushNamedAndRemoveUntil(
-            AppRoute.teamFcListScreen,
-            (route) => false,
-          );
-        },
-      ),
     );
   }
 
@@ -103,18 +93,18 @@ class _FavoriteScreenState extends State<FavoriteScreen> {
                   child: Hero(
                     tag: footballClub.team ?? 'default-tag',
                     child: CachedNetworkImage(
-                      width: 120,
                       height: 120,
+                      width: 120,
                       imageUrl: imageUrl,
                       placeholder: (context, url) =>
-                          const Center(child: CircularProgressIndicator()),
+                          Container(color: Colors.grey[200]),
                       errorWidget: (context, url, error) =>
                           const Icon(Icons.error),
                       fit: BoxFit.cover,
+                      fadeInDuration: const Duration(milliseconds: 300),
                     ),
                   ),
                 ),
-                const SizedBox(height: 5),
                 Container(
                   padding: const EdgeInsets.all(5),
                   child: Center(
@@ -146,7 +136,7 @@ class _FavoriteScreenState extends State<FavoriteScreen> {
 
   void _onTapItemFootball(FavClubModel team) {
     if (team.team != null && team.badge != null) {
-      _controller.onTapItemFootBall(team.team!);
+      _controller.onTapItemFootBall(team.team!, team.idTeam!);
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Unable to load team details')),
