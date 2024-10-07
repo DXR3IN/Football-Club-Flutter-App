@@ -13,14 +13,32 @@ class DetailController extends BaseController {
 
   // Command queries
   late final dummyDetailClubModel =
-      CommandQuery.createWithParam<String, ClubModel>(_fetchTeamById);
+      CommandQuery.createWithParam<String, ClubModel>(_fetchTeamByName);
 
   late final dummyEquipmentCommand =
       CommandQuery.createWithParam<String, List<EquipmentModel>>(
           _fetchEquipment);
 
+  // late final dummyFavoriteCommand = CommandQuery.createWithParam<ClubModel, Future<void>>(_toggleFavorite);
+
+  // This method will be called to fetch equipment after team details are loaded
+  Future<void> fetchTeamAndEquipment(String team) async {
+    // Start loading for team details
+    await dummyDetailClubModel.execute(team);
+
+    // Check if team details were successfully fetched
+    if (dummyDetailClubModel.onData != null) {
+      final ClubModel teamDetails = dummyDetailClubModel.onData!;
+
+      // Now start loading for equipment
+      await dummyEquipmentCommand.execute(teamDetails.idTeam!);
+    } else {
+      logger.i("Unable to fetch team details.");
+    }
+  }
+
   // Private methods to handle API and business logic
-  Future<ClubModel> _fetchTeamById(String team) async {
+  Future<ClubModel> _fetchTeamByName(String team) async {
     try {
       final response = await _api.getApiFootballClubById(team);
       if (response != null && response.isNotEmpty) {
@@ -38,7 +56,6 @@ class DetailController extends BaseController {
 
   FutureOr<List<EquipmentModel>> _fetchEquipment(String id) async {
     return await _api.getFcEquipment(id).then((value) {
-      logger.i("equipment $value");
       return value?.map((e) => EquipmentModel.fromJson(e)).toList() ?? [];
     });
   }

@@ -22,13 +22,10 @@ class HomeController extends BaseController {
   }
 
   // To see the detail of the football team
-  void onTapItemFootBall(String team, String idTeam) {
+  void onTapItemFootBall(String team) {
     AppNav.navigator.pushNamed(
       AppRoute.teamFcDetailScreen,
-      arguments: {
-        'team': team,
-        'idTeam': idTeam,
-      },
+      arguments: team,
     );
   }
 

@@ -2,6 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:ionicons/ionicons.dart';
 import 'package:premiere_league_v2/components/widget/app_observer_builder_widget.dart';
+import 'package:premiere_league_v2/components/widget/hex_to_color.dart';
 import 'package:premiere_league_v2/screens/detail/model/club_model.dart';
 import 'package:premiere_league_v2/main.dart';
 import 'package:premiere_league_v2/screens/detail/controller/detail_controller.dart';
@@ -11,9 +12,8 @@ import 'package:url_launcher/url_launcher.dart';
 import 'package:logger/logger.dart';
 
 class DetailScreen extends StatefulWidget {
-  const DetailScreen({super.key, required this.team, required this.idTeam});
+  const DetailScreen({super.key, required this.team});
   final String team;
-  final String idTeam;
 
   @override
   State<DetailScreen> createState() => _DetailScreenState();
@@ -26,9 +26,12 @@ class _DetailScreenState extends State<DetailScreen> {
   void initState() {
     super.initState();
     _controller = DetailController(getIt.get());
-    _controller.dummyEquipmentCommand.execute(widget.idTeam);
-    _controller.dummyDetailClubModel.execute(widget.team);
-    // _controller.favoriteCommand.execute(widget.data);
+    // // _controller.dummyEquipmentCommand.execute(widget.idTeam);
+    // _controller.dummyDetailClubModel.execute(widget.team);
+    // // _controller.favoriteCommand.execute(widget.data);
+
+    // Fetch team and equipment details
+    _controller.fetchTeamAndEquipment(widget.team);
   }
 
   @override
@@ -44,7 +47,8 @@ class _DetailScreenState extends State<DetailScreen> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {},
-        child: Icon(Icons.favorite),
+        child:
+            Icon(Icons.favorite), 
       ),
     );
   }
@@ -67,9 +71,9 @@ class _DetailScreenState extends State<DetailScreen> {
             _buildInfo(team),
             const SizedBox(height: 13),
             _buildMediaSocials(team),
-            const SizedBox(height: 20),
+            const SizedBox(height: 30),
             _buildEquipmentObserver(),
-            const SizedBox(height: 20),
+            const SizedBox(height: 30),
             _buildDescription(team),
           ],
         ),
@@ -96,7 +100,18 @@ class _DetailScreenState extends State<DetailScreen> {
         const SizedBox(height: 5),
         Text(
           team.team!,
-          style: TextStyle(fontWeight: FontWeight.bold, fontSize: width / 10),
+          style: TextStyle(
+            fontWeight: FontWeight.bold,
+            fontSize: width / 10,
+            color: hexToColor(team.colour1!),
+            shadows: [
+              Shadow(
+                offset: Offset(1.0, 1.0),
+                color: hexToColor(team.colour2!),
+                blurRadius: 3.0,
+              ),
+            ],
+          ),
         ),
         FavoriteButton(team),
       ],
@@ -178,9 +193,6 @@ class _DetailScreenState extends State<DetailScreen> {
           ),
         ),
         child: (equipmentData) {
-          // Log the data type to check if it's what you expect
-          logger.i("EquipmentData is ${equipmentData.runtimeType}");
-
           // Check if the data is null or empty
           if (equipmentData == null || equipmentData.isEmpty) {
             logger.i(
@@ -191,26 +203,52 @@ class _DetailScreenState extends State<DetailScreen> {
           // Cast to the expected type (e.g., List<EquipmentModel>)
           var equipmentList = equipmentData as List<EquipmentModel>;
 
-          logger.i("Equipment list has ${equipmentList.length} items");
-
           return GridView.builder(
             scrollDirection: Axis.horizontal,
             gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 1),
+                crossAxisCount: 1, mainAxisSpacing: 10),
             itemCount: equipmentList.length, // Use the length of the list
             itemBuilder: (BuildContext context, int index) {
               var equipment = equipmentList[index];
-              logger.i("Equipment item at index $index is ${equipment}");
-              return Stack(children: [
-                CachedNetworkImage(
-                  imageUrl: equipment.strEquipment!,
-                  fit: BoxFit.cover,
+
+              return Container(
+                decoration: const BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.all(Radius.circular(10)),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black26,
+                      blurRadius: 6.0,
+                      spreadRadius: 2.0,
+                      offset: Offset(3, 3),
+                    ),
+                  ],
                 ),
-                Text(
-                  equipment.strSeason!,
-                  style: TextStyle(fontStyle: FontStyle.italic, fontSize: 20),
-                )
-              ]);
+                child: Stack(fit: StackFit.expand, children: [
+                  CachedNetworkImage(
+                    imageUrl: equipment.strEquipment!,
+                    fit: BoxFit.cover,
+                  ),
+                  Center(
+                    child: Text(
+                      equipment.strSeason!,
+                      style: const TextStyle(
+                        fontStyle: FontStyle.italic,
+                        fontSize: 30,
+                        fontWeight: FontWeight.bold,
+                        color: const Color.fromARGB(255, 32, 0, 83),
+                        shadows: [
+                          Shadow(
+                            offset: Offset(1.0, 1.0),
+                            color: Colors.white,
+                            blurRadius: 3.0,
+                          ),
+                        ],
+                      ),
+                    ),
+                  )
+                ]),
+              );
             },
           );
         },

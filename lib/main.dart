@@ -52,10 +52,10 @@ Future _dependencyInjection() async {
   getIt.registerLazySingleton(() => ApiClient(getIt()));
 
   // initialize firebase
-  firebaseHandler.initializeFirebase();
+  await firebaseHandler.initializeFirebase();
 
   // Initialize the local notification service (if needed)
-  firebaseHandler.initializeNotifications();
+  await firebaseHandler.initializeNotifications();
 
   // initialize the firebase listener for notification
   firebaseHandler.firebaseListener();

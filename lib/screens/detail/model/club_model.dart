@@ -13,23 +13,26 @@ class ClubModel {
   String? league;
   String? stadium;
   String? desc;
+  String? colour1;
+  String? colour2;
 
-  ClubModel({
-    this.idTeam,
-    this.team,
-    this.teamAlternate,
-    this.badge,
-    this.banner,
-    this.youtube,
-    this.instagram,
-    this.facebook,
-    this.twitter,
-    this.website,
-    this.formedYear,
-    this.league,
-    this.stadium,
-    this.desc,
-  });
+  ClubModel(
+      {this.idTeam,
+      this.team,
+      this.teamAlternate,
+      this.badge,
+      this.banner,
+      this.youtube,
+      this.instagram,
+      this.facebook,
+      this.twitter,
+      this.website,
+      this.formedYear,
+      this.league,
+      this.stadium,
+      this.desc,
+      this.colour1,
+      this.colour2});
 
   ClubModel.fromJson(Map<String, dynamic> json) {
     idTeam = json['idTeam'] as String?;
@@ -46,6 +49,8 @@ class ClubModel {
     league = json['strLeague'] as String?;
     stadium = json['strStadium'] as String?;
     desc = json['strDescriptionEN'] as String?;
+    colour1 = json['strColour1'] as String?;
+    colour2 = json['strColour2'] as String?;
   }
 
   Map<String, dynamic> toJson() {
@@ -64,6 +69,8 @@ class ClubModel {
     data['strLeague'] = league;
     data['strStadium'] = stadium;
     data['strDescriptionEN'] = desc;
+    data['strColour1'] = colour1;
+    data['strColour2'] = colour2;
     return data;
   }
 }

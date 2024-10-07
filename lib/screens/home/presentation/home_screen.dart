@@ -157,7 +157,7 @@ class _HomeScreenState extends State<HomeScreen> {
     return GestureDetector(
       onTap: () {
         logger.i("id team is : ${footballClub.idTeam}");
-        _controller.onTapItemFootBall(footballClub.team!, footballClub.idTeam!);
+        _controller.onTapItemFootBall(footballClub.team!);
       },
       child: GridTile(
         child: Container(

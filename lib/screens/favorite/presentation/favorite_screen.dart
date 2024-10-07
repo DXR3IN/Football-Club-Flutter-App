@@ -136,7 +136,7 @@ class _FavoriteScreenState extends State<FavoriteScreen> {
 
   void _onTapItemFootball(FavClubModel team) {
     if (team.team != null && team.badge != null) {
-      _controller.onTapItemFootBall(team.team!, team.idTeam!);
+      _controller.onTapItemFootBall(team.team!);
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Unable to load team details')),

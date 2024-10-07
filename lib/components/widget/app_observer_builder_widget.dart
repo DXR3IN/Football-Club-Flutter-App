@@ -53,7 +53,6 @@ class AppObserverBuilder extends StatelessWidget {
           return const Center(child: Text('No data available.'));
         }
 
-        debugPrint("Data received: ${commandQuery.onData}");
         return child?.call(commandQuery.onData) ?? const SizedBox();
       },
     );
