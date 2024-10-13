@@ -1,8 +1,9 @@
+import 'dart:convert';
+
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
-import 'package:flutter/widgets.dart';
-import 'package:premiere_league_v2/components/config/app_route.dart';
 import 'package:premiere_league_v2/components/notification_service/local_notification_service.dart';
+import 'package:premiere_league_v2/components/notification_service/model/notification_model.dart';
 import 'package:premiere_league_v2/components/notification_service/permission.dart';
 import 'package:premiere_league_v2/main.dart';
 
@@ -14,10 +15,11 @@ class FirebaseHandler {
   // function for firebase messaging background handler
   Future<void> _firebaseMessagingBackgroundHandler(
       RemoteMessage message) async {
-    logger.i("Handling a background message: ${message.messageId}");
+    logger.i(
+        "Handling a background message: ${message.notification!.title} && ${message.data['id']}");
   }
 
-  // function to initialize firebase
+  // function to initialize firebase and all another function to help it
   Future initializeFirebase() async {
     await notificationService.initNotification();
     // Initialize Firebase
@@ -36,6 +38,8 @@ class FirebaseHandler {
 
   // function to initialize firebase listener
   void firebaseListener() {
+    FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
+
     // Listen to Firebase messages while the app is in the foreground
     FirebaseMessaging.onMessage.listen((RemoteMessage message) {
       if (message.notification != null) {
@@ -43,45 +47,29 @@ class FirebaseHandler {
           id: DateTime.now().millisecondsSinceEpoch ~/ 1000,
           title: message.notification!.title,
           body: message.notification!.body,
-          payload: message.data['teamName'],
+          payload: message.data.toString(),
         );
       }
     });
 
-    // Handle messages when the app is opened from a notification
+    // Handle messages when the app is opened
     FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
       if (message.notification != null) {
         logger.i("Notification clicked: ${message.notification!.title}");
-        firebaseHandler.handleNotificationNavigation(message);
+        NotificationModel notificationResponse =
+            NotificationModel.fromJson(jsonDecode(message.data.toString()));
+        notificationService.actionForNotification(notificationResponse);
       }
     });
-
-    FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
-  }
-
-  // function to handle navigation to notification
-  void handleNotificationNavigation(RemoteMessage message) {
-    String? route = message.data['teamName'];
-    if (route != null) {
-      // Check if there are route to detail screen is opened
-      if (AppNav.navigator.canPop()) {
-        AppNav.navigator
-            .popUntil(ModalRoute.withName(AppRoute.teamFcListScreen));
-      }
-
-      AppNav.navigator.pushNamed(AppRoute.teamFcDetailScreen, arguments: route);
-    } else {
-      AppNav.navigator.pushNamed(AppRoute.teamFcListScreen);
-    }
   }
 
   static Future<void> subscribeHandler(String teamName) async {
-    logger.i("Subscribed to ${teamName}");
+    logger.i("Subscribed to $teamName");
     await FirebaseMessaging.instance.subscribeToTopic(teamName);
   }
 
-  static Future<void> unsubcribeHandler(String teamName) async {
-    logger.i("Unsubscribed to ${teamName}");
+  static Future<void> unsubscribeHandler(String teamName) async {
+    logger.i("Unsubscribed to $teamName");
     await FirebaseMessaging.instance.unsubscribeFromTopic(teamName);
   }
 }

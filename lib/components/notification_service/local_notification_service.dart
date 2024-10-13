@@ -1,6 +1,9 @@
+import 'dart:convert';
+
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:premiere_league_v2/components/config/app_const.dart';
 import 'package:premiere_league_v2/components/config/app_route.dart';
+import 'package:premiere_league_v2/components/notification_service/model/notification_model.dart';
 import 'package:premiere_league_v2/main.dart';
 
 class LocalNotificationService {
@@ -31,11 +34,33 @@ class LocalNotificationService {
 
     await notificationsPlugin.initialize(
       initializationSettings,
-      // Handle foreground notification taps (when the app is running)
-      onDidReceiveNotificationResponse: backgroundNotificationResponseHandler,
-      onDidReceiveBackgroundNotificationResponse:
-          backgroundNotificationResponseHandler,
+      onDidReceiveNotificationResponse: notificationRedirectHandler,
+      onDidReceiveBackgroundNotificationResponse: notificationRedirectHandler,
     );
+  }
+
+  void actionForNotification(NotificationModel notificationModel) {
+    switch (notificationModel.redirectTo) {
+      case AppConst.toDetail:
+        toDetailScreen(notificationModel.title!);
+      case AppConst.toFavorite:
+        toFavoriteScreen();
+    }
+  }
+
+  void toDetailScreen(String title) async {
+    logger.i('Going into detail screen with id: $title');
+
+    AppNav.navigator.pushNamed(
+      AppRoute.teamFcDetailScreen,
+      arguments: title,
+    );
+  }
+
+  void toFavoriteScreen() {
+    logger.i('Going into Favorite Screen');
+
+    AppNav.navigator.pushNamed(AppRoute.favTeamFcScreen);
   }
 
   // function for local notification
@@ -66,24 +91,24 @@ class LocalNotificationService {
       ),
     );
   }
-
-  static Future<void> firebaseMessagingBackgroundHandler(
-      RemoteMessage message) async {
-    logger.i("Handling background message: ${message.messageId}");
-  }
 }
 
-void backgroundNotificationResponseHandler(
-    NotificationResponse notification) async {
-  logger.i('Received background notification response: $notification');
+void notificationRedirectHandler(
+    NotificationResponse notificationResponse) async {
+  try {
+    // Convert payload to valid JSON format
+    String payloadString = notificationResponse.payload.toString();
 
-  if (notification.payload != null) {
-    logger.i('Navigating to detail with payload: ${notification.payload}');
+    // Attempt to parse the payload
+    NotificationModel notificationPayload =
+        NotificationModel.fromJson(jsonDecode(payloadString));
 
-    // Remove all previous routes and navigate to the detail screen
-    AppNav.navigator.pushNamed(
-      AppRoute.teamFcDetailScreen,
-      arguments: notification.payload,
-    );
+    logger.i("Successfully handled redirect: $notificationPayload");
+
+    // Perform the notification action
+    LocalNotificationService().actionForNotification(notificationPayload);
+  } catch (e) {
+    // Log the error for debugging
+    logger.e("Failed to handle notification redirect: $e");
   }
 }

@@ -7,33 +7,28 @@ import 'package:premiere_league_v2/components/util/command_query.dart';
 import 'package:premiere_league_v2/screens/favorite/model/fav_club_model.dart';
 
 class FavoriteController extends ChangeNotifier {
-  final ApiClient _api;
   final FavoriteHandler _favoriteHandler = FavoriteHandler();
 
-  FavoriteController(this._api);
-
-  FutureOr<List<FavClubModel>> _getAllTeamsForFiltering() async {
-    return _api.getApiFootballClubs().then((value) {
-      return value?.map((e) => FavClubModel.fromJson(e)).toList() ?? [];
-    });
-  }
-
-  List<FavClubModel> _allTeams = [];
   List<FavClubModel> _favoriteTeams = [];
   List<FavClubModel> get favoriteTeams => _favoriteTeams;
 
+  // Accepting list of teams passed as arguments
+  FavoriteController();
+
+  // CommandQuery to handle loading favorites
   late final favoriteCommand =
       CommandQuery.create<Null, List<FavClubModel>>(loadFavorites);
 
+  // Load favorites based on the teams already passed
   Future<List<FavClubModel>> loadFavorites() async {
-    _allTeams = await _getAllTeamsForFiltering();
-    _favoriteTeams = await _favoriteHandler.getFavoriteTeams(_allTeams);
-    // logger.i("the first favorite team : ${_favoriteTeams[0]}");
+    _favoriteTeams = await _favoriteHandler.getFavoriteTeams();
+    notifyListeners();
     return _favoriteTeams;
   }
 
-  Future<void> removeFromFavorites(FavClubModel team) async {
-    await _favoriteHandler.removeFavoriteTeam(team.team!);
-    await favoriteCommand.execute();
+  // Removing a team from favorites
+  Future<void> removeFromFavorites(FavClubModel footbalTeam) async {
+    await _favoriteHandler.removeFavoriteTeam(footbalTeam);
+    await favoriteCommand.execute(); 
   }
 }

@@ -45,11 +45,10 @@ class _DetailScreenState extends State<DetailScreen> {
         onError: (error) => Center(child: Text('Error: $error')),
         child: (team) => _buildContent(team),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {},
-        child:
-            Icon(Icons.favorite), 
-      ),
+      // floatingActionButton: FloatingActionButton(
+      //   onPressed: () {},
+      //   child: FavoriteButton(widget.team),
+      // ),
     );
   }
 
@@ -63,7 +62,6 @@ class _DetailScreenState extends State<DetailScreen> {
   Widget _buildContent(ClubModel team) {
     return SafeArea(
       child: SingleChildScrollView(
-        padding: const EdgeInsets.all(10),
         child: Column(
           children: <Widget>[
             _buildHeader(team),
@@ -85,62 +83,72 @@ class _DetailScreenState extends State<DetailScreen> {
     double width = MediaQuery.of(context).size.width;
     double height = MediaQuery.of(context).size.height;
 
-    return Column(
-      children: [
-        Center(
-          child: Hero(
-            tag: team.team!,
-            child: Image.network(
-              team.badge!,
-              width: width / 1.5,
-              height: height / 2.5,
+    return Padding(
+      padding: const EdgeInsets.all(10),
+      child: Column(
+        children: [
+          Center(
+            child: Hero(
+              tag: team.team!,
+              child: Image.network(
+                team.badge!,
+                width: width / 1.5,
+                height: height / 2.5,
+              ),
             ),
           ),
-        ),
-        const SizedBox(height: 5),
-        Text(
-          team.team!,
-          style: TextStyle(
-            fontWeight: FontWeight.bold,
-            fontSize: width / 10,
-            color: hexToColor(team.colour1!),
-            shadows: [
-              Shadow(
-                offset: Offset(1.0, 1.0),
-                color: hexToColor(team.colour2!),
-                blurRadius: 3.0,
-              ),
-            ],
+          const SizedBox(height: 5),
+          Text(
+            team.team!,
+            style: TextStyle(
+              fontWeight: FontWeight.bold,
+              fontSize: width / 10,
+              color: hexToColor(team.colour1!),
+              shadows: [
+                Shadow(
+                  offset: Offset(1.0, 1.0),
+                  color: hexToColor(team.colour2!),
+                  blurRadius: 3.0,
+                ),
+              ],
+            ),
           ),
-        ),
-        FavoriteButton(team),
-      ],
+          FavoriteButton(team),
+        ],
+      ),
     );
   }
 
   Widget _buildInfo(ClubModel team) {
-    return Column(
-      children: [
-        Text(
-          "Formed Year: ${team.formedYear}",
-          style: const TextStyle(fontSize: 18),
-        ),
-        const SizedBox(height: 8),
-        Text(
-          "Stadium: ${team.stadium}",
-          style: const TextStyle(fontSize: 18),
-        ),
-      ],
+    return Padding(
+      padding: const EdgeInsets.all(10),
+      child: Column(
+        children: [
+          Text(
+            "Formed Year: ${team.formedYear}",
+            style: const TextStyle(fontSize: 18),
+          ),
+          const SizedBox(height: 8),
+          Text(
+            "Stadium: ${team.stadium}",
+            style: const TextStyle(fontSize: 18),
+          ),
+        ],
+      ),
     );
   }
 
   Widget _buildMediaSocials(ClubModel team) {
-    return Column(
-      children: [
-        _buildMediaItem(team.instagram!, Colors.pink, Ionicons.logo_instagram),
-        _buildMediaItem(team.youtube!, Colors.red, Ionicons.logo_youtube),
-        _buildMediaItem(team.facebook!, Colors.blue, Ionicons.logo_facebook),
-      ],
+    return Padding(
+      padding: const EdgeInsets.all(10),
+      child: Column(
+        children: [
+          _buildMediaItem(
+              team.instagram!, Colors.pink, Ionicons.logo_instagram),
+          _buildMediaItem(team.youtube!, Colors.red, Ionicons.logo_youtube),
+          _buildMediaItem(team.facebook!, Colors.blue, Ionicons.logo_facebook),
+        ],
+      ),
     );
   }
 
@@ -161,25 +169,29 @@ class _DetailScreenState extends State<DetailScreen> {
   }
 
   Widget _buildDescription(ClubModel team) {
-    return Container(
-      color: Colors.white,
-      child: Column(
-        children: [
-          CachedNetworkImage(
-            imageUrl: team.banner!,
-            fit: BoxFit.cover,
-          ),
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Text(team.desc!),
-          )
-        ],
+    return Padding(
+      padding: const EdgeInsets.all(10),
+      child: Container(
+        color: Colors.white,
+        child: Column(
+          children: [
+            CachedNetworkImage(
+              imageUrl: team.banner!,
+              fit: BoxFit.cover,
+            ),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Text(team.desc!),
+            )
+          ],
+        ),
       ),
     );
   }
 
   Widget _buildEquipmentObserver() {
-    return SizedBox(
+    return Container(
+      padding: const EdgeInsets.symmetric(vertical: 10),
       height: 200,
       child: AppObserverBuilder(
         commandQuery: _controller.dummyEquipmentCommand,

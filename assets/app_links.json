@@ -1,0 +1,13 @@
+{
+    "links": [
+      {
+        "url": "https://dxr3in.github.io/premiere-league-teams-flutter/home",
+        "description": "Halaman Home"
+      },
+      {
+        "url": "https://dxr3in.github.io/premiere-league-teams-flutter/detail",
+        "description": "Halaman Detail"
+      }
+    ]
+  }
+  

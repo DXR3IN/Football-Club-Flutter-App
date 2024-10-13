@@ -1,8 +1,10 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:get_it/get_it.dart';
 import 'package:logger/logger.dart';
 import 'package:mobx/mobx.dart';
+import 'package:premiere_league_v2/deep_link_handler.dart';
 import 'package:premiere_league_v2/firebase_handler.dart';
 
 import 'components/api_services/api_client.dart';
@@ -33,6 +35,8 @@ class AppNav {
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
+  FlutterNativeSplash.remove();
+
   await _dependencyInjection();
 
   mainContext.config = ReactiveConfig.main.clone(
@@ -50,14 +54,11 @@ Future _dependencyInjection() async {
   getIt.registerLazySingleton<IStorage>(() => SecureStorage());
   getIt.registerLazySingleton(() => Network.dioClient());
   getIt.registerLazySingleton(() => ApiClient(getIt()));
+  getIt.registerLazySingleton(() => DeepLinkHandler());
 
   // initialize firebase
   await firebaseHandler.initializeFirebase();
-
-  // Initialize the local notification service (if needed)
   await firebaseHandler.initializeNotifications();
-
-  // initialize the firebase listener for notification
   firebaseHandler.firebaseListener();
 }
 
@@ -70,6 +71,14 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
+  late DeepLinkHandler _deepLinkHandler;
+
+  @override
+  void initState() {
+    super.initState();
+    _deepLinkHandler = getIt<DeepLinkHandler>();
+  }
+
   @override
   Widget build(BuildContext context) {
     final appTheme = AppDefaultThemeData();

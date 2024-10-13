@@ -16,9 +16,11 @@ class HomeController extends BaseController {
 
   // Code to get all the FootBall Club in Premiere League
   FutureOr<List<HomeClubModel>> _getListTeamFC() async {
-    return _api.getApiFootballClubs().then((value) {
+    final List<HomeClubModel> teamList =
+        await _api.getApiFootballClubs().then((value) {
       return value?.map((e) => HomeClubModel.fromJson(e)).toList() ?? [];
     });
+    return teamList;
   }
 
   // To see the detail of the football team
@@ -31,6 +33,8 @@ class HomeController extends BaseController {
 
   // go to Favorite Page
   void onTapFavScreen() {
-    AppNav.navigator.pushNamed(AppRoute.favTeamFcScreen);
+    AppNav.navigator.pushNamed(
+      AppRoute.favTeamFcScreen,
+    );
   }
 }

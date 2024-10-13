@@ -14,14 +14,17 @@ class FavoriteScreen extends StatefulWidget {
 }
 
 class _FavoriteScreenState extends State<FavoriteScreen> {
-  final FavoriteController _favoriteController =
-      FavoriteController(getIt.get());
-  final HomeController _controller = HomeController(getIt.get());
+  late FavoriteController _favoriteController;
+  late HomeController _controller;
 
   @override
   void initState() {
     super.initState();
+    _favoriteController = FavoriteController();
+
     _favoriteController.favoriteCommand.execute();
+
+    _controller = HomeController(getIt.get());
   }
 
   @override
