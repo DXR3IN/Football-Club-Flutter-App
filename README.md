@@ -1,8 +1,8 @@
 # premiere_league_v2
 
-Link to open the app: <a>https://dxr3in.github.io/premiere-league-teams-flutter/home</a>
+Link to open the app: [Home link](https://dxr3in.github.io/premiere-league-teams-flutter/home)
 
-Link to open the detail club of arsenal: <a>https://dxr3in.github.io/premiere-league-teams-flutter/detail/Arsenal</a>
+Link to open the detail club of arsenal: [Detail link](https://dxr3in.github.io/premiere-league-teams-flutter/detail/Arsenal)
 
 ## Getting Started
 
