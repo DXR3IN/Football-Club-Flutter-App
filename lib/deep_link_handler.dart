@@ -15,11 +15,13 @@ class DeepLinkHandler {
     // Listen to the initial deep link when the app is started
     final initialLink = await _appLinks.getInitialLinkString();
     if (initialLink != null) {
+      print('Initial Deep Link: $initialLink');
       _handleDeepLink(initialLink);
     }
 
     // Listen to app links when the app is already running
     _appLinks.uriLinkStream.listen((Uri? uri) {
+      print('Deep Link Stream: $uri');
       if (uri != null) {
         _handleDeepLink(uri.toString());
       }
