@@ -1,6 +1,6 @@
 # premiere_league_v2
 
-A new Flutter project.
+Link to open the app: https://dxr3in.github.io/premiere-league-teams-flutter/
 
 ## Getting Started
 
