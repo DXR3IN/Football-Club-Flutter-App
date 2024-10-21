@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:mobx/mobx.dart';
 
 import 'package:premiere_league_v2/screens/home/model/home_club_model.dart';
 
@@ -11,15 +12,20 @@ import '../../../main.dart';
 class HomeController extends BaseController {
   final ApiClient _api;
   late final dummyTeamFCCommand = CommandQuery.create(_getListTeamFC);
+  final totalTeam = Observable<int>(0);
+  final isLoading = Observable<bool>(false);
 
   HomeController(this._api);
 
   // Code to get all the FootBall Club in Premiere League
   FutureOr<List<HomeClubModel>> _getListTeamFC() async {
+    isLoading.value = true;
     final List<HomeClubModel> teamList =
         await _api.getApiFootballClubs().then((value) {
       return value?.map((e) => HomeClubModel.fromJson(e)).toList() ?? [];
     });
+    totalTeam.value = teamList.length;
+    isLoading.value = false;
     return teamList;
   }
 

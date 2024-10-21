@@ -2,6 +2,7 @@ import 'dart:ui';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:premiere_league_v2/components/widget/app_observer_builder_widget.dart';
 import 'package:premiere_league_v2/main.dart';
 import 'package:premiere_league_v2/screens/home/controller/home_controller.dart';
@@ -185,7 +186,25 @@ class _HomeScreenState extends State<HomeScreen> {
                                 topRight: Radius.circular(10)),
                             color: Colors.white,
                           ),
-                          child: Center(child: Text("Premiere Teams")),
+                          child: Center(
+                            child: Observer(
+                              builder: (context) {
+                                final isLoading = _controller.isLoading.value;
+                                if (isLoading) {
+                                  return const Text(
+                                    "0 Premier Team",
+                                    style:
+                                        TextStyle(fontWeight: FontWeight.bold),
+                                  );
+                                }
+
+                                return Text(
+                                  "${_controller.totalTeam.value} Premier Team",
+                                  style: const TextStyle(fontWeight: FontWeight.bold),
+                                );
+                              },
+                            ),
+                          ),
                         ),
                       ),
                     ],
@@ -241,6 +260,7 @@ class _HomeScreenState extends State<HomeScreen> {
         controller: _searchController,
         decoration: InputDecoration(
           hintText: 'Search teams...',
+          hintStyle: const TextStyle(color: Colors.white),
           suffixIcon: _favoriteCaller(
             const Icon(
               Icons.star_border,
@@ -259,6 +279,8 @@ class _HomeScreenState extends State<HomeScreen> {
             borderSide: const BorderSide(color: Colors.white, width: 2.0),
           ),
         ),
+        cursorColor: Colors.white,
+        style: const TextStyle(color: Colors.white),
       ),
     );
   }
@@ -282,7 +304,7 @@ class _HomeScreenState extends State<HomeScreen> {
       },
       child: GridTile(
         child: Container(
-          padding: EdgeInsets.all(5),
+          padding: const EdgeInsets.all(5),
           decoration: const BoxDecoration(
             color: Colors.white,
             borderRadius: BorderRadius.all(Radius.circular(10)),

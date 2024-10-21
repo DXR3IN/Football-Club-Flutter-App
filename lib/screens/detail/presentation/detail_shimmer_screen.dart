@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:shimmer/shimmer.dart';
 
 Shimmer appShimmer(Widget child) {
@@ -25,9 +24,8 @@ class _DetailShimmerScreenState extends State<DetailShimmerScreen> {
         child: Column(
           children: <Widget>[
             _buildHeaderShimmer(),
-            const SizedBox(height: 13),
             _buildInfo(),
-            const SizedBox(height: 13),
+            const SizedBox(height: 26),
             _buildMediaSocials(),
             const SizedBox(height: 30),
           ],
@@ -44,20 +42,24 @@ class _DetailShimmerScreenState extends State<DetailShimmerScreen> {
       children: [
         appShimmer(Container(
           width: width,
-          height: 80,
+          height: width / 2,
           color: Colors.grey[300],
         )),
         Padding(
           padding: const EdgeInsets.all(10),
           child: Column(
             children: [
+              SizedBox(
+                width: width,
+                height: width / 15,
+              ),
               Center(
                 child: appShimmer(
                   Container(
                     width: width / 1.5,
                     height: height / 2.5,
                     decoration: ShapeDecoration(
-                        shape: CircleBorder(), color: Colors.grey[300]),
+                        shape: const CircleBorder(), color: Colors.grey[300]),
                   ),
                 ),
               ),

@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class AppDefaultThemeData {
   var colorPrimary50 = const Color(0xffffdddd);
   var colorPrimary100 = const Color(0xffffc0c0);
-  var colorPrimary200 = const Color.fromARGB(255, 39, 0, 82);
-  var colorPrimary300 = const Color.fromARGB(255, 48, 1, 98);
-  var colorPrimary400 = const Color.fromARGB(255, 61, 1, 124);
-  var colorPrimary500 = const Color.fromARGB(255, 32, 0, 83);
-  var colorPrimary600 = const Color.fromARGB(255, 32, 0, 83);
+  var colorPrimary200 = const Color.fromARGB(255, 107, 5, 216);
+  var colorPrimary300 = const Color.fromARGB(255, 94, 4, 189);
+  var colorPrimary400 = const Color.fromARGB(255, 93, 4, 187);
+  var colorPrimary500 = const Color.fromARGB(255, 67, 6, 166);
+  var colorPrimary600 = const Color.fromARGB(255, 66, 3, 133);
   var colorPrimary700 = const Color.fromARGB(255, 61, 1, 124);
   var colorPrimary800 = const Color.fromARGB(255, 48, 1, 98);
   var colorPrimary900 = const Color.fromARGB(255, 39, 0, 82);
@@ -43,7 +44,7 @@ class AppDefaultThemeData {
   ThemeData themeData() {
     return ThemeData(
         useMaterial3: false,
-        fontFamily: 'MMC',
+        textTheme: GoogleFonts.rethinkSansTextTheme(),
         colorScheme: ColorScheme.fromSwatch(
           primarySwatch: MaterialColor(
             colorPrimary500.value,

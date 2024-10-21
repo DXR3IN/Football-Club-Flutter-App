@@ -35,14 +35,13 @@ class AppNav {
 }
 
 // Background message handler
-  Future<void> _firebaseMessagingBackgroundHandler(
-      RemoteMessage message) async {
-    final notification = message.notification;
-    final notificationTitle = notification?.title ?? 'No Title';
-    final id = message.data['id'] ?? 'No ID';
+Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
+  final notification = message.notification;
+  final notificationTitle = notification?.title ?? 'No Title';
+  final id = message.data['id'] ?? 'No ID';
 
-    logger.i("Handling a background message: $notificationTitle && $id");
-  }
+  logger.i("Handling a background message: $notificationTitle && $id");
+}
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -71,7 +70,6 @@ Future _dependencyInjection() async {
   getIt.registerLazySingleton(() => Network.dioClient());
   getIt.registerLazySingleton(() => ApiClient(getIt()));
 
-  
   await firebaseHandler.initializeNotifications();
   await firebaseHandler.firebaseListener();
 }

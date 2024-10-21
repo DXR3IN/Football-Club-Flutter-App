@@ -1,4 +1,6 @@
+
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:ionicons/ionicons.dart';
@@ -7,7 +9,7 @@ import 'package:premiere_league_v2/components/widget/hex_to_color.dart';
 import 'package:premiere_league_v2/screens/detail/model/club_model.dart';
 import 'package:premiere_league_v2/main.dart';
 import 'package:premiere_league_v2/screens/detail/controller/detail_controller.dart';
-import 'package:premiere_league_v2/components/widget/favorite_button/favorite_button.dart';
+import 'package:premiere_league_v2/screens/detail/favorite_button/favorite_button.dart';
 import 'package:premiere_league_v2/screens/detail/model/equipment_model.dart';
 import 'package:premiere_league_v2/screens/detail/presentation/detail_shimmer_screen.dart';
 import 'package:shimmer/shimmer.dart';
@@ -29,9 +31,6 @@ class _DetailScreenState extends State<DetailScreen> {
   void initState() {
     super.initState();
     _controller = DetailController(getIt.get());
-    // // _controller.dummyEquipmentCommand.execute(widget.idTeam);
-    // _controller.dummyDetailClubModel.execute(widget.team);
-    // // _controller.favoriteCommand.execute(widget.data);
 
     // Fetch team and equipment details
     _controller.fetchTeamAndEquipment(widget.team);
@@ -41,7 +40,7 @@ class _DetailScreenState extends State<DetailScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.grey[200],
-      appBar: _buildAppBar(),
+      // appBar: _buildAppBar(),
       body: AppObserverBuilder(
         commandQuery: _controller.dummyDetailClubModel,
         onLoading: () => const DetailShimmerScreen(),
@@ -57,11 +56,17 @@ class _DetailScreenState extends State<DetailScreen> {
           final loading = _controller.isLoading.value;
 
           if (loading) {
-            return Shimmer.fromColors(
-              baseColor: Colors.grey[200]!,
-              highlightColor: Colors.white,
-              child: FloatingActionButton(
-                  child: Icon(Icons.favorite), onPressed: () {}),
+            return FloatingActionButton(
+              child: Shimmer.fromColors(
+                baseColor: Colors.grey[200]!,
+                highlightColor: Colors.white,
+                child: Icon(
+                  Icons.star,
+                  color: Colors.grey[200],
+                  size: 40,
+                ),
+              ),
+              onPressed: () {},
             );
           }
 
@@ -69,7 +74,7 @@ class _DetailScreenState extends State<DetailScreen> {
 
           // Check if the team is loaded
           if (team == ClubModel()) {
-            return SizedBox();
+            return const SizedBox();
           }
 
           // Build the favorite button when the team is available
@@ -79,12 +84,12 @@ class _DetailScreenState extends State<DetailScreen> {
     );
   }
 
-  PreferredSizeWidget _buildAppBar() {
-    return AppBar(
-      title: const Text("Detail Club"),
-      centerTitle: true,
-    );
-  }
+  // PreferredSizeWidget _buildAppBar() {
+  //   return AppBar(
+  //     title: const Text("Detail Club"),
+  //     centerTitle: true,
+  //   );
+  // }
 
   Widget _buildContent(ClubModel team) {
     return SafeArea(
@@ -92,14 +97,13 @@ class _DetailScreenState extends State<DetailScreen> {
         child: Column(
           children: <Widget>[
             _buildHeader(team),
-            const SizedBox(height: 13),
             _buildInfo(team),
-            const SizedBox(height: 13),
+            const SizedBox(height: 26),
             _buildMediaSocials(team),
             const SizedBox(height: 30),
-            _buildEquipmentObserver(),
-            const SizedBox(height: 30),
             _buildDescription(team),
+            const SizedBox(height: 30),
+            _buildEquipmentObserver(),
           ],
         ),
       ),
@@ -108,7 +112,6 @@ class _DetailScreenState extends State<DetailScreen> {
 
   Widget _buildHeader(ClubModel team) {
     double width = MediaQuery.of(context).size.width;
-    double height = MediaQuery.of(context).size.height;
 
     return Stack(
       children: [
@@ -124,9 +127,10 @@ class _DetailScreenState extends State<DetailScreen> {
         //     highlightColor: Colors.white,
         //   ),
         // ),
+
         Container(
           width: width,
-          height: width / 3,
+          height: width / 2,
           decoration: BoxDecoration(
             gradient: LinearGradient(
               begin: Alignment.topCenter,
@@ -134,7 +138,6 @@ class _DetailScreenState extends State<DetailScreen> {
               colors: [
                 hexToColor(team.colour1!),
                 hexToColor(team.colour2!),
-                Colors.grey[200]!
               ],
             ),
           ),
@@ -143,13 +146,33 @@ class _DetailScreenState extends State<DetailScreen> {
           padding: const EdgeInsets.all(10),
           child: Column(
             children: [
+              SizedBox(
+                width: width,
+                height: width / 15,
+                child: Align(
+                  alignment: Alignment.topLeft,
+                  child: IconButton(
+                    onPressed: () {
+                      AppNav.navigator.pop();
+                    },
+                    icon: const Icon(
+                      Icons.arrow_back_rounded,
+                      size: 30,
+                      color: Colors.white,
+                    ),
+                  ),
+                ),
+              ),
+              const SizedBox(
+                height: 20,
+              ),
               Center(
                 child: SizedBox(
                   child: Hero(
                     tag: team.team!,
                     child: CachedNetworkImage(
                       width: width / 1.5,
-                      height: height / 2.5,
+                      // height: height / 2.5,
                       imageUrl: team.badge!,
                       fit: BoxFit.contain,
                       placeholder: (context, url) => Image.asset(
@@ -169,7 +192,7 @@ class _DetailScreenState extends State<DetailScreen> {
                   color: hexToColor(team.colour1!),
                   shadows: [
                     Shadow(
-                      offset: Offset(1.0, 1.0),
+                      offset: const Offset(1.0, 1.0),
                       color: hexToColor(team.colour2!),
                       blurRadius: 3.0,
                     ),
@@ -203,10 +226,24 @@ class _DetailScreenState extends State<DetailScreen> {
   }
 
   Widget _buildMediaSocials(ClubModel team) {
-    return Padding(
+    return Container(
       padding: const EdgeInsets.all(10),
+      margin: const EdgeInsets.symmetric(horizontal: 10),
+      decoration: const BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.all(Radius.circular(10)),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black26,
+            blurRadius: 6.0,
+            spreadRadius: 2.0,
+            offset: Offset(3, 3),
+          ),
+        ],
+      ),
       child: Column(
         children: [
+          const Text("Social Media", style: const TextStyle(fontSize: 18)),
           _buildMediaItem(
               team.instagram!, Colors.pink, Ionicons.logo_instagram),
           _buildMediaItem(team.youtube!, Colors.red, Ionicons.logo_youtube),
@@ -245,7 +282,9 @@ class _DetailScreenState extends State<DetailScreen> {
             ),
             Padding(
               padding: const EdgeInsets.all(8.0),
-              child: Text(team.desc!),
+              child: Text(
+                team.desc!,
+              ),
             )
           ],
         ),
@@ -255,106 +294,140 @@ class _DetailScreenState extends State<DetailScreen> {
 
   Widget _buildEquipmentObserver() {
     return Container(
-      padding: const EdgeInsets.symmetric(vertical: 10),
-      height: 200,
-      child: AppObserverBuilder(
-        commandQuery: _controller.dummyEquipmentCommand,
-        onLoading: () {
-          return GridView.builder(
-            scrollDirection: Axis.horizontal,
-            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 1, mainAxisSpacing: 10),
-            itemCount: 3,
-            itemBuilder: (context, index) => Shimmer.fromColors(
-              baseColor: Colors.grey[300]!,
-              highlightColor: Colors.white,
-              child: Container(
-                decoration: const BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.all(Radius.circular(10)),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black26,
-                      blurRadius: 6.0,
-                      spreadRadius: 2.0,
-                      offset: Offset(3, 3),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          );
-        },
-        onError: (message) => Container(
-          color: Colors.red,
-          child: Center(
-            child: Text(message),
+      margin: const EdgeInsets.only(bottom: 20),
+      child: Column(
+        children: [
+          const Text("Equipment", style: const TextStyle(fontSize: 18)),
+          const SizedBox(
+            height: 10,
           ),
-        ),
-        child: (equipmentData) {
-          // Check if the data is null or empty
-          if (equipmentData == null || equipmentData.isEmpty) {
-            logger.i(
-                "Equipment is $equipmentData and runtimeType ${equipmentData.runtimeType}");
-            return const Center(child: Text("No equipment available"));
-          }
-
-          // Cast to the expected type (e.g., List<EquipmentModel>)
-          var equipmentList = equipmentData as List<EquipmentModel>;
-
-          return GridView.builder(
-            scrollDirection: Axis.horizontal,
-            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 1, mainAxisSpacing: 10),
-            itemCount: equipmentList.length,
-            itemBuilder: (BuildContext context, int index) {
-              var equipment = equipmentList[index];
-
-              return Container(
-                decoration: const BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.all(Radius.circular(10)),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black26,
-                      blurRadius: 6.0,
-                      spreadRadius: 2.0,
-                      offset: Offset(3, 3),
-                    ),
-                  ],
+          AppObserverBuilder(
+            commandQuery: _controller.dummyEquipmentCommand,
+            onLoading: () {
+              return CarouselSlider.builder(
+                itemCount: 3,
+                options: CarouselOptions(
+                  // viewportFraction: 2,
+                  // aspectRatio: 1 / 1,
+                  pageSnapping: false,
+                  initialPage: 2,
+                  enableInfiniteScroll: true,
+                  autoPlay: true,
+                  autoPlayAnimationDuration: const Duration(milliseconds: 800),
+                  // autoPlayCurve: Curves.fastOutSlowIn,
+                  enlargeCenterPage: true,
+                  enlargeFactor: 0.3,
+                  enlargeStrategy: CenterPageEnlargeStrategy.scale,
+                  scrollDirection: Axis.horizontal,
                 ),
-                child: Stack(fit: StackFit.expand, children: [
-                  CachedNetworkImage(
-                    imageUrl: equipment.strEquipment!,
-                    fit: BoxFit.cover,
-                    placeholder: (context, url) => Image.asset(
-                      "assets/placeholder/equipment-placeholder.png",
-                      fit: BoxFit.cover,
+                itemBuilder:
+                    (BuildContext context, int itemIndex, int pageViewIndex) =>
+                        Shimmer.fromColors(
+                  baseColor: Colors.grey[300]!,
+                  highlightColor: Colors.white,
+                  child: Container(
+                    decoration: const BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.all(Radius.circular(10)),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black26,
+                          blurRadius: 6.0,
+                          spreadRadius: 2.0,
+                          offset: Offset(3, 3),
+                        ),
+                      ],
                     ),
                   ),
-                  Center(
-                    child: Text(
-                      equipment.strSeason!,
-                      style: const TextStyle(
-                        fontStyle: FontStyle.italic,
-                        fontSize: 30,
-                        fontWeight: FontWeight.bold,
-                        color: const Color.fromARGB(255, 32, 0, 83),
-                        shadows: [
-                          Shadow(
-                            offset: Offset(1.0, 1.0),
-                            color: Colors.white,
-                            blurRadius: 3.0,
-                          ),
-                        ],
-                      ),
-                    ),
-                  )
-                ]),
+                ),
               );
             },
-          );
-        },
+            onError: (message) => Container(
+              color: Colors.red,
+              child: Center(
+                child: Text(message),
+              ),
+            ),
+            child: (equipmentData) {
+              // Check if the data is null or empty
+              if (equipmentData == null || equipmentData.isEmpty) {
+                logger.i(
+                    "Equipment is $equipmentData and runtimeType ${equipmentData.runtimeType}");
+                return const Center(child: Text("No equipment available"));
+              }
+
+              // Cast to the expected type (e.g., List<EquipmentModel>)
+              var equipmentList = equipmentData as List<EquipmentModel>;
+
+              return CarouselSlider.builder(
+                itemCount: equipmentList.length,
+                options: CarouselOptions(
+                  // viewportFraction: 1,
+                  height: 200,
+                  aspectRatio: 1 / 1,
+                  pageSnapping: false,
+                  initialPage: (equipmentList.length / 2).round(),
+                  enableInfiniteScroll: true,
+                  autoPlay: true,
+                  autoPlayAnimationDuration: Duration(milliseconds: 800),
+                  // autoPlayCurve: Curves.fastOutSlowIn,
+                  enlargeCenterPage: true,
+                  enlargeFactor: 0.3,
+                  enlargeStrategy: CenterPageEnlargeStrategy.scale,
+                  scrollDirection: Axis.horizontal,
+                ),
+                itemBuilder:
+                    (BuildContext context, int itemIndex, int pageViewIndex) {
+                  var equipment = equipmentList[itemIndex];
+
+                  return Container(
+                    padding: const EdgeInsets.all(5),
+                    decoration: const BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.all(Radius.circular(10)),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black26,
+                          blurRadius: 6.0,
+                          spreadRadius: 2.0,
+                          offset: Offset(3, 3),
+                        ),
+                      ],
+                    ),
+                    child: Stack(fit: StackFit.expand, children: [
+                      CachedNetworkImage(
+                        imageUrl: equipment.strEquipment!,
+                        fit: BoxFit.cover,
+                        placeholder: (context, url) => Image.asset(
+                          "assets/placeholder/equipment-placeholder.png",
+                          // fit: BoxFit.fill,
+                        ),
+                      ),
+                      Center(
+                        child: Text(
+                          equipment.strSeason!,
+                          style: const TextStyle(
+                            fontStyle: FontStyle.italic,
+                            fontSize: 30,
+                            fontWeight: FontWeight.bold,
+                            color: const Color.fromARGB(255, 32, 0, 83),
+                            shadows: [
+                              Shadow(
+                                offset: Offset(1.0, 1.0),
+                                color: Colors.white,
+                                blurRadius: 3.0,
+                              ),
+                            ],
+                          ),
+                        ),
+                      )
+                    ]),
+                  );
+                },
+              );
+            },
+          ),
+        ],
       ),
     );
   }
