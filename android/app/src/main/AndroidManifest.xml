@@ -5,7 +5,7 @@
     <application
         android:label="premiere_league_v2"
         android:name="${applicationName}"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@mipmap/launcher_icon"
         android:usesCleartextTraffic="true">
         <activity
             android:name=".MainActivity"
@@ -40,14 +40,11 @@
             </intent-filter>
             <intent-filter android:autoVerify="true">
                 <action android:name="android.intent.action.VIEW"/>
-
                 <category android:name="android.intent.category.DEFAULT"/>
                 <category android:name="android.intent.category.BROWSABLE"/>
-
                 <data
                     android:scheme="https"
-                    android:host="dxr3in.github.io"
-                    android:pathPrefix="/premiere-league-teams-flutter"/>
+                    android:host="www.mypremiere.com"/>
             </intent-filter>
         </activity>
         <!-- Don't delete the meta-data below.

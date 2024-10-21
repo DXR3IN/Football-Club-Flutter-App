@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:flutter/foundation.dart';
-import 'package:premiere_league_v2/components/api_services/api_client.dart';
 import 'package:premiere_league_v2/favorite_handler.dart';
 import 'package:premiere_league_v2/components/util/command_query.dart';
 import 'package:premiere_league_v2/screens/favorite/model/fav_club_model.dart';

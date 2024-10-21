@@ -60,7 +60,7 @@ class CommandQuery<TParam, TValue> {
       });
 
       final data = await handler(param);
-      logger.i("Data >>> $data");
+      logger.i("Data Length is fetched");
       _onData.value = data;
     } on Exception catch (e) {
       _thrownExceptions.value = e;

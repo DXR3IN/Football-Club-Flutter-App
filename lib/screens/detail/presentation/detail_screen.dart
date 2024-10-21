@@ -1,5 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:ionicons/ionicons.dart';
 import 'package:premiere_league_v2/components/widget/app_observer_builder_widget.dart';
 import 'package:premiere_league_v2/components/widget/hex_to_color.dart';
@@ -8,6 +9,8 @@ import 'package:premiere_league_v2/main.dart';
 import 'package:premiere_league_v2/screens/detail/controller/detail_controller.dart';
 import 'package:premiere_league_v2/components/widget/favorite_button/favorite_button.dart';
 import 'package:premiere_league_v2/screens/detail/model/equipment_model.dart';
+import 'package:premiere_league_v2/screens/detail/presentation/detail_shimmer_screen.dart';
+import 'package:shimmer/shimmer.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:logger/logger.dart';
 
@@ -41,14 +44,38 @@ class _DetailScreenState extends State<DetailScreen> {
       appBar: _buildAppBar(),
       body: AppObserverBuilder(
         commandQuery: _controller.dummyDetailClubModel,
-        onLoading: () => const Center(child: CircularProgressIndicator()),
+        onLoading: () => const DetailShimmerScreen(),
         onError: (error) => Center(child: Text('Error: $error')),
-        child: (team) => _buildContent(team),
+        child: (team) {
+          _controller.teamFc.value = team;
+          return _buildContent(team);
+        },
       ),
-      // floatingActionButton: FloatingActionButton(
-      //   onPressed: () {},
-      //   child: FavoriteButton(widget.team),
-      // ),
+      floatingActionButton: Observer(
+        builder: (context) {
+          // Check the loading state from the controller
+          final loading = _controller.isLoading.value;
+
+          if (loading) {
+            return Shimmer.fromColors(
+              baseColor: Colors.grey[200]!,
+              highlightColor: Colors.white,
+              child: FloatingActionButton(
+                  child: Icon(Icons.favorite), onPressed: () {}),
+            );
+          }
+
+          final team = _controller.teamFc.value;
+
+          // Check if the team is loaded
+          if (team == ClubModel()) {
+            return SizedBox();
+          }
+
+          // Build the favorite button when the team is available
+          return FavoriteButton(team);
+        },
+      ),
     );
   }
 
@@ -83,39 +110,76 @@ class _DetailScreenState extends State<DetailScreen> {
     double width = MediaQuery.of(context).size.width;
     double height = MediaQuery.of(context).size.height;
 
-    return Padding(
-      padding: const EdgeInsets.all(10),
-      child: Column(
-        children: [
-          Center(
-            child: Hero(
-              tag: team.team!,
-              child: Image.network(
-                team.badge!,
-                width: width / 1.5,
-                height: height / 2.5,
-              ),
-            ),
-          ),
-          const SizedBox(height: 5),
-          Text(
-            team.team!,
-            style: TextStyle(
-              fontWeight: FontWeight.bold,
-              fontSize: width / 10,
-              color: hexToColor(team.colour1!),
-              shadows: [
-                Shadow(
-                  offset: Offset(1.0, 1.0),
-                  color: hexToColor(team.colour2!),
-                  blurRadius: 3.0,
-                ),
+    return Stack(
+      children: [
+        // CachedNetworkImage(
+        //   imageUrl: team.banner!,
+        //   placeholder: (context, url) => Shimmer.fromColors(
+        //     child: Container(
+        //       width: width,
+        //       height: 75,
+        //       color: Colors.grey[300],
+        //     ),
+        //     baseColor: Colors.grey[300]!,
+        //     highlightColor: Colors.white,
+        //   ),
+        // ),
+        Container(
+          width: width,
+          height: width / 3,
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+              colors: [
+                hexToColor(team.colour1!),
+                hexToColor(team.colour2!),
+                Colors.grey[200]!
               ],
             ),
           ),
-          FavoriteButton(team),
-        ],
-      ),
+        ),
+        Padding(
+          padding: const EdgeInsets.all(10),
+          child: Column(
+            children: [
+              Center(
+                child: SizedBox(
+                  child: Hero(
+                    tag: team.team!,
+                    child: CachedNetworkImage(
+                      width: width / 1.5,
+                      height: height / 2.5,
+                      imageUrl: team.badge!,
+                      fit: BoxFit.contain,
+                      placeholder: (context, url) => Image.asset(
+                        "assets/placeholder/logoclub-placeholder.png",
+                        fit: BoxFit.contain,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+              const SizedBox(height: 5),
+              Text(
+                team.team!,
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: width / 10,
+                  color: hexToColor(team.colour1!),
+                  shadows: [
+                    Shadow(
+                      offset: Offset(1.0, 1.0),
+                      color: hexToColor(team.colour2!),
+                      blurRadius: 3.0,
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
+      ],
     );
   }
 
@@ -195,9 +259,32 @@ class _DetailScreenState extends State<DetailScreen> {
       height: 200,
       child: AppObserverBuilder(
         commandQuery: _controller.dummyEquipmentCommand,
-        onLoading: () => const Center(
-          child: CircularProgressIndicator(),
-        ),
+        onLoading: () {
+          return GridView.builder(
+            scrollDirection: Axis.horizontal,
+            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 1, mainAxisSpacing: 10),
+            itemCount: 3,
+            itemBuilder: (context, index) => Shimmer.fromColors(
+              baseColor: Colors.grey[300]!,
+              highlightColor: Colors.white,
+              child: Container(
+                decoration: const BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.all(Radius.circular(10)),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black26,
+                      blurRadius: 6.0,
+                      spreadRadius: 2.0,
+                      offset: Offset(3, 3),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          );
+        },
         onError: (message) => Container(
           color: Colors.red,
           child: Center(
@@ -219,7 +306,7 @@ class _DetailScreenState extends State<DetailScreen> {
             scrollDirection: Axis.horizontal,
             gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                 crossAxisCount: 1, mainAxisSpacing: 10),
-            itemCount: equipmentList.length, // Use the length of the list
+            itemCount: equipmentList.length,
             itemBuilder: (BuildContext context, int index) {
               var equipment = equipmentList[index];
 
@@ -240,6 +327,10 @@ class _DetailScreenState extends State<DetailScreen> {
                   CachedNetworkImage(
                     imageUrl: equipment.strEquipment!,
                     fit: BoxFit.cover,
+                    placeholder: (context, url) => Image.asset(
+                      "assets/placeholder/equipment-placeholder.png",
+                      fit: BoxFit.cover,
+                    ),
                   ),
                   Center(
                     child: Text(
@@ -270,10 +361,6 @@ class _DetailScreenState extends State<DetailScreen> {
 
   Future<void> _launchUrl(String url) async {
     final Uri uri = Uri.parse(url);
-    if (await canLaunchUrl(uri)) {
-      await launchUrl(uri);
-    } else {
-      throw 'Could not launch $url';
-    }
+    await launchUrl(uri);
   }
 }

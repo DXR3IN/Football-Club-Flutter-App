@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:mobx/mobx.dart';
 import 'package:premiere_league_v2/components/base/base_controller.dart';
 import 'package:premiere_league_v2/components/notification_service/local_notification_service.dart';
@@ -46,10 +44,12 @@ class FavoriteButtonController extends BaseController {
 
     if (currentStatus) {
       await _removeFromFavorites(favFootballTeam);
-      _showNotification(favFootballTeam.idTeam!, 'Not your favorite', 'Removed from favorites');
+      _showNotification(favFootballTeam.idTeam!, 'Not your favorite',
+          'Removed from favorites');
     } else {
       await _addToFavorites(favFootballTeam);
-      _showNotification(favFootballTeam.idTeam!, 'Your new favorite', 'Added to favorites');
+      _showNotification(
+          favFootballTeam.idTeam!, 'Your new favorite', 'Added to favorites');
     }
 
     runInAction(() {

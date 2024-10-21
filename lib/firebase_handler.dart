@@ -1,5 +1,4 @@
 import 'dart:convert';
-
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:premiere_league_v2/components/notification_service/local_notification_service.dart';
@@ -12,64 +11,84 @@ class FirebaseHandler {
   final LocalNotificationService notificationService =
       LocalNotificationService();
 
-  // function for firebase messaging background handler
-  Future<void> _firebaseMessagingBackgroundHandler(
-      RemoteMessage message) async {
-    logger.i(
-        "Handling a background message: ${message.notification!.title} && ${message.data['id']}");
-  }
-
-  // function to initialize firebase and all another function to help it
-  Future initializeFirebase() async {
+  // Function to initialize Firebase and necessary permissions
+  Future<void> initializeFirebase() async {
+    
     await notificationService.initNotification();
+
     // Initialize Firebase
     await Firebase.initializeApp();
 
+    // Request notification permissions
     await Permission.requestPermision();
   }
 
-  // function to initializw notification
+  // Function to initialize notifications
   Future<void> initializeNotifications() async {
     await notificationService.initNotification();
+
+    // Get the Firebase Messaging token
     FirebaseMessaging.instance.getToken().then((String? token) {
-      logger.i("Firebase Messaging Token: $token");
+      if (token != null) {
+        logger.i("Firebase Messaging Token: $token");
+      } else {
+        logger.w("Firebase Messaging Token is null");
+      }
+    }).catchError((error) {
+      logger.e("Error getting Firebase Messaging token: $error");
     });
   }
 
-  // function to initialize firebase listener
-  void firebaseListener() {
-    FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
-
-    // Listen to Firebase messages while the app is in the foreground
+  // Function to initialize Firebase message listeners
+  Future<void> firebaseListener() async {
+    // Listen for messages when the app is in the foreground
     FirebaseMessaging.onMessage.listen((RemoteMessage message) {
-      if (message.notification != null) {
+      final notification = message.notification;
+      if (notification != null) {
         notificationService.showLocalNotification(
           id: DateTime.now().millisecondsSinceEpoch ~/ 1000,
-          title: message.notification!.title,
-          body: message.notification!.body,
+          title: notification.title ?? 'No Title',
+          body: notification.body ?? 'No Body',
           payload: message.data.toString(),
         );
       }
     });
 
-    // Handle messages when the app is opened
+    // Handle messages when the app is opened from a notification
     FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
-      if (message.notification != null) {
-        logger.i("Notification clicked: ${message.notification!.title}");
-        NotificationModel notificationResponse =
-            NotificationModel.fromJson(jsonDecode(message.data.toString()));
-        notificationService.actionForNotification(notificationResponse);
+      final notification = message.notification;
+      if (notification != null) {
+        logger.i("Notification clicked: ${notification.title}");
+
+        // Deserialize the data
+        try {
+          NotificationModel notificationResponse =
+              NotificationModel.fromJson(jsonDecode(message.data.toString()));
+          notificationService.actionForNotification(notificationResponse);
+        } catch (e) {
+          logger.e("Error parsing notification data: $e");
+        }
       }
     });
   }
 
+  // Subscribe to a topic for team notifications
   static Future<void> subscribeHandler(String teamName) async {
-    logger.i("Subscribed to $teamName");
-    await FirebaseMessaging.instance.subscribeToTopic(teamName);
+    try {
+      logger.i("Subscribed to $teamName");
+      await FirebaseMessaging.instance.subscribeToTopic(teamName);
+    } catch (e) {
+      logger.e("Error subscribing to $teamName: $e");
+    }
   }
 
+  // Unsubscribe from a topic for team notifications
   static Future<void> unsubscribeHandler(String teamName) async {
-    logger.i("Unsubscribed to $teamName");
-    await FirebaseMessaging.instance.unsubscribeFromTopic(teamName);
+    try {
+      logger.i("Unsubscribed from $teamName");
+      await FirebaseMessaging.instance.unsubscribeFromTopic(teamName);
+    } catch (e) {
+      logger.e("Error unsubscribing from $teamName: $e");
+    }
   }
 }

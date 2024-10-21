@@ -31,16 +31,17 @@ class _FavoriteButtonState extends State<FavoriteButton> {
         bool isFavorite = _controller.isFavorite.value;
 
         logger.i("Favorite status is $isFavorite");
-        return IconButton(
-          icon: Icon(
-            isFavorite ? Icons.favorite : Icons.favorite_border,
-            color: isFavorite ? Colors.red : null,
-          ),
+        return FloatingActionButton(
           onPressed: () async {
             // Use the existing favFootballTeam from the controller
             await _controller.favoriteCommand
                 .execute(_controller.favFootballTeam);
           },
+          child: Icon(
+            isFavorite ? Icons.star : Icons.star_border,
+            color: isFavorite ? Colors.red : null,
+            size: 40,
+          ),
         );
       },
     );

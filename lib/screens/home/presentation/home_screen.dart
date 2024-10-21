@@ -2,11 +2,11 @@ import 'dart:ui';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:premiere_league_v2/components/config/app_const.dart';
 import 'package:premiere_league_v2/components/widget/app_observer_builder_widget.dart';
 import 'package:premiere_league_v2/main.dart';
 import 'package:premiere_league_v2/screens/home/controller/home_controller.dart';
 import 'package:premiere_league_v2/screens/home/model/home_club_model.dart';
+import 'package:premiere_league_v2/screens/home/presentation/home_shimmer_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -51,58 +51,151 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: _body(),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+      floatingActionButton: _favoriteCaller(
+        Container(
+          padding: const EdgeInsets.all(10),
+          decoration: const BoxDecoration(
+            color: Colors.deepPurple,
+            image: DecorationImage(
+                image: AssetImage("assets/background.jpg"), fit: BoxFit.cover),
+            borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(100),
+              topRight: Radius.circular(100),
+            ),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black26,
+                blurRadius: 6.0,
+                spreadRadius: 2.0,
+                offset: Offset(3, 3),
+              ),
+            ],
+          ),
+          child: const Icon(
+            Icons.star_border,
+            color: Colors.white,
+            size: 35,
+          ),
+        ),
+      ),
     );
   }
 
   Widget _body() {
-    return CustomScrollView(
-      slivers: [
-        _sliverAppBar(),
-        _navBar(),
-        SliverPadding(
-          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
-          sliver: AppObserverBuilder(
-            commandQuery: _controller.dummyTeamFCCommand,
-            onLoading: () => SliverToBoxAdapter(
-                child: Container(height: 400, child: _loading())),
-            child: (data) {
-              return _contentBody(data);
-            },
-          ),
-        ),
-      ],
-    );
-  }
-
-  Widget _sliverAppBar() {
-    return SliverAppBar(
-      pinned: true,
-      floating: true,
-      expandedHeight: 200.0,
-      flexibleSpace: FlexibleSpaceBar(
-        background: Stack(
-          fit: StackFit.expand,
+    return SafeArea(
+      child: SingleChildScrollView(
+        child: Column(
           children: [
-            Image.asset(
-              "assets/banner/premier-league-banner.jpg",
-              fit: BoxFit.cover,
+            // _sliverAppBar(),
+            _navBar(),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 12),
+              child: AppObserverBuilder(
+                commandQuery: _controller.dummyTeamFCCommand,
+                onLoading: () => const HomeShimmerScreen(),
+                child: (data) {
+                  return _contentBody(data);
+                },
+              ),
             ),
           ],
         ),
-        title: Text(AppConst.appName),
-        centerTitle: true,
       ),
     );
   }
 
+  // Widget _sliverAppBar() {
+  //   return SliverAppBar(
+  //     automaticallyImplyLeading: false,
+  //     pinned: true,
+  //     floating: true,
+  //     expandedHeight: 200.0,
+  //     flexibleSpace: FlexibleSpaceBar(
+  //       background: Stack(
+  //         fit: StackFit.expand,
+  //         children: [
+  //           ClipRRect(
+  //             borderRadius: BorderRadius.only(
+  //                 bottomLeft: Radius.circular(200),
+  //                 bottomRight: Radius.circular(50)),
+  //             child: Image.asset(
+  //               "assets/banner/premiere-league-banner2.png",
+  //               fit: BoxFit.fill,
+  //             ),
+  //           ),
+  //         ],
+  //       ),
+  //       title: Text(AppConst.appName),
+  //       centerTitle: true,
+  //     ),
+  //   );
+  // }
+
   Widget _navBar() {
-    return SliverToBoxAdapter(
-      child: Padding(
-        padding: EdgeInsets.symmetric(horizontal: 12),
-        child: Row(
-          children: [_searchBar(), _favorite()],
+    return Stack(
+      children: [
+        ClipRRect(
+            borderRadius: const BorderRadius.only(
+                bottomLeft: Radius.circular(30),
+                bottomRight: Radius.circular(30)),
+            child: Image.asset("assets/background.jpg")),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
+          child: Column(
+            children: [
+              const SizedBox(
+                height: 12,
+              ),
+              Row(
+                children: [_searchBar()],
+              ),
+              Padding(
+                padding: const EdgeInsets.only(
+                    bottom: 20, left: 30, right: 30, top: 40),
+                child: Container(
+                  height: MediaQuery.of(context).size.width / 2 - 22,
+                  decoration: const BoxDecoration(
+                    image: DecorationImage(
+                      image: AssetImage(
+                          "assets/banner/premiere-league-banner2.png"),
+                      fit: BoxFit.cover,
+                    ),
+                    color: Colors.white,
+                    borderRadius: BorderRadius.all(Radius.circular(10)),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black26,
+                        blurRadius: 6.0,
+                        spreadRadius: 2.0,
+                        offset: Offset(3, 3),
+                      ),
+                    ],
+                  ),
+                  child: Stack(
+                    children: [
+                      Align(
+                        alignment: Alignment.bottomCenter,
+                        child: Container(
+                          width: 200,
+                          height: 20,
+                          decoration: const BoxDecoration(
+                            borderRadius: BorderRadius.only(
+                                topLeft: Radius.circular(10),
+                                topRight: Radius.circular(10)),
+                            color: Colors.white,
+                          ),
+                          child: Center(child: Text("Premiere Teams")),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ],
+          ),
         ),
-      ),
+      ],
     );
   }
 
@@ -110,19 +203,35 @@ class _HomeScreenState extends State<HomeScreen> {
     final displayList =
         _searchController.text.isEmpty ? listTeam : _filteredTeams;
 
-    return SliverGrid(
-      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: 2,
+    final width = MediaQuery.of(context).size.width;
+
+    int crossAxisCount;
+    if (width > 1200) {
+      // Large screens (e.g., tablets or desktops)
+      crossAxisCount = 8;
+    } else if (width > 800) {
+      // Medium screens (e.g., large phones)
+      crossAxisCount = 5;
+    } else if (width > 600) {
+      crossAxisCount = 3;
+    } else {
+      // Small screens (e.g., regular phones)
+      crossAxisCount = 2;
+    }
+
+    return GridView.builder(
+      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+        crossAxisCount: crossAxisCount,
         childAspectRatio: 1.0,
         mainAxisSpacing: 8.0,
         crossAxisSpacing: 8.0,
       ),
-      delegate: SliverChildBuilderDelegate(
-        (BuildContext context, int index) {
-          return _itemCardFC(displayList[index]);
-        },
-        childCount: displayList.length,
-      ),
+      shrinkWrap: true,
+      physics: const NeverScrollableScrollPhysics(),
+      itemCount: displayList.length,
+      itemBuilder: (BuildContext context, int index) {
+        return _itemCardFC(displayList[index]);
+      },
     );
   }
 
@@ -132,20 +241,32 @@ class _HomeScreenState extends State<HomeScreen> {
         controller: _searchController,
         decoration: InputDecoration(
           hintText: 'Search teams...',
-          fillColor: Colors.red,
-          prefixIcon: const Icon(Icons.search),
-          border: OutlineInputBorder(
+          suffixIcon: _favoriteCaller(
+            const Icon(
+              Icons.star_border,
+            ),
+          ),
+          suffixIconColor: Colors.white,
+          fillColor: Colors.white,
+          iconColor: Colors.white,
+          focusColor: Colors.white,
+          prefixIcon: const Icon(
+            Icons.search,
+            color: Colors.white,
+          ),
+          focusedBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(8.0),
+            borderSide: const BorderSide(color: Colors.white, width: 2.0),
           ),
         ),
       ),
     );
   }
 
-  Widget _favorite() {
-    return IconButton(
-      icon: const Icon(Icons.favorite, color: Colors.red),
-      onPressed: () {
+  Widget _favoriteCaller(Widget icon) {
+    return GestureDetector(
+      child: icon,
+      onTap: () {
         _controller.onTapFavScreen();
       },
     );
@@ -161,7 +282,7 @@ class _HomeScreenState extends State<HomeScreen> {
       },
       child: GridTile(
         child: Container(
-          padding: const EdgeInsets.all(10),
+          padding: EdgeInsets.all(5),
           decoration: const BoxDecoration(
             color: Colors.white,
             borderRadius: BorderRadius.all(Radius.circular(10)),
@@ -175,37 +296,43 @@ class _HomeScreenState extends State<HomeScreen> {
             ],
           ),
           child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              Container(
-                padding: const EdgeInsets.all(10),
-                decoration: const BoxDecoration(
-                  borderRadius: BorderRadius.all(Radius.circular(10)),
-                ),
-                child: Hero(
-                  tag: footballClub.team!,
-                  child: CachedNetworkImage(
-                    width: 120,
-                    height: 120,
-                    imageUrl: imageUrl,
-                    placeholder: (context, url) => _loading(),
-                    errorWidget: (context, url, error) =>
-                        const Icon(Icons.error),
-                    fit: BoxFit.cover,
+              Flexible(
+                child: Container(
+                  padding: const EdgeInsets.all(10),
+                  decoration: const BoxDecoration(
+                    borderRadius: BorderRadius.all(Radius.circular(10)),
+                  ),
+                  child: Hero(
+                    tag: footballClub.team!,
+                    child: CachedNetworkImage(
+                      imageUrl: imageUrl,
+                      placeholder: (context, url) => Image.asset(
+                        "assets/placeholder/logoclub-placeholder.png",
+                        fit: BoxFit.fill,
+                      ),
+                      errorWidget: (context, url, error) =>
+                          const Icon(Icons.error),
+                      fit: BoxFit.fill,
+                      fadeInDuration: const Duration(milliseconds: 300),
+                    ),
                   ),
                 ),
               ),
-              Container(
-                padding: const EdgeInsets.all(5),
-                child: Center(
-                  child: Text(footballClub.team!),
+              const SizedBox(height: 8),
+              Text(
+                footballClub.team!,
+                textAlign: TextAlign.center,
+                style: const TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.w400,
                 ),
-              )
+              ),
             ],
           ),
         ),
       ),
     );
   }
-
-  Widget _loading() => const Center(child: CircularProgressIndicator());
 }

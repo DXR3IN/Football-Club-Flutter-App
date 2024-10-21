@@ -6,13 +6,34 @@ import 'package:premiere_league_v2/components/config/app_route.dart';
 import 'package:premiere_league_v2/components/notification_service/model/notification_model.dart';
 import 'package:premiere_league_v2/main.dart';
 
+// top level for checking
+void notificationRedirectHandler(
+    NotificationResponse notificationResponse) async {
+  try {
+    // Convert payload to valid JSON format
+    String payloadString = notificationResponse.payload.toString();
+
+    // Attempt to parse the payload
+    NotificationModel notificationPayload =
+        NotificationModel.fromJson(jsonDecode(payloadString));
+
+    logger.i("Successfully handled redirect: $notificationPayload");
+
+    // Perform the notification action
+    LocalNotificationService().actionForNotification(notificationPayload);
+  } catch (e) {
+    // Log the error for debugging
+    logger.e("Failed to handle notification redirect: $e");
+  }
+}
+
 class LocalNotificationService {
   final FlutterLocalNotificationsPlugin notificationsPlugin =
       FlutterLocalNotificationsPlugin();
 
   Future<void> initNotification() async {
     const AndroidInitializationSettings initializationAndroidSettings =
-        AndroidInitializationSettings('logo');
+        AndroidInitializationSettings('@drawable/logo');
 
     final DarwinInitializationSettings initializationSettingIOS =
         DarwinInitializationSettings(
@@ -90,25 +111,5 @@ class LocalNotificationService {
         priority: Priority.high,
       ),
     );
-  }
-}
-
-void notificationRedirectHandler(
-    NotificationResponse notificationResponse) async {
-  try {
-    // Convert payload to valid JSON format
-    String payloadString = notificationResponse.payload.toString();
-
-    // Attempt to parse the payload
-    NotificationModel notificationPayload =
-        NotificationModel.fromJson(jsonDecode(payloadString));
-
-    logger.i("Successfully handled redirect: $notificationPayload");
-
-    // Perform the notification action
-    LocalNotificationService().actionForNotification(notificationPayload);
-  } catch (e) {
-    // Log the error for debugging
-    logger.e("Failed to handle notification redirect: $e");
   }
 }

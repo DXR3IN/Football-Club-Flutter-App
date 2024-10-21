@@ -43,6 +43,21 @@ class _FavoriteScreenState extends State<FavoriteScreen> {
   }
 
   Widget _contentBody() {
+    final width = MediaQuery.of(context).size.width;
+
+    int crossAxisCount;
+    if (width > 1200) {
+      // Large screens (e.g., tablets or desktops)
+      crossAxisCount = 8;
+    } else if (width > 800) {
+      // Medium screens (e.g., large phones)
+      crossAxisCount = 5;
+    } else if (width > 600) {
+      crossAxisCount = 3;
+    } else {
+      // Small screens (e.g., regular phones)
+      crossAxisCount = 2;
+    }
     return AppObserverBuilder(
       commandQuery: _favoriteController.favoriteCommand,
       onLoading: () => const Center(child: CircularProgressIndicator()),
@@ -54,7 +69,7 @@ class _FavoriteScreenState extends State<FavoriteScreen> {
         }
 
         return GridView.count(
-          crossAxisCount: 2,
+          crossAxisCount: crossAxisCount,
           childAspectRatio: 1.0,
           padding: const EdgeInsets.all(8.0),
           mainAxisSpacing: 8.0,
@@ -87,36 +102,39 @@ class _FavoriteScreenState extends State<FavoriteScreen> {
               ],
             ),
             child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                Container(
-                  padding: const EdgeInsets.all(10),
-                  decoration: const BoxDecoration(
-                    borderRadius: BorderRadius.all(Radius.circular(10)),
-                  ),
-                  child: Hero(
-                    tag: footballClub.team ?? 'default-tag',
-                    child: CachedNetworkImage(
-                      height: 120,
-                      width: 120,
-                      imageUrl: imageUrl,
-                      placeholder: (context, url) =>
-                          Container(color: Colors.grey[200]),
-                      errorWidget: (context, url, error) =>
-                          const Icon(Icons.error),
-                      fit: BoxFit.cover,
-                      fadeInDuration: const Duration(milliseconds: 300),
+                Expanded(
+                  child: Container(
+                    padding: const EdgeInsets.all(10),
+                    decoration: const BoxDecoration(
+                      borderRadius: BorderRadius.all(Radius.circular(10)),
+                    ),
+                    child: Hero(
+                      tag: footballClub.team ?? 'default-tag',
+                      child: CachedNetworkImage(
+                        height: 120,
+                        width: 120,
+                        imageUrl: imageUrl,
+                        placeholder: (context, url) => Image.asset(
+                          "assets/placeholder/logoclub-placeholder.png",
+                          fit: BoxFit.fill,
+                        ),
+                        errorWidget: (context, url, error) =>
+                            const Icon(Icons.error),
+                        fit: BoxFit.fill,
+                        fadeInDuration: const Duration(milliseconds: 300),
+                      ),
                     ),
                   ),
                 ),
-                Container(
-                  padding: const EdgeInsets.all(5),
-                  child: Center(
-                    child: Text(
-                      footballClub.team!,
-                      style: const TextStyle(
-                        fontSize: 15,
-                      ),
-                    ),
+                const SizedBox(height: 8),
+                Text(
+                  footballClub.team!,
+                  textAlign: TextAlign.center,
+                  style: const TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w400,
                   ),
                 ),
               ],
