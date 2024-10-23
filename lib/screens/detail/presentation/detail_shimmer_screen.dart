@@ -1,3 +1,4 @@
+import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:shimmer/shimmer.dart';
 
@@ -24,10 +25,11 @@ class _DetailShimmerScreenState extends State<DetailShimmerScreen> {
         child: Column(
           children: <Widget>[
             _buildHeaderShimmer(),
-            _buildInfo(),
-            const SizedBox(height: 26),
-            _buildMediaSocials(),
+            _buildInfoShimmer(),
             const SizedBox(height: 30),
+            _buildEquipmentShimmer(),
+            const SizedBox(height: 26),
+            _buildMediaSocialsShimmer(),
           ],
         ),
       ),
@@ -78,7 +80,7 @@ class _DetailShimmerScreenState extends State<DetailShimmerScreen> {
     );
   }
 
-  Widget _buildInfo() {
+  Widget _buildInfoShimmer() {
     return Padding(
       padding: const EdgeInsets.all(10),
       child: Column(
@@ -105,7 +107,46 @@ class _DetailShimmerScreenState extends State<DetailShimmerScreen> {
     );
   }
 
-  Widget _buildMediaSocials() {
+  Widget _buildEquipmentShimmer() {
+    return CarouselSlider.builder(
+      itemCount: 3,
+      options: CarouselOptions(
+        viewportFraction: 0.5,
+        // aspectRatio: 1 / 1,
+        pageSnapping: false,
+        initialPage: 2,
+        enableInfiniteScroll: true,
+        autoPlay: false,
+        autoPlayAnimationDuration: const Duration(milliseconds: 800),
+        // autoPlayCurve: Curves.fastOutSlowIn,
+        enlargeCenterPage: true,
+        enlargeFactor: 0.3,
+        enlargeStrategy: CenterPageEnlargeStrategy.scale,
+        scrollDirection: Axis.horizontal,
+      ),
+      itemBuilder: (BuildContext context, int itemIndex, int pageViewIndex) =>
+          Shimmer.fromColors(
+        baseColor: Colors.grey[300]!,
+        highlightColor: Colors.white,
+        child: Container(
+          decoration: const BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.all(Radius.circular(10)),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black26,
+                blurRadius: 6.0,
+                spreadRadius: 2.0,
+                offset: Offset(3, 3),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildMediaSocialsShimmer() {
     return Padding(
       padding: const EdgeInsets.all(10),
       child: Column(

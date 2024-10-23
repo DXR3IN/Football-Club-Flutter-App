@@ -1,4 +1,3 @@
-
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
@@ -98,12 +97,14 @@ class _DetailScreenState extends State<DetailScreen> {
           children: <Widget>[
             _buildHeader(team),
             _buildInfo(team),
+            const SizedBox(height: 30),
+            _buildEquipmentObserver(),
             const SizedBox(height: 26),
             _buildMediaSocials(team),
             const SizedBox(height: 30),
             _buildDescription(team),
-            const SizedBox(height: 30),
-            _buildEquipmentObserver(),
+            const SizedBox(height: 20),
+            _bottomDesign(team)
           ],
         ),
       ),
@@ -282,8 +283,32 @@ class _DetailScreenState extends State<DetailScreen> {
             ),
             Padding(
               padding: const EdgeInsets.all(8.0),
-              child: Text(
-                team.desc!,
+              child: Observer(
+                builder: (context) {
+                  return GestureDetector(
+                    onTap: () {
+                      _controller.descIsLong.value =
+                          !(_controller.descIsLong.value);
+                    },
+                    child: Column(
+                      children: [
+                        Text(
+                          team.desc!,
+                          maxLines: _controller.descIsLong.value ? 7 : null,
+                          overflow: _controller.descIsLong.value
+                              ? TextOverflow.ellipsis
+                              : null,
+                        ),
+                        Text(
+                          _controller.descIsLong.value
+                              ? "Show More"
+                              : "Show Less",
+                          style: TextStyle(color: Colors.blueAccent),
+                        ),
+                      ],
+                    ),
+                  );
+                },
               ),
             )
           ],
@@ -307,7 +332,7 @@ class _DetailScreenState extends State<DetailScreen> {
               return CarouselSlider.builder(
                 itemCount: 3,
                 options: CarouselOptions(
-                  // viewportFraction: 2,
+                  viewportFraction: 0.5,
                   // aspectRatio: 1 / 1,
                   pageSnapping: false,
                   initialPage: 2,
@@ -362,14 +387,14 @@ class _DetailScreenState extends State<DetailScreen> {
               return CarouselSlider.builder(
                 itemCount: equipmentList.length,
                 options: CarouselOptions(
-                  // viewportFraction: 1,
+                  viewportFraction: 0.5,
                   height: 200,
                   aspectRatio: 1 / 1,
                   pageSnapping: false,
                   initialPage: (equipmentList.length / 2).round(),
                   enableInfiniteScroll: true,
                   autoPlay: true,
-                  autoPlayAnimationDuration: Duration(milliseconds: 800),
+                  autoPlayAnimationDuration: const Duration(milliseconds: 800),
                   // autoPlayCurve: Curves.fastOutSlowIn,
                   enlargeCenterPage: true,
                   enlargeFactor: 0.3,
@@ -394,34 +419,37 @@ class _DetailScreenState extends State<DetailScreen> {
                         ),
                       ],
                     ),
-                    child: Stack(fit: StackFit.expand, children: [
-                      CachedNetworkImage(
-                        imageUrl: equipment.strEquipment!,
-                        fit: BoxFit.cover,
-                        placeholder: (context, url) => Image.asset(
-                          "assets/placeholder/equipment-placeholder.png",
-                          // fit: BoxFit.fill,
-                        ),
-                      ),
-                      Center(
-                        child: Text(
-                          equipment.strSeason!,
-                          style: const TextStyle(
-                            fontStyle: FontStyle.italic,
-                            fontSize: 30,
-                            fontWeight: FontWeight.bold,
-                            color: const Color.fromARGB(255, 32, 0, 83),
-                            shadows: [
-                              Shadow(
-                                offset: Offset(1.0, 1.0),
-                                color: Colors.white,
-                                blurRadius: 3.0,
-                              ),
-                            ],
+                    child: Stack(
+                      fit: StackFit.expand,
+                      children: [
+                        CachedNetworkImage(
+                          imageUrl: equipment.strEquipment!,
+                          fit: BoxFit.cover,
+                          placeholder: (context, url) => Image.asset(
+                            "assets/placeholder/equipment-placeholder.png",
+                            // fit: BoxFit.fill,
                           ),
                         ),
-                      )
-                    ]),
+                        Center(
+                          child: Text(
+                            equipment.strSeason!,
+                            style: const TextStyle(
+                              fontStyle: FontStyle.italic,
+                              fontSize: 30,
+                              fontWeight: FontWeight.bold,
+                              color: const Color.fromARGB(255, 32, 0, 83),
+                              shadows: [
+                                Shadow(
+                                  offset: Offset(1.0, 1.0),
+                                  color: Colors.white,
+                                  blurRadius: 3.0,
+                                ),
+                              ],
+                            ),
+                          ),
+                        )
+                      ],
+                    ),
                   );
                 },
               );
@@ -432,8 +460,25 @@ class _DetailScreenState extends State<DetailScreen> {
     );
   }
 
-  Future<void> _launchUrl(String url) async {
-    final Uri uri = Uri.parse(url);
-    await launchUrl(uri);
+  Widget _bottomDesign(ClubModel team) {
+    double width = MediaQuery.of(context).size.width;
+    return Container(
+      height: width / 5,
+      width: width,
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.only(topLeft: Radius.elliptical(500, 200)),
+        gradient: LinearGradient(
+          colors: [
+            hexToColor(team.colour1!),
+            hexToColor(team.colour2!),
+          ],
+        ),
+      ),
+    );
   }
+}
+
+Future<void> _launchUrl(String url) async {
+  final Uri uri = Uri.parse(url);
+  await launchUrl(uri);
 }

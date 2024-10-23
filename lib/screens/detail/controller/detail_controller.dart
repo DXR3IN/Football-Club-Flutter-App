@@ -14,6 +14,7 @@ class DetailController extends BaseController {
 
   final teamFc = Observable<ClubModel>(ClubModel());
   final isLoading = Observable<bool>(false);
+  final descIsLong = Observable<bool>(true);
 
   // Command queries
   late final dummyDetailClubModel =
