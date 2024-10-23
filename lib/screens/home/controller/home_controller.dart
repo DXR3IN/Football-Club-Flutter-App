@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:flutter/material.dart';
 import 'package:mobx/mobx.dart';
 
 import 'package:premiere_league_v2/screens/home/model/home_club_model.dart';
@@ -12,13 +13,27 @@ import '../../../main.dart';
 class HomeController extends BaseController {
   final ApiClient _api;
   late final dummyTeamFCCommand = CommandQuery.create(_getListTeamFC);
-  final totalTeam = Observable<int>(0);
-  final isLoading = Observable<bool>(false);
-  final searchQuery = Observable<String>('');
 
+  // for total team on the API
+  final totalTeam = Observable<int>(0);
+
+  // checking if the function _getListTeamFC still processing
+  final isLoading = Observable<bool>(false);
+
+  // variable for searching
+  final searchQuery = Observable<String>('');
   List<HomeClubModel> _filteredTeams = [];
 
-  HomeController(this._api);
+  // variable to check if the search is being focused
+  @observable
+  var isSearchBarFocused = false;
+  final FocusNode searchBarFocusNode = FocusNode();
+
+  HomeController(this._api) {
+    searchBarFocusNode.addListener(() {
+      isSearchBarFocused = searchBarFocusNode.hasFocus;
+    });
+  }
 
   // Code to get all the FootBall Club in Premiere League
   FutureOr<List<HomeClubModel>> _getListTeamFC() async {
@@ -44,7 +59,7 @@ class HomeController extends BaseController {
   @action
   void updateSearchQuery(String query) {
     searchQuery.value = query.toLowerCase();
-    _filterTeams(); // panggil method untuk memfilter tim
+    _filterTeams();
   }
 
   void _filterTeams() {
@@ -60,6 +75,10 @@ class HomeController extends BaseController {
     AppNav.navigator.pushNamed(
       AppRoute.favTeamFcScreen,
     );
+  }
+
+  void dispose() {
+    searchBarFocusNode.dispose();
   }
 
   // Getter to access filtered teams

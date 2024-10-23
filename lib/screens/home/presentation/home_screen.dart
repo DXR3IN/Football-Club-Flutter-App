@@ -18,7 +18,7 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   final _controller = HomeController(getIt.get());
-  final TextEditingController _searchController = TextEditingController();
+  // final TextEditingController _searchController = TextEditingController();
 
   @override
   void initState() {
@@ -28,8 +28,9 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   void dispose() {
-    _searchController.dispose();
+    // _searchController.dispose();
     super.dispose();
+    _controller.dispose();
   }
 
   @override
@@ -120,11 +121,24 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget _navBar() {
     return Stack(
       children: [
-        ClipRRect(
-            borderRadius: const BorderRadius.only(
-                bottomLeft: Radius.circular(30),
-                bottomRight: Radius.circular(30)),
-            child: Image.asset("assets/background.jpg")),
+        _controller.isSearchBarFocused
+            ? Container(
+                width: MediaQuery.of(context).size.width,
+                height: MediaQuery.of(context).size.width / 4,
+                decoration: const BoxDecoration(
+                  image: DecorationImage(
+                      image: AssetImage("assets/background.jpg"),
+                      fit: BoxFit.cover),
+                  // borderRadius: BorderRadius.only(
+                  //     bottomLeft: Radius.circular(30),
+                  //     bottomRight: Radius.circular(30)),
+                ),
+              )
+            : ClipRRect(
+                borderRadius: const BorderRadius.only(
+                    bottomLeft: Radius.circular(30),
+                    bottomRight: Radius.circular(30)),
+                child: Image.asset("assets/background.jpg")),
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
           child: Column(
@@ -138,63 +152,66 @@ class _HomeScreenState extends State<HomeScreen> {
               Padding(
                 padding: const EdgeInsets.only(
                     bottom: 20, left: 30, right: 30, top: 40),
-                child: Container(
-                  height: MediaQuery.of(context).size.width / 2 - 22,
-                  decoration: const BoxDecoration(
-                    image: DecorationImage(
-                      image: AssetImage(
-                          "assets/banner/premiere-league-banner2.png"),
-                      fit: BoxFit.cover,
-                    ),
-                    color: Colors.white,
-                    borderRadius: BorderRadius.all(Radius.circular(10)),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.black26,
-                        blurRadius: 6.0,
-                        spreadRadius: 2.0,
-                        offset: Offset(3, 3),
-                      ),
-                    ],
-                  ),
-                  child: Stack(
-                    children: [
-                      Align(
-                        alignment: Alignment.bottomCenter,
-                        child: Container(
-                          width: 200,
-                          height: 20,
-                          decoration: const BoxDecoration(
-                            borderRadius: BorderRadius.only(
-                                topLeft: Radius.circular(10),
-                                topRight: Radius.circular(10)),
-                            color: Colors.white,
+                child: _controller.isSearchBarFocused
+                    ? const SizedBox()
+                    : Container(
+                        height: MediaQuery.of(context).size.width / 2 - 22,
+                        decoration: const BoxDecoration(
+                          image: DecorationImage(
+                            image: AssetImage(
+                                "assets/banner/premiere-league-banner2.png"),
+                            fit: BoxFit.cover,
                           ),
-                          child: Center(
-                            child: Observer(
-                              builder: (context) {
-                                final isLoading = _controller.isLoading.value;
-                                if (isLoading) {
-                                  return const Text(
-                                    "0 Premier Team",
-                                    style:
-                                        TextStyle(fontWeight: FontWeight.bold),
-                                  );
-                                }
-
-                                return Text(
-                                  "${_controller.totalTeam.value} Premier Team",
-                                  style: const TextStyle(
-                                      fontWeight: FontWeight.bold),
-                                );
-                              },
+                          color: Colors.white,
+                          borderRadius: BorderRadius.all(Radius.circular(10)),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black26,
+                              blurRadius: 6.0,
+                              spreadRadius: 2.0,
+                              offset: Offset(3, 3),
                             ),
-                          ),
+                          ],
+                        ),
+                        child: Stack(
+                          children: [
+                            Align(
+                              alignment: Alignment.bottomCenter,
+                              child: Container(
+                                width: 200,
+                                height: 20,
+                                decoration: const BoxDecoration(
+                                  borderRadius: BorderRadius.only(
+                                      topLeft: Radius.circular(10),
+                                      topRight: Radius.circular(10)),
+                                  color: Colors.white,
+                                ),
+                                child: Center(
+                                  child: Observer(
+                                    builder: (context) {
+                                      final isLoading =
+                                          _controller.isLoading.value;
+                                      if (isLoading) {
+                                        return const Text(
+                                          "0 Premier Team",
+                                          style: TextStyle(
+                                              fontWeight: FontWeight.bold),
+                                        );
+                                      }
+
+                                      return Text(
+                                        "${_controller.totalTeam.value} Premier Team",
+                                        style: const TextStyle(
+                                            fontWeight: FontWeight.bold),
+                                      );
+                                    },
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
                         ),
                       ),
-                    ],
-                  ),
-                ),
               ),
             ],
           ),
@@ -245,6 +262,7 @@ class _HomeScreenState extends State<HomeScreen> {
     return Observer(
       builder: (_) => Expanded(
         child: TextField(
+          focusNode: _controller.searchBarFocusNode,
           onChanged: (value) {
             _controller.updateSearchQuery(value);
           },
