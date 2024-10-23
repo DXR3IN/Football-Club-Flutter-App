@@ -466,7 +466,8 @@ class _DetailScreenState extends State<DetailScreen> {
       height: width / 5,
       width: width,
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.only(topLeft: Radius.elliptical(500, 200)),
+        borderRadius:
+            const BorderRadius.only(topLeft: Radius.elliptical(500, 200)),
         gradient: LinearGradient(
           colors: [
             hexToColor(team.colour1!),

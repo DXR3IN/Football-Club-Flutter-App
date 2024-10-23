@@ -19,33 +19,17 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   final _controller = HomeController(getIt.get());
   final TextEditingController _searchController = TextEditingController();
-  List<HomeClubModel> _filteredTeams = [];
 
   @override
   void initState() {
     super.initState();
     _controller.dummyTeamFCCommand.execute();
-    _searchController.addListener(() {
-      final data = _controller.dummyTeamFCCommand.onData;
-      if (data is List<HomeClubModel>) {
-        _filterTeams(data);
-      }
-    });
   }
 
   @override
   void dispose() {
     _searchController.dispose();
     super.dispose();
-  }
-
-  void _filterTeams(List<HomeClubModel> listTeam) {
-    final query = _searchController.text.toLowerCase();
-    setState(() {
-      _filteredTeams = listTeam
-          .where((team) => team.team?.toLowerCase().contains(query) ?? false)
-          .toList();
-    });
   }
 
   @override
@@ -200,7 +184,8 @@ class _HomeScreenState extends State<HomeScreen> {
 
                                 return Text(
                                   "${_controller.totalTeam.value} Premier Team",
-                                  style: const TextStyle(fontWeight: FontWeight.bold),
+                                  style: const TextStyle(
+                                      fontWeight: FontWeight.bold),
                                 );
                               },
                             ),
@@ -219,9 +204,6 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Widget _contentBody(List<HomeClubModel> listTeam) {
-    final displayList =
-        _searchController.text.isEmpty ? listTeam : _filteredTeams;
-
     final width = MediaQuery.of(context).size.width;
 
     int crossAxisCount;
@@ -238,49 +220,58 @@ class _HomeScreenState extends State<HomeScreen> {
       crossAxisCount = 2;
     }
 
-    return GridView.builder(
-      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: crossAxisCount,
-        childAspectRatio: 1.0,
-        mainAxisSpacing: 8.0,
-        crossAxisSpacing: 8.0,
-      ),
-      shrinkWrap: true,
-      physics: const NeverScrollableScrollPhysics(),
-      itemCount: displayList.length,
-      itemBuilder: (BuildContext context, int index) {
-        return _itemCardFC(displayList[index]);
-      },
-    );
+    return Observer(builder: (_) {
+      final displayList = _controller.searchQuery.value.isEmpty
+          ? listTeam
+          : _controller.filteredTeams;
+      return GridView.builder(
+        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+          crossAxisCount: crossAxisCount,
+          childAspectRatio: 1.0,
+          mainAxisSpacing: 8.0,
+          crossAxisSpacing: 8.0,
+        ),
+        shrinkWrap: true,
+        physics: const NeverScrollableScrollPhysics(),
+        itemCount: displayList.length,
+        itemBuilder: (BuildContext context, int index) {
+          return _itemCardFC(displayList[index]);
+        },
+      );
+    });
   }
 
   Widget _searchBar() {
-    return Expanded(
-      child: TextField(
-        controller: _searchController,
-        decoration: InputDecoration(
-          hintText: 'Search teams...',
-          hintStyle: const TextStyle(color: Colors.white),
-          suffixIcon: _favoriteCaller(
-            const Icon(
-              Icons.star_border,
+    return Observer(
+      builder: (_) => Expanded(
+        child: TextField(
+          onChanged: (value) {
+            _controller.updateSearchQuery(value);
+          },
+          decoration: InputDecoration(
+            hintText: 'Search teams...',
+            hintStyle: const TextStyle(color: Colors.white),
+            suffixIcon: _favoriteCaller(
+              const Icon(
+                Icons.star_border,
+              ),
+            ),
+            suffixIconColor: Colors.white,
+            fillColor: Colors.white,
+            iconColor: Colors.white,
+            focusColor: Colors.white,
+            prefixIcon: const Icon(
+              Icons.search,
+              color: Colors.white,
+            ),
+            focusedBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(8.0),
+              borderSide: const BorderSide(color: Colors.white, width: 2.0),
             ),
           ),
-          suffixIconColor: Colors.white,
-          fillColor: Colors.white,
-          iconColor: Colors.white,
-          focusColor: Colors.white,
-          prefixIcon: const Icon(
-            Icons.search,
-            color: Colors.white,
-          ),
-          focusedBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(8.0),
-            borderSide: const BorderSide(color: Colors.white, width: 2.0),
-          ),
+          cursorColor: Colors.white,
+          style: const TextStyle(color: Colors.white),
         ),
-        cursorColor: Colors.white,
-        style: const TextStyle(color: Colors.white),
       ),
     );
   }

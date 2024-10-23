@@ -14,6 +14,9 @@ class HomeController extends BaseController {
   late final dummyTeamFCCommand = CommandQuery.create(_getListTeamFC);
   final totalTeam = Observable<int>(0);
   final isLoading = Observable<bool>(false);
+  final searchQuery = Observable<String>('');
+
+  List<HomeClubModel> _filteredTeams = [];
 
   HomeController(this._api);
 
@@ -25,6 +28,7 @@ class HomeController extends BaseController {
       return value?.map((e) => HomeClubModel.fromJson(e)).toList() ?? [];
     });
     totalTeam.value = teamList.length;
+    _filteredTeams = teamList;
     isLoading.value = false;
     return teamList;
   }
@@ -37,10 +41,27 @@ class HomeController extends BaseController {
     );
   }
 
+  @action
+  void updateSearchQuery(String query) {
+    searchQuery.value = query.toLowerCase();
+    _filterTeams(); // panggil method untuk memfilter tim
+  }
+
+  void _filterTeams() {
+    final List<HomeClubModel> allTeams = dummyTeamFCCommand.onData ?? [];
+    _filteredTeams = allTeams
+        .where((team) =>
+            team.team?.toLowerCase().contains(searchQuery.value) ?? false)
+        .toList();
+  }
+
   // go to Favorite Page
   void onTapFavScreen() {
     AppNav.navigator.pushNamed(
       AppRoute.favTeamFcScreen,
     );
   }
+
+  // Getter to access filtered teams
+  List<HomeClubModel> get filteredTeams => _filteredTeams;
 }
