@@ -1,0 +1,57 @@
+{
+    "title": "Premier League",
+    "searchHint": "Search team name...",
+    
+    "formedYear": "Formed Year: {year}",
+    "@formedYear": {
+        "description": "A text with single parameter",
+        "placehoolders": {
+            "year": {
+                "type": "String",
+                "example": "2000"
+            }
+        }
+    },
+    "stadium": "Stadium: {stadiumName}",
+    "@stadium": {
+        "description": "A text with single parameter",
+        "placehoolders": {
+            "stadiumName": {
+                "type": "String",
+                "example": "0"
+            }
+        }
+    },
+    "equipment": "Equipment",
+    "socialMedia": "Social Media",
+    "equipmentError": "No equipment available",
+
+    "showMoreHint": "Show More",
+    "showLessHint": "Show Less",
+
+    "favoriteTitle": "Your Favorite Team",
+
+    "settingsTitle": "Settings",
+    "languageSettingTitle": "Language: ",
+    "indonesian": "Indonesian",
+    "english": "English",
+
+    "notifNotFav": "Your Favorite",
+    "bodyNotifNotFav": "{notFav} is your favorite anymore",
+    "@bodyNotifNotFav": {
+        "placehoolders": {
+            "notFav": {
+                "type": "String"
+            }
+        }
+    },
+    "notifFav": "Not Your Favorite",
+    "bodyNotifFav": "{fav} is not your favorite anymore",
+    "@bodyNotifFav": {
+        "placehoolders": {
+            "fav": {
+                "type": "String"
+            }
+        }
+    }
+}

@@ -1,0 +1,57 @@
+{
+    "title": "Liga Primer",
+    "searchHint": "Cari nama tim...",
+    
+    "formedYear": "Tahun dibentuk: {year}",
+    "@formedYear": {
+        "description": "Text dengan sebuah parameter",
+        "placehoolders": {
+            "year": {
+                "type": "String",
+                "example": "2000"
+            }
+        }
+    },
+    "stadium": "Stadium: {stadiumName}",
+    "@stadium": {
+        "description": "Text dengan sebuah parameter",
+        "placehoolders": {
+            "stadiumName": {
+                "type": "String",
+                "example": "0"
+            }
+        }
+    },
+    "equipment": "Seragam",
+    "socialMedia": "Media Sosial",
+    "equipmentError": "Tidak ada perlengkapan yang tersedia",
+
+    "showMoreHint": "Tampilkan lebih banyak",
+    "showLessHint": "Tampilkan lebih sedikit",
+
+    "favoriteTitle": "Team Liga Favoritmu",
+
+    "settingsTitle": "Pengaturan",
+    "languageSettingTitle": "Bahasa: ",
+    "indonesian": "Indonesia",
+    "english": "Inggris",
+
+    "notifNotFav": "Bukan Favoritmu",
+    "bodyNotifNotFav": "{notFav} bukan lagi dalam daftar favoritmu",
+    "@bodyNotifNotFav": {
+        "placehoolders": {
+            "notFav": {
+                "type": "String"
+            }
+        }
+    },
+    "notifFav": "Favoritmu",
+    "bodyNotifFav": "{fav} sekarang adalah favoritmu",
+    "@bodyNotifFav": {
+        "placehoolders": {
+            "fav": {
+                "type": "String"
+            }
+        }
+    }
+}

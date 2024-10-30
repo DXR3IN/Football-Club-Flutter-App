@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
+import 'package:premiere_league_v2/components/config/app_style.dart';
 
 class AppDefaultThemeData {
   var colorPrimary50 = const Color(0xffffdddd);
   var colorPrimary100 = const Color(0xffffc0c0);
-  var colorPrimary200 = const Color.fromARGB(255, 107, 5, 216);
+  var colorPrimary200 = const Color.fromARGB(255, 89, 5, 216);
   var colorPrimary300 = const Color.fromARGB(255, 94, 4, 189);
   var colorPrimary400 = const Color.fromARGB(255, 93, 4, 187);
   var colorPrimary500 = const Color.fromARGB(255, 67, 6, 166);
@@ -44,7 +44,7 @@ class AppDefaultThemeData {
   ThemeData themeData() {
     return ThemeData(
         useMaterial3: false,
-        textTheme: GoogleFonts.rethinkSansTextTheme(),
+        textTheme: AppStyle.mainTextTheme,
         colorScheme: ColorScheme.fromSwatch(
           primarySwatch: MaterialColor(
             colorPrimary500.value,

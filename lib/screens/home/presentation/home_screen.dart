@@ -3,11 +3,13 @@ import 'dart:ui';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
+import 'package:premiere_league_v2/components/config/app_style.dart';
 import 'package:premiere_league_v2/components/widget/app_observer_builder_widget.dart';
 import 'package:premiere_league_v2/main.dart';
 import 'package:premiere_league_v2/screens/home/controller/home_controller.dart';
 import 'package:premiere_league_v2/screens/home/model/home_club_model.dart';
 import 'package:premiere_league_v2/screens/home/presentation/home_shimmer_screen.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -23,7 +25,7 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
     super.initState();
-    _controller.dummyTeamFCCommand.execute();
+    _controller.listFootballClubCommand.execute();
   }
 
   @override
@@ -73,12 +75,12 @@ class _HomeScreenState extends State<HomeScreen> {
       child: SingleChildScrollView(
         child: Column(
           children: [
-            // _sliverAppBar(),
+            // _safeArea(context),
             _navBar(),
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 12),
+              padding: AppStyle.mainPadding,
               child: AppObserverBuilder(
-                commandQuery: _controller.dummyTeamFCCommand,
+                commandQuery: _controller.listFootballClubCommand,
                 onLoading: () => const HomeShimmerScreen(),
                 child: (data) {
                   return _contentBody(data);
@@ -121,7 +123,7 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget _navBar() {
     return Stack(
       children: [
-        _controller.isSearchBarFocused
+        _controller.isSearchBarFocused.value
             ? Container(
                 width: MediaQuery.of(context).size.width,
                 height: MediaQuery.of(context).size.width / 4,
@@ -129,9 +131,9 @@ class _HomeScreenState extends State<HomeScreen> {
                   image: DecorationImage(
                       image: AssetImage("assets/background.jpg"),
                       fit: BoxFit.cover),
-                  // borderRadius: BorderRadius.only(
-                  //     bottomLeft: Radius.circular(30),
-                  //     bottomRight: Radius.circular(30)),
+                  borderRadius: BorderRadius.only(
+                      bottomLeft: Radius.circular(8),
+                      bottomRight: Radius.circular(8)),
                 ),
               )
             : ClipRRect(
@@ -147,12 +149,12 @@ class _HomeScreenState extends State<HomeScreen> {
                 height: 12,
               ),
               Row(
-                children: [_searchBar()],
+                children: [_searchBar(), _settingsButton()],
               ),
               Padding(
                 padding: const EdgeInsets.only(
                     bottom: 20, left: 30, right: 30, top: 40),
-                child: _controller.isSearchBarFocused
+                child: _controller.isSearchBarFocused.value
                     ? const SizedBox()
                     : Container(
                         height: MediaQuery.of(context).size.width / 2 - 22,
@@ -192,15 +194,15 @@ class _HomeScreenState extends State<HomeScreen> {
                                       final isLoading =
                                           _controller.isLoading.value;
                                       if (isLoading) {
-                                        return const Text(
-                                          "0 Premier Team",
-                                          style: TextStyle(
+                                        return Text(
+                                          "0 ${AppLocalizations.of(context)!.title}",
+                                          style: const TextStyle(
                                               fontWeight: FontWeight.bold),
                                         );
                                       }
 
                                       return Text(
-                                        "${_controller.totalTeam.value} Premier Team",
+                                        "${_controller.totalTeam.value} ${AppLocalizations.of(context)!.title}",
                                         style: const TextStyle(
                                             fontWeight: FontWeight.bold),
                                       );
@@ -220,7 +222,7 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  Widget _contentBody(List<HomeClubModel> listTeam) {
+  Widget _contentBody(List<HomeClubModel> listFootballClub) {
     final width = MediaQuery.of(context).size.width;
 
     int crossAxisCount;
@@ -239,7 +241,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
     return Observer(builder: (_) {
       final displayList = _controller.searchQuery.value.isEmpty
-          ? listTeam
+          ? listFootballClub
           : _controller.filteredTeams;
       return GridView.builder(
         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
@@ -267,14 +269,8 @@ class _HomeScreenState extends State<HomeScreen> {
             _controller.updateSearchQuery(value);
           },
           decoration: InputDecoration(
-            hintText: 'Search teams...',
+            hintText: AppLocalizations.of(context)!.searchHint,
             hintStyle: const TextStyle(color: Colors.white),
-            suffixIcon: _favoriteCaller(
-              const Icon(
-                Icons.star_border,
-              ),
-            ),
-            suffixIconColor: Colors.white,
             fillColor: Colors.white,
             iconColor: Colors.white,
             focusColor: Colors.white,
@@ -291,15 +287,6 @@ class _HomeScreenState extends State<HomeScreen> {
           style: const TextStyle(color: Colors.white),
         ),
       ),
-    );
-  }
-
-  Widget _favoriteCaller(Widget icon) {
-    return GestureDetector(
-      child: icon,
-      onTap: () {
-        _controller.onTapFavScreen();
-      },
     );
   }
 
@@ -362,6 +349,30 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
             ],
           ),
+        ),
+      ),
+    );
+  }
+
+  Widget _favoriteCaller(Widget icon) {
+    return GestureDetector(
+      child: icon,
+      onTap: () {
+        _controller.onTapFavScreen();
+      },
+    );
+  }
+
+  Widget _settingsButton() {
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: GestureDetector(
+        onTap: () {
+          _controller.onTapSettingsScreen();
+        },
+        child: const Icon(
+          Icons.settings,
+          color: Colors.white,
         ),
       ),
     );

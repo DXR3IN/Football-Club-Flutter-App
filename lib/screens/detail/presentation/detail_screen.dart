@@ -5,6 +5,7 @@ import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:ionicons/ionicons.dart';
 import 'package:premiere_league_v2/components/widget/app_observer_builder_widget.dart';
 import 'package:premiere_league_v2/components/widget/hex_to_color.dart';
+import 'package:premiere_league_v2/components/widget/launch_url.dart';
 import 'package:premiere_league_v2/screens/detail/model/club_model.dart';
 import 'package:premiere_league_v2/main.dart';
 import 'package:premiere_league_v2/screens/detail/controller/detail_controller.dart';
@@ -12,8 +13,8 @@ import 'package:premiere_league_v2/screens/detail/favorite_button/favorite_butto
 import 'package:premiere_league_v2/screens/detail/model/equipment_model.dart';
 import 'package:premiere_league_v2/screens/detail/presentation/detail_shimmer_screen.dart';
 import 'package:shimmer/shimmer.dart';
-import 'package:url_launcher/url_launcher.dart';
 import 'package:logger/logger.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class DetailScreen extends StatefulWidget {
   const DetailScreen({super.key, required this.team});
@@ -33,6 +34,11 @@ class _DetailScreenState extends State<DetailScreen> {
 
     // Fetch team and equipment details
     _controller.fetchTeamAndEquipment(widget.team);
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
   }
 
   @override
@@ -103,7 +109,7 @@ class _DetailScreenState extends State<DetailScreen> {
             _buildMediaSocials(team),
             const SizedBox(height: 30),
             _buildDescription(team),
-            const SizedBox(height: 20),
+            const SizedBox(height: 5),
             _bottomDesign(team)
           ],
         ),
@@ -213,12 +219,12 @@ class _DetailScreenState extends State<DetailScreen> {
       child: Column(
         children: [
           Text(
-            "Formed Year: ${team.formedYear}",
+            AppLocalizations.of(context)!.formedYear(team.formedYear!),
             style: const TextStyle(fontSize: 18),
           ),
           const SizedBox(height: 8),
           Text(
-            "Stadium: ${team.stadium}",
+            AppLocalizations.of(context)!.stadium(team.stadium!),
             style: const TextStyle(fontSize: 18),
           ),
         ],
@@ -244,7 +250,8 @@ class _DetailScreenState extends State<DetailScreen> {
       ),
       child: Column(
         children: [
-          const Text("Social Media", style: const TextStyle(fontSize: 18)),
+          Text(AppLocalizations.of(context)!.socialMedia,
+              style: const TextStyle(fontSize: 18)),
           _buildMediaItem(
               team.instagram!, Colors.pink, Ionicons.logo_instagram),
           _buildMediaItem(team.youtube!, Colors.red, Ionicons.logo_youtube),
@@ -262,7 +269,7 @@ class _DetailScreenState extends State<DetailScreen> {
       title: Text(url),
       onTap: () async {
         try {
-          await _launchUrl("https://$url");
+          await launchUrlService("https://$url");
         } catch (e) {
           Logger().i("Failed to launch URL: $e");
         }
@@ -301,9 +308,9 @@ class _DetailScreenState extends State<DetailScreen> {
                         ),
                         Text(
                           _controller.descIsLong.value
-                              ? "Show More"
-                              : "Show Less",
-                          style: TextStyle(color: Colors.blueAccent),
+                              ? AppLocalizations.of(context)!.showMoreHint
+                              : AppLocalizations.of(context)!.showLessHint,
+                          style: const TextStyle(color: Colors.blueAccent),
                         ),
                       ],
                     ),
@@ -322,7 +329,8 @@ class _DetailScreenState extends State<DetailScreen> {
       margin: const EdgeInsets.only(bottom: 20),
       child: Column(
         children: [
-          const Text("Equipment", style: const TextStyle(fontSize: 18)),
+          Text(AppLocalizations.of(context)!.equipment,
+              style: const TextStyle(fontSize: 18)),
           const SizedBox(
             height: 10,
           ),
@@ -378,7 +386,8 @@ class _DetailScreenState extends State<DetailScreen> {
               if (equipmentData == null || equipmentData.isEmpty) {
                 logger.i(
                     "Equipment is $equipmentData and runtimeType ${equipmentData.runtimeType}");
-                return const Center(child: Text("No equipment available"));
+                return Center(
+                    child: Text(AppLocalizations.of(context)!.equipmentError));
               }
 
               // Cast to the expected type (e.g., List<EquipmentModel>)
@@ -437,7 +446,7 @@ class _DetailScreenState extends State<DetailScreen> {
                               fontStyle: FontStyle.italic,
                               fontSize: 30,
                               fontWeight: FontWeight.bold,
-                              color: const Color.fromARGB(255, 32, 0, 83),
+                              color: Color.fromARGB(255, 32, 0, 83),
                               shadows: [
                                 Shadow(
                                   offset: Offset(1.0, 1.0),
@@ -462,24 +471,96 @@ class _DetailScreenState extends State<DetailScreen> {
 
   Widget _bottomDesign(ClubModel team) {
     double width = MediaQuery.of(context).size.width;
-    return Container(
-      height: width / 5,
-      width: width,
-      decoration: BoxDecoration(
-        borderRadius:
-            const BorderRadius.only(topLeft: Radius.elliptical(500, 200)),
-        gradient: LinearGradient(
-          colors: [
-            hexToColor(team.colour1!),
-            hexToColor(team.colour2!),
+    return Column(
+      children: [
+        Stack(
+          children: [
+            SizedBox(
+              height: width / 5,
+              width: width,
+              child: CustomPaint(
+                painter: WavePainter(
+                  color1: hexToColor(team.colour1!),
+                  color2: hexToColor(team.colour2!),
+                  offset: 10,
+                ),
+              ),
+            ),
+            Positioned(
+              top: 20,
+              child: SizedBox(
+                height: width / 5,
+                width: width,
+                child: CustomPaint(
+                  painter: WavePainter(
+                    color1: hexToColor(team.colour2!),
+                    color2: hexToColor(team.colour1!),
+                    offset: 30,
+                  ),
+                ),
+              ),
+            ),
           ],
         ),
-      ),
+        Container(
+          height: 80,
+          width: double.infinity,
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              colors: [
+                hexToColor(team.colour1!),
+                hexToColor(team.colour2!),
+              ],
+            ),
+          ),
+        ),
+      ],
     );
   }
 }
 
-Future<void> _launchUrl(String url) async {
-  final Uri uri = Uri.parse(url);
-  await launchUrl(uri);
+class WavePainter extends CustomPainter {
+  final Color color1;
+  final Color color2;
+  final double offset;
+
+  WavePainter({
+    required this.color1,
+    required this.color2,
+    this.offset = 0,
+  });
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final paint = Paint()
+      ..shader = LinearGradient(
+        colors: [color1, color2],
+        begin: Alignment.topLeft,
+        end: Alignment.bottomRight,
+      ).createShader(Rect.fromLTWH(0, 0, size.width, size.height))
+      ..style = PaintingStyle.fill;
+
+    final path = Path();
+
+    path.moveTo(0, size.height * 0.6 + offset);
+    path.quadraticBezierTo(
+      size.width * 0.25,
+      size.height * 0.8 + offset,
+      size.width * 0.5,
+      size.height * 0.6 + offset,
+    );
+    path.quadraticBezierTo(
+      size.width * 0.75,
+      size.height * 0.4 + offset,
+      size.width,
+      size.height * 0.6 + offset,
+    );
+    path.lineTo(size.width, size.height);
+    path.lineTo(0, size.height);
+
+    canvas.drawPath(path, paint);
+  }
+
+  @override
+  bool shouldRepaint(CustomPainter oldDelegate) => true;
 }

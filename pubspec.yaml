@@ -36,6 +36,8 @@ dependencies:
   firebase_messaging: ^15.1.1
   flutter:
     sdk: flutter
+  flutter_localizations:
+    sdk: flutter
   flutter_local_notifications: ^17.2.1+1
   flutter_mobx: ^2.2.0
   flutter_secure_storage: ^9.2.2
@@ -61,6 +63,7 @@ dependencies:
   shimmer: ^3.0.0
   google_fonts: ^6.2.1
   carousel_slider: ^5.0.0
+  
 
 dev_dependencies:
   # The "flutter_lints" package below contains a set of recommended lints to
@@ -94,6 +97,7 @@ flutter_launcher_icons:
 # following page: https://dart.dev/tools/pub/pubspec
 # The following section is specific to Flutter packages.
 flutter:
+  generate: true
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in
   # the material Icons class.

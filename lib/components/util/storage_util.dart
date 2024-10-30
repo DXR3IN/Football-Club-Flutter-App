@@ -2,6 +2,8 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 const _loginToken = "logintoken";
 
+const _language = 'language';
+
 extension StorageUtil on IStorage {
   Future<bool> isLoggedIn() async {
     return await getLoginToken() != null;
@@ -17,6 +19,19 @@ extension StorageUtil on IStorage {
   Future<String?> getLoginToken() async {
     return await read(
       key: _loginToken,
+    );
+  }
+
+  Future setLanguage(String lang) async {
+    await write(
+      key: _language,
+      value: lang,
+    );
+  }
+
+  Future<String?> getLanguage() async {
+    return await read(
+      key: _language,
     );
   }
 }

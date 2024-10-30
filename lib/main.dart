@@ -6,6 +6,8 @@ import 'package:get_it/get_it.dart';
 import 'package:logger/logger.dart';
 import 'package:mobx/mobx.dart';
 import 'package:premiere_league_v2/firebase_handler.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import 'components/api_services/api_client.dart';
 import 'components/config/app_const.dart';
@@ -80,14 +82,38 @@ class MyApp extends StatefulWidget {
 
   @override
   State<MyApp> createState() => _MyAppState();
+
+  static void setLocale(BuildContext context, Locale value) {
+    _MyAppState? state = context.findAncestorStateOfType<_MyAppState>();
+    //ignore: invalid_use_of_protected_member
+    state?.setState(() {
+      state._locale = value;
+    });
+  }
 }
 
 class _MyAppState extends State<MyApp> {
+  Locale _locale = const Locale('en');
+  final _storage = getIt.get<IStorage>();
+
   @override
   void initState() {
     super.initState();
     logger.i('MyApp initState');
+    _fetchLocale().then((locale) {
+      setState(() {
+        _locale = locale;
+      });
+    });
+
     _checkForDeepLinkingWhenAppIsOpened();
+  }
+
+  Future<Locale> _fetchLocale() async {
+    var prefs = await _storage.getLanguage();
+
+    String languageCode = prefs?.split('-').firstOrNull ?? 'en';
+    return Locale(languageCode);
   }
 
   void _checkForDeepLinkingWhenAppIsOpened() {
@@ -143,6 +169,17 @@ class _MyAppState extends State<MyApp> {
     return AppTheme(
       themeData: appTheme,
       child: MaterialApp(
+        locale: _locale,
+        localizationsDelegates: const [
+          AppLocalizations.delegate,
+          GlobalMaterialLocalizations.delegate,
+          GlobalWidgetsLocalizations.delegate,
+          GlobalCupertinoLocalizations.delegate,
+        ],
+        localeListResolutionCallback: (_, __) {
+          return _locale;
+        },
+        supportedLocales: AppLocalizations.supportedLocales,
         title: AppConst.appName,
         theme: appTheme.themeData(),
         initialRoute: AppRoute.splashScreen,

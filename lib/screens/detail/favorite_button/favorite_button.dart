@@ -34,8 +34,7 @@ class _FavoriteButtonState extends State<FavoriteButton> {
         return FloatingActionButton(
           onPressed: () async {
             // Use the existing favFootballTeam from the controller
-            await _controller.favoriteCommand
-                .execute(_controller.favFootballTeam);
+            await _controller.favoriteCommand.execute(context);
           },
           child: Icon(
             isFavorite ? Icons.star : Icons.star_border,

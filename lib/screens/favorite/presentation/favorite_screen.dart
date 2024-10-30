@@ -1,10 +1,12 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:premiere_league_v2/components/config/app_style.dart';
 import 'package:premiere_league_v2/components/widget/app_observer_builder_widget.dart';
 import 'package:premiere_league_v2/main.dart';
 import 'package:premiere_league_v2/screens/favorite/controller/favorite_controller.dart';
 import 'package:premiere_league_v2/screens/favorite/model/fav_club_model.dart';
 import 'package:premiere_league_v2/screens/home/controller/home_controller.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class FavoriteScreen extends StatefulWidget {
   const FavoriteScreen({super.key});
@@ -28,6 +30,11 @@ class _FavoriteScreenState extends State<FavoriteScreen> {
   }
 
   @override
+  void dispose() {
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: _appBar(),
@@ -37,7 +44,7 @@ class _FavoriteScreenState extends State<FavoriteScreen> {
 
   PreferredSizeWidget _appBar() {
     return AppBar(
-      title: const Text("Favorite Teams"),
+      title: Text(AppLocalizations.of(context)!.favoriteTitle),
       centerTitle: true,
     );
   }
@@ -58,25 +65,28 @@ class _FavoriteScreenState extends State<FavoriteScreen> {
       // Small screens (e.g., regular phones)
       crossAxisCount = 2;
     }
-    return AppObserverBuilder(
-      commandQuery: _favoriteController.favoriteCommand,
-      onLoading: () => const Center(child: CircularProgressIndicator()),
-      child: (data) {
-        final List<FavClubModel> team = List<FavClubModel>.from(data);
+    return Padding(
+      padding: AppStyle.mainPadding,
+      child: AppObserverBuilder(
+        commandQuery: _favoriteController.favoriteCommand,
+        onLoading: () => const Center(child: CircularProgressIndicator()),
+        child: (data) {
+          final List<FavClubModel> team = List<FavClubModel>.from(data);
 
-        if (team.isEmpty) {
-          return const Center(child: Text("No favorite teams yet"));
-        }
+          if (team.isEmpty) {
+            return const Center(child: Text("No favorite teams yet"));
+          }
 
-        return GridView.count(
-          crossAxisCount: crossAxisCount,
-          childAspectRatio: 1.0,
-          padding: const EdgeInsets.all(8.0),
-          mainAxisSpacing: 8.0,
-          crossAxisSpacing: 8.0,
-          children: team.map((team) => _itemCardFC(team)).toList(),
-        );
-      },
+          return GridView.count(
+            crossAxisCount: crossAxisCount,
+            childAspectRatio: 1.0,
+            padding: const EdgeInsets.all(8.0),
+            mainAxisSpacing: 8.0,
+            crossAxisSpacing: 8.0,
+            children: team.map((team) => _itemCardFC(team)).toList(),
+          );
+        },
+      ),
     );
   }
 

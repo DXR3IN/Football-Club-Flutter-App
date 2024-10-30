@@ -12,7 +12,7 @@ import '../../../main.dart';
 
 class HomeController extends BaseController {
   final ApiClient _api;
-  late final dummyTeamFCCommand = CommandQuery.create(_getListTeamFC);
+  late final listFootballClubCommand = CommandQuery.create(_getListTeamFC);
 
   // for total team on the API
   final totalTeam = Observable<int>(0);
@@ -25,13 +25,12 @@ class HomeController extends BaseController {
   List<HomeClubModel> _filteredTeams = [];
 
   // variable to check if the search is being focused
-  @observable
-  var isSearchBarFocused = false;
+  var isSearchBarFocused = Observable<bool>(false);
   final FocusNode searchBarFocusNode = FocusNode();
 
   HomeController(this._api) {
     searchBarFocusNode.addListener(() {
-      isSearchBarFocused = searchBarFocusNode.hasFocus;
+      isSearchBarFocused.value = searchBarFocusNode.hasFocus;
     });
   }
 
@@ -48,14 +47,6 @@ class HomeController extends BaseController {
     return teamList;
   }
 
-  // To see the detail of the football team
-  void onTapItemFootBall(String team) {
-    AppNav.navigator.pushNamed(
-      AppRoute.teamFcDetailScreen,
-      arguments: team,
-    );
-  }
-
   @action
   void updateSearchQuery(String query) {
     searchQuery.value = query.toLowerCase();
@@ -63,7 +54,7 @@ class HomeController extends BaseController {
   }
 
   void _filterTeams() {
-    final List<HomeClubModel> allTeams = dummyTeamFCCommand.onData ?? [];
+    final List<HomeClubModel> allTeams = listFootballClubCommand.onData ?? [];
     _filteredTeams = allTeams
         .where((team) =>
             team.team?.toLowerCase().contains(searchQuery.value) ?? false)
@@ -75,6 +66,19 @@ class HomeController extends BaseController {
     AppNav.navigator.pushNamed(
       AppRoute.favTeamFcScreen,
     );
+  }
+
+  //  go to detail page
+  void onTapItemFootBall(String team) {
+    AppNav.navigator.pushNamed(
+      AppRoute.teamFcDetailScreen,
+      arguments: team,
+    );
+  }
+
+  // got to settings page
+  void onTapSettingsScreen() {
+    AppNav.navigator.pushNamed(AppRoute.settingsScreen);
   }
 
   void dispose() {

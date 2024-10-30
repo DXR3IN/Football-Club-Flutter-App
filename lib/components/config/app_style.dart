@@ -1,9 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class AppStyle {
-  static const Color primaryColor = Color(0xFF203548);
+  // Main Padding for the App
+  static const EdgeInsets mainPadding =
+      EdgeInsets.symmetric(horizontal: 15, vertical: 12);
 
-  static const Color secondColor = Color.fromARGB(255, 76, 154, 204);
+  // color
+  static const Color primaryColor = Color.fromARGB(255, 71, 2, 150);
+
+  static const Color secondColor = Color.fromARGB(255, 145, 9, 230);
 
   static const Color mainColor = Color.fromARGB(255, 228, 227, 232);
 
@@ -21,6 +27,8 @@ class AppStyle {
     900: Color(0xFFD50B0F),
   });
   static const int _appthemePrimaryValue = 0xFFE62129;
+
+  static TextTheme mainTextTheme = GoogleFonts.rethinkSansTextTheme();
 
   static const MaterialColor appthemeAccent =
       MaterialColor(_appThemeAccentValue, <int, Color>{
