@@ -74,7 +74,8 @@ class _FavoriteScreenState extends State<FavoriteScreen> {
           final List<FavClubModel> team = List<FavClubModel>.from(data);
 
           if (team.isEmpty) {
-            return const Center(child: Text("No favorite teams yet"));
+            return Center(
+                child: Text(AppLocalizations.of(context)!.favoriteError));
           }
 
           return GridView.count(

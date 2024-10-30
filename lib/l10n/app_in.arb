@@ -30,6 +30,7 @@
     "showLessHint": "Tampilkan lebih sedikit",
 
     "favoriteTitle": "Team Liga Favoritmu",
+    "favoriteError": "Belum ada team yang kamu favoritkan",
 
     "settingsTitle": "Pengaturan",
     "languageSettingTitle": "Bahasa: ",

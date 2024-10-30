@@ -13,25 +13,25 @@ class SettingController {
     this.storage = storage ?? getIt.get<IStorage>();
   }
 
-  final isLang = Observable<bool>(true);
+  final isLang = Observable<int>(1);
 
   @action
-  void setIsLang(bool data) {   
+  void setIsLang(int data) {   
     isLang.value = data;
   }
 
   Future<void> initializeData() async {
     final language = await storage.getLanguage();
     if (language == null || language.contains('en')) {
-      isLang.value = true;
+      isLang.value = 1;
     } else {
-      isLang.value = false;
+      isLang.value = 2;
     }
   }
 
   void saveLanguage(BuildContext context) {
-    if (isLang.value) {
-      storage.setLanguage(AppConst.defaulthLang);
+    if (isLang.value == 1) {
+      storage.setLanguage(AppConst.defaultLang);
       MyApp.setLocale(context, const Locale('en'));
     } else {
       storage.setLanguage(AppConst.indoLang);

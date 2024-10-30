@@ -30,6 +30,16 @@ class AppStyle {
 
   static TextTheme mainTextTheme = GoogleFonts.rethinkSansTextTheme();
 
+  static TextStyle rSansw500 = TextStyle(
+    fontWeight: FontWeight.w500,
+    fontSize: 18,
+  );
+
+  static TextStyle rSansw300 = TextStyle(
+    fontWeight: FontWeight.w300,
+    fontSize: 18,
+  );
+
   static const MaterialColor appthemeAccent =
       MaterialColor(_appThemeAccentValue, <int, Color>{
     100: Color(0xFFFFFFFF),

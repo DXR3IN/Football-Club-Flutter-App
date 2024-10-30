@@ -4,6 +4,7 @@ import 'package:mobx/mobx.dart';
 import 'package:premiere_league_v2/components/config/app_style.dart';
 import 'package:premiere_league_v2/screens/settings/controller/setting_controller.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:premiere_league_v2/screens/settings/popup/change_language_popup.dart';
 
 class SettingsScreen extends StatefulWidget {
   const SettingsScreen({super.key});
@@ -84,24 +85,41 @@ class _SettingsScreenState extends State<SettingsScreen> {
             children: [
               Text(
                 AppLocalizations.of(context)!.languageSettingTitle,
-                style: TextStyle(fontWeight: FontWeight.w500, fontSize: 18),
+                style:
+                    const TextStyle(fontWeight: FontWeight.w500, fontSize: 18),
               ),
               const SizedBox(
                 height: 5,
               ),
               Observer(
                 builder: (context) {
-                  return ListTile(
-                    leading: const Icon(Icons.language),
-                    title: Text(
-                        _controller.isLang.value ? "English" : "Indonesian"),
-                    trailing: Switch(
-                      value: _controller.isLang.value,
-                      onChanged: (bool newValue) {
-                        _controller.isLang.value = newValue;
-                        _controller.saveLanguage(context);
-                      },
-                    ),
+                  return InkWell(
+                    child: ListTile(
+                        leading: const Icon(Icons.language),
+                        title: Text(_controller.isLang.value == 1
+                            ? "English"
+                            : "Indonesian"),
+                        trailing: Icon(Icons.arrow_right_sharp)),
+                    onTap: () async {
+                      await showModalBottomSheet(
+                        context: context,
+                        isScrollControlled: true,
+                        clipBehavior: Clip.antiAlias,
+                        shape: const RoundedRectangleBorder(
+                          borderRadius: BorderRadius.only(
+                            topLeft: Radius.circular(20),
+                            topRight: Radius.circular(20),
+                          ),
+                        ),
+                        builder: (ctx) {
+                          return SizedBox(
+                              width: MediaQuery.of(context).size.width * 0.95,
+                              child: ChangeLanguagePopup(
+                                controller: _controller,
+                              ));
+                        },
+                      );
+                    },
                   );
                 },
               )
@@ -117,8 +135,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
 class TripleWaveDesign extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Container(
-      height: 180, // Tinggi dari ombak
+    return SizedBox(
+      height: 180,
       width: double.infinity,
       child: CustomPaint(
         painter: VariedTripleWavePainter(),

@@ -30,6 +30,7 @@
     "showLessHint": "Show Less",
 
     "favoriteTitle": "Your Favorite Team",
+    "favoriteError": "No favorite teams yet",
 
     "settingsTitle": "Settings",
     "languageSettingTitle": "Language: ",
