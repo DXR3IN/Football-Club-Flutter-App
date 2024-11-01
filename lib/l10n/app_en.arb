@@ -54,5 +54,6 @@
                 "type": "String"
             }
         }
-    }
+    },
+    "likedEquipmentButton": "Liked Equipment"
 }

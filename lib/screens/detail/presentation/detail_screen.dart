@@ -6,10 +6,11 @@ import 'package:ionicons/ionicons.dart';
 import 'package:premiere_league_v2/components/widget/app_observer_builder_widget.dart';
 import 'package:premiere_league_v2/components/widget/hex_to_color.dart';
 import 'package:premiere_league_v2/components/widget/launch_url.dart';
+import 'package:premiere_league_v2/screens/detail/button/like_equipment_button.dart';
 import 'package:premiere_league_v2/screens/detail/model/club_model.dart';
 import 'package:premiere_league_v2/main.dart';
 import 'package:premiere_league_v2/screens/detail/controller/detail_controller.dart';
-import 'package:premiere_league_v2/screens/detail/favorite_button/favorite_button.dart';
+import 'package:premiere_league_v2/screens/detail/button/favorite_button.dart';
 import 'package:premiere_league_v2/screens/detail/model/equipment_model.dart';
 import 'package:premiere_league_v2/screens/detail/presentation/detail_shimmer_screen.dart';
 import 'package:shimmer/shimmer.dart';
@@ -399,10 +400,10 @@ class _DetailScreenState extends State<DetailScreen> {
                   viewportFraction: 0.5,
                   height: 200,
                   aspectRatio: 1 / 1,
-                  pageSnapping: false,
+                  pageSnapping: true,
                   initialPage: (equipmentList.length / 2).round(),
                   enableInfiniteScroll: true,
-                  autoPlay: true,
+                  // autoPlay: true,
                   autoPlayAnimationDuration: const Duration(milliseconds: 800),
                   // autoPlayCurve: Curves.fastOutSlowIn,
                   enlargeCenterPage: true,
@@ -456,6 +457,10 @@ class _DetailScreenState extends State<DetailScreen> {
                               ],
                             ),
                           ),
+                        ),
+                        Align(
+                          alignment: Alignment.topRight,
+                          child: LikeEquipmentButton(equipment: equipment),
                         )
                       ],
                     ),

@@ -1,10 +1,12 @@
 import 'package:app_links/app_links.dart';
+import 'package:drift/native.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:logger/logger.dart';
 import 'package:mobx/mobx.dart';
+import 'package:premiere_league_v2/components/util/local_database/data_equipment.dart';
 import 'package:premiere_league_v2/firebase_handler.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -15,6 +17,7 @@ import 'components/config/app_route.dart';
 import 'components/config/app_theme.dart';
 import 'components/util/network.dart';
 import 'components/util/storage_util.dart';
+
 
 final getIt = GetIt.instance;
 // initialize firebase handler
@@ -71,6 +74,7 @@ Future _dependencyInjection() async {
   getIt.registerLazySingleton<IStorage>(() => SecureStorage());
   getIt.registerLazySingleton(() => Network.dioClient());
   getIt.registerLazySingleton(() => ApiClient(getIt()));
+  getIt.registerLazySingleton<Database>(() => Database(NativeDatabase.memory()));
 
   await firebaseHandler.initializeNotifications();
   await firebaseHandler.firebaseListener();

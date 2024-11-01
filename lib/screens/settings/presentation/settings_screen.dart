@@ -97,9 +97,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     child: ListTile(
                         leading: const Icon(Icons.language),
                         title: Text(_controller.isLang.value == 1
-                            ? "English"
-                            : "Indonesian"),
-                        trailing: Icon(Icons.arrow_right_sharp)),
+                            ? AppLocalizations.of(context)!.english
+                            : AppLocalizations.of(context)!.indonesian),
+                        trailing: const Icon(Icons.arrow_right_sharp)),
                     onTap: () async {
                       await showModalBottomSheet(
                         context: context,
@@ -152,7 +152,7 @@ class VariedTripleWavePainter extends CustomPainter {
 
     paint.color = Colors.blue[300]!;
     Path path1 = Path();
-    path1.moveTo(0, 0);
+    path1.moveTo(0, 0); 
     path1.cubicTo(
       size.width * 0.2,
       40,

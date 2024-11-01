@@ -28,7 +28,6 @@ environment:
 # the latest version available on pub.dev. To see which dependencies have newer
 # versions available, run `flutter pub outdated`.
 dependencies:
-  build_runner: ^2.4.12
   cached_network_image: ^3.4.1
   cupertino_icons: ^1.0.8
   dio: ^5.6.0
@@ -63,6 +62,8 @@ dependencies:
   shimmer: ^3.0.0
   google_fonts: ^6.2.1
   carousel_slider: ^5.0.0
+  drift: ^2.21.0
+  sqlite3_flutter_libs: ^0.5.26
   
 
 dev_dependencies:
@@ -76,6 +77,8 @@ dev_dependencies:
     sdk: flutter
   json_serializable: ^6.0.0
   flutter_launcher_icons: ^0.14.1
+  drift_dev: ^2.5.0
+  build_runner: ^2.3.3
  
 flutter_native_splash:
   color: "#ffffff"

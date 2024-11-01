@@ -54,5 +54,6 @@
                 "type": "String"
             }
         }
-    }
+    },
+    "likedEquipmentButton": "Equipment Yang Disukai"
 }
