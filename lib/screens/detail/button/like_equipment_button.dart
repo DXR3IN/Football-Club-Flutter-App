@@ -35,7 +35,7 @@ class _LikeEquipmentButtonState extends State<LikeEquipmentButton> {
         final isLiked = _controller.isLiked.value;
         return IconButton(
           icon: Icon(Icons.thumb_up,
-              color: isLiked ? AppStyle.primaryColor : AppStyle.mainColor),
+              color: isLiked ? AppStyle.primaryColor : AppStyle.thirdColor),
           onPressed: () {
             _controller.toggleEquipmentCommand.execute();
           },

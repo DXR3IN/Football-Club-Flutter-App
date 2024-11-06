@@ -2,16 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:premiere_league_v2/components/config/app_style.dart';
 
 class AppDefaultThemeData {
-  var colorPrimary50 = const Color(0xffffdddd);
-  var colorPrimary100 = const Color(0xffffc0c0);
-  var colorPrimary200 = const Color.fromARGB(255, 89, 5, 216);
-  var colorPrimary300 = const Color.fromARGB(255, 94, 4, 189);
-  var colorPrimary400 = const Color.fromARGB(255, 93, 4, 187);
-  var colorPrimary500 = const Color.fromARGB(255, 67, 6, 166);
-  var colorPrimary600 = const Color.fromARGB(255, 66, 3, 133);
-  var colorPrimary700 = const Color.fromARGB(255, 61, 1, 124);
-  var colorPrimary800 = const Color.fromARGB(255, 48, 1, 98);
-  var colorPrimary900 = const Color.fromARGB(255, 39, 0, 82);
+  var colorPrimary50 = const Color.fromARGB(255, 238, 238, 238);
+  var colorPrimary100 = const Color.fromARGB(255, 167, 3, 112);
+  var colorPrimary200 = const Color.fromARGB(255, 161, 2, 108);
+  var colorPrimary300 = const Color.fromARGB(255, 175, 2, 117);
+  var colorPrimary400 = const Color.fromARGB(255, 147, 2, 99);
+  var colorPrimary500 = const Color.fromARGB(255, 159, 5, 108);
+  var colorPrimary600 = const Color.fromARGB(255, 173, 4, 117);
+  var colorPrimary700 = const Color.fromARGB(255, 127, 3, 85);
+  var colorPrimary800 = const Color.fromARGB(255, 103, 3, 70);
+  var colorPrimary900 = const Color.fromARGB(255, 106, 4, 72);
 
   var backgroundColor1 = const Color(0xffFFFFFF);
   var backgroundColor2 = const Color(0xfff2f2f2);

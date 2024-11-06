@@ -7,11 +7,11 @@ class AppStyle {
       EdgeInsets.symmetric(horizontal: 15, vertical: 12);
 
   // color
-  static const Color primaryColor = Color.fromARGB(255, 71, 2, 150);
+  static const Color primaryColor = Color.fromARGB(255, 129, 4, 87);
 
   static const Color secondColor = Color.fromARGB(255, 145, 9, 230);
 
-  static const Color mainColor = Color.fromARGB(255, 228, 227, 232);
+  static const Color thirdColor = Color.fromARGB(255, 228, 227, 232);
 
   static const MaterialColor appTheme =
       MaterialColor(_appthemePrimaryValue, <int, Color>{

@@ -1,11 +1,10 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:premiere_league_v2/components/config/app_style.dart';
 import 'package:premiere_league_v2/components/widget/app_observer_builder_widget.dart';
 import 'package:premiere_league_v2/main.dart';
 import 'package:premiere_league_v2/screens/favorite/controller/favorite_controller.dart';
 import 'package:premiere_league_v2/screens/favorite/model/fav_club_model.dart';
-import 'package:premiere_league_v2/screens/favorite/presentation/like_equipment_pop.dart';
+import 'package:premiere_league_v2/screens/favorite/presentation/liked_equipment_popup.dart';
 import 'package:premiere_league_v2/screens/home/controller/home_controller.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
@@ -40,6 +39,26 @@ class _FavoriteScreenState extends State<FavoriteScreen> {
     return Scaffold(
       appBar: _appBar(),
       body: _contentBody(),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+      floatingActionButtonAnimator: FloatingActionButtonAnimator.scaling,
+      floatingActionButton: FloatingActionButton(
+        onPressed: () async {
+          await showModalBottomSheet(
+            context: context,
+            isScrollControlled: true,
+            clipBehavior: Clip.antiAlias,
+            shape: const RoundedRectangleBorder(
+              borderRadius: BorderRadius.only(
+                topLeft: Radius.circular(20),
+                topRight: Radius.circular(20),
+              ),
+            ),
+            builder: (context) =>
+                LikedEquipmentPopup(controller: _favoriteController),
+          );
+        },
+        child: Icon(Icons.rounded_corner_sharp),
+      ),
     );
   }
 
@@ -66,54 +85,26 @@ class _FavoriteScreenState extends State<FavoriteScreen> {
       // Small screens (e.g., regular phones)
       crossAxisCount = 2;
     }
-    return Column(
-      children: [
-        Flexible(
-            child: ListTile(
-          leading: Icon(Icons.equalizer),
-          title: Text(AppLocalizations.of(context)!.likedEquipmentButton),
-          trailing: Icon(Icons.arrow_right_sharp),
-          onTap: () async {
-            await showModalBottomSheet(
-              context: context,
-              isScrollControlled: true,
-              clipBehavior: Clip.antiAlias,
-              shape: const RoundedRectangleBorder(
-                borderRadius: BorderRadius.only(
-                  topLeft: Radius.circular(20),
-                  topRight: Radius.circular(20),
-                ),
-              ),
-              builder: (context) =>
-                  LikeEquipmentPop(controller: _favoriteController),
-            );
-          },
-        )),
-        Expanded(
-          flex: 4,
-          child: AppObserverBuilder(
-            commandQuery: _favoriteController.favoriteClubCommand,
-            onLoading: () => const Center(child: CircularProgressIndicator()),
-            child: (data) {
-              final List<FavClubModel> team = List<FavClubModel>.from(data);
+    return AppObserverBuilder(
+      commandQuery: _favoriteController.favoriteClubCommand,
+      onLoading: () => const Center(child: CircularProgressIndicator()),
+      child: (data) {
+        final List<FavClubModel> team = List<FavClubModel>.from(data);
 
-              if (team.isEmpty) {
-                return Center(
-                    child: Text(AppLocalizations.of(context)!.favoriteError));
-              }
+        if (team.isEmpty) {
+          return Center(
+              child: Text(AppLocalizations.of(context)!.favoriteError));
+        }
 
-              return GridView.count(
-                crossAxisCount: crossAxisCount,
-                childAspectRatio: 1.0,
-                padding: const EdgeInsets.all(8.0),
-                mainAxisSpacing: 8.0,
-                crossAxisSpacing: 8.0,
-                children: team.map((team) => _itemCardFC(team)).toList(),
-              );
-            },
-          ),
-        ),
-      ],
+        return GridView.count(
+          crossAxisCount: crossAxisCount,
+          childAspectRatio: 1.0,
+          padding: const EdgeInsets.all(8.0),
+          mainAxisSpacing: 8.0,
+          crossAxisSpacing: 8.0,
+          children: team.map((team) => _itemCardFC(team)).toList(),
+        );
+      },
     );
   }
 

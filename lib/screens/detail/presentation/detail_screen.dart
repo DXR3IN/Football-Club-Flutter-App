@@ -3,6 +3,7 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:ionicons/ionicons.dart';
+import 'package:premiere_league_v2/components/config/app_style.dart';
 import 'package:premiere_league_v2/components/widget/app_observer_builder_widget.dart';
 import 'package:premiere_league_v2/components/widget/hex_to_color.dart';
 import 'package:premiere_league_v2/components/widget/launch_url.dart';
@@ -40,6 +41,17 @@ class _DetailScreenState extends State<DetailScreen> {
   @override
   void dispose() {
     super.dispose();
+  }
+
+  _safeAreaWidget(BuildContext context) {
+    if (MediaQuery.of(context).viewPadding.top < 20.0) {
+      return const SizedBox(height: 59);
+    } else {
+      return Container(
+        height: 35,
+        color: AppStyle.primaryColor,
+      );
+    }
   }
 
   @override
@@ -90,30 +102,22 @@ class _DetailScreenState extends State<DetailScreen> {
     );
   }
 
-  // PreferredSizeWidget _buildAppBar() {
-  //   return AppBar(
-  //     title: const Text("Detail Club"),
-  //     centerTitle: true,
-  //   );
-  // }
-
   Widget _buildContent(ClubModel team) {
-    return SafeArea(
-      child: SingleChildScrollView(
-        child: Column(
-          children: <Widget>[
-            _buildHeader(team),
-            _buildInfo(team),
-            const SizedBox(height: 30),
-            _buildEquipmentObserver(),
-            const SizedBox(height: 26),
-            _buildMediaSocials(team),
-            const SizedBox(height: 30),
-            _buildDescription(team),
-            const SizedBox(height: 5),
-            _bottomDesign(team)
-          ],
-        ),
+    return SingleChildScrollView(
+      child: Column(
+        children: <Widget>[
+          _safeAreaWidget(context),
+          _buildHeader(team),
+          _buildInfo(team),
+          const SizedBox(height: 30),
+          _buildEquipmentObserver(),
+          const SizedBox(height: 26),
+          _buildMediaSocials(team),
+          const SizedBox(height: 30),
+          _buildDescription(team),
+          const SizedBox(height: 5),
+          _bottomDesign(team)
+        ],
       ),
     );
   }

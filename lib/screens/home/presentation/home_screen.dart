@@ -2,6 +2,7 @@ import 'dart:ui';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:premiere_league_v2/components/config/app_style.dart';
 import 'package:premiere_league_v2/components/widget/app_observer_builder_widget.dart';
@@ -18,9 +19,12 @@ class HomeScreen extends StatefulWidget {
   State<HomeScreen> createState() => _HomeScreenState();
 }
 
-class _HomeScreenState extends State<HomeScreen> {
+class _HomeScreenState extends State<HomeScreen>
+    with AutomaticKeepAliveClientMixin {
   final _controller = HomeController(getIt.get());
-  // final TextEditingController _searchController = TextEditingController();
+
+  @override
+  bool get wantKeepAlive => true;
 
   @override
   void initState() {
@@ -30,95 +34,59 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   void dispose() {
-    // _searchController.dispose();
     super.dispose();
     _controller.dispose();
   }
 
+  Widget _safeAreaWidget(BuildContext context) {
+    final topPadding = MediaQuery.of(context).viewPadding.top;
+
+    final screenHeight = MediaQuery.of(context).size.height;
+
+    double height;
+    if (topPadding < 10.0) {
+      height = screenHeight * 0.015;
+    } else {
+      height = screenHeight * 0.035;
+    }
+
+    return Container(
+      height: height,
+      color: AppStyle.primaryColor,
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     return Scaffold(
       body: _body(),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-      floatingActionButton: _favoriteCaller(
-        Container(
-          padding: const EdgeInsets.all(10),
-          decoration: const BoxDecoration(
-            color: Colors.deepPurple,
-            image: DecorationImage(
-                image: AssetImage("assets/background.jpg"), fit: BoxFit.cover),
-            borderRadius: BorderRadius.only(
-              topLeft: Radius.circular(100),
-              topRight: Radius.circular(100),
-            ),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black26,
-                blurRadius: 6.0,
-                spreadRadius: 2.0,
-                offset: Offset(3, 3),
-              ),
-            ],
-          ),
-          child: const Icon(
-            Icons.star_border,
-            color: Colors.white,
-            size: 35,
-          ),
-        ),
-      ),
+      floatingActionButton: _favoriteCaller(),
     );
   }
 
   Widget _body() {
-    return SafeArea(
-      child: SingleChildScrollView(
-        child: Column(
-          children: [
-            // _safeArea(context),
-            _navBar(),
-            Padding(
-              padding: AppStyle.mainPadding,
-              child: AppObserverBuilder(
-                commandQuery: _controller.listFootballClubCommand,
-                onLoading: () => const HomeShimmerScreen(),
-                child: (data) {
-                  return _contentBody(data);
-                },
-              ),
+    return SingleChildScrollView(
+      padding: MediaQuery.of(context).viewInsets,
+      child: Column(
+        children: [
+          _safeAreaWidget(context),
+          _navBar(),
+          Padding(
+            padding: AppStyle.mainPadding,
+            child: AppObserverBuilder(
+              commandQuery: _controller.listFootballClubCommand,
+              onLoading: () => const HomeShimmerScreen(),
+              child: (data) {
+                return _contentBody(data);
+              },
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
-
-  // Widget _sliverAppBar() {
-  //   return SliverAppBar(
-  //     automaticallyImplyLeading: false,
-  //     pinned: true,
-  //     floating: true,
-  //     expandedHeight: 200.0,
-  //     flexibleSpace: FlexibleSpaceBar(
-  //       background: Stack(
-  //         fit: StackFit.expand,
-  //         children: [
-  //           ClipRRect(
-  //             borderRadius: BorderRadius.only(
-  //                 bottomLeft: Radius.circular(200),
-  //                 bottomRight: Radius.circular(50)),
-  //             child: Image.asset(
-  //               "assets/banner/premiere-league-banner2.png",
-  //               fit: BoxFit.fill,
-  //             ),
-  //           ),
-  //         ],
-  //       ),
-  //       title: Text(AppConst.appName),
-  //       centerTitle: true,
-  //     ),
-  //   );
-  // }
 
   Widget _navBar() {
     return Stack(
@@ -142,7 +110,8 @@ class _HomeScreenState extends State<HomeScreen> {
                     bottomRight: Radius.circular(30)),
                 child: Image.asset("assets/background.jpg")),
         Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
+          padding:
+              const EdgeInsets.only(top: 12, right: 12, left: 12, bottom: 5),
           child: Column(
             children: [
               const SizedBox(
@@ -152,8 +121,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 children: [_searchBar(), _settingsButton()],
               ),
               Padding(
-                padding: const EdgeInsets.only(
-                    bottom: 20, left: 30, right: 30, top: 40),
+                padding: const EdgeInsets.only(left: 30, right: 30, top: 40),
                 child: _controller.isSearchBarFocused.value
                     ? const SizedBox()
                     : Container(
@@ -180,36 +148,29 @@ class _HomeScreenState extends State<HomeScreen> {
                             Align(
                               alignment: Alignment.bottomCenter,
                               child: Container(
-                                width: 200,
-                                height: 20,
-                                decoration: const BoxDecoration(
-                                  borderRadius: BorderRadius.only(
-                                      topLeft: Radius.circular(10),
-                                      topRight: Radius.circular(10)),
+                                  padding: const EdgeInsets.all(8),
                                   color: Colors.white,
-                                ),
-                                child: Center(
-                                  child: Observer(
-                                    builder: (context) {
-                                      final isLoading =
-                                          _controller.isLoading.value;
-                                      if (isLoading) {
-                                        return Text(
-                                          "0 ${AppLocalizations.of(context)!.title}",
-                                          style: const TextStyle(
-                                              fontWeight: FontWeight.bold),
-                                        );
-                                      }
-
-                                      return Text(
-                                        "${_controller.totalTeam.value} ${AppLocalizations.of(context)!.title}",
-                                        style: const TextStyle(
-                                            fontWeight: FontWeight.bold),
-                                      );
-                                    },
-                                  ),
-                                ),
-                              ),
+                                  height: MediaQuery.sizeOf(context).width / 12,
+                                  width: MediaQuery.sizeOf(context).width / 3,
+                                  child: Row(
+                                    children: [
+                                      Expanded(
+                                        flex: 2,
+                                        child: Observer(
+                                            builder: (context) => _controller
+                                                    .isLoading.value
+                                                ? const Text("0")
+                                                : Text(
+                                                    "${_controller.totalTeam.value}")),
+                                      ),
+                                      Expanded(
+                                        flex: 6,
+                                        child: Text(
+                                            AppLocalizations.of(context)!
+                                                .title),
+                                      )
+                                    ],
+                                  )),
                             ),
                           ],
                         ),
@@ -223,23 +184,21 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Widget _contentBody(List<HomeClubModel> listFootballClub) {
-    final width = MediaQuery.of(context).size.width;
-
-    int crossAxisCount;
-    if (width > 1200) {
-      // Large screens (e.g., tablets or desktops)
-      crossAxisCount = 8;
-    } else if (width > 800) {
-      // Medium screens (e.g., large phones)
-      crossAxisCount = 5;
-    } else if (width > 600) {
-      crossAxisCount = 3;
-    } else {
-      // Small screens (e.g., regular phones)
-      crossAxisCount = 2;
-    }
-
     return Observer(builder: (_) {
+      final width = MediaQuery.of(context).size.width;
+      int crossAxisCount;
+
+      // Determine the grid layout based on screen width
+      if (width > 1200) {
+        crossAxisCount = 8; // Large screens (e.g., tablets or desktops)
+      } else if (width > 800) {
+        crossAxisCount = 5; // Medium screens (e.g., large phones)
+      } else if (width > 600) {
+        crossAxisCount = 3;
+      } else {
+        crossAxisCount = 2; // Small screens (e.g., regular phones)
+      }
+
       final displayList = _controller.searchQuery.value.isEmpty
           ? listFootballClub
           : _controller.filteredTeams;
@@ -354,12 +313,28 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  Widget _favoriteCaller(Widget icon) {
+  Widget _favoriteCaller() {
     return GestureDetector(
-      child: icon,
       onTap: () {
         _controller.onTapFavScreen();
       },
+      child: Container(
+        padding: const EdgeInsets.all(10),
+        decoration: const BoxDecoration(
+          image: DecorationImage(
+              image: AssetImage("assets/background.jpg"), fit: BoxFit.fill),
+          color: Colors.deepPurple,
+          borderRadius: BorderRadius.only(
+            topLeft: Radius.circular(100),
+            topRight: Radius.circular(100),
+          ),
+        ),
+        child: const Icon(
+          Icons.star_border,
+          color: Colors.white,
+          size: 35,
+        ),
+      ),
     );
   }
 

@@ -82,16 +82,16 @@ dev_dependencies:
  
 flutter_native_splash:
   color: "#ffffff"
-  image: assets/logo.png
+  image: assets/app_icon_and_splash.png
 
   android_12:
     icon_background_color: "#ffffff"
-    image: assets/logo.png
+    image: assets/app_icon_and_splash.png
   android: true
 
 flutter_launcher_icons:
   android: "launcher_icon"
-  image_path: "assets/app_icon.png"
+  image_path: "assets/app_icon_and_splash.png"
   ios: true
   min_sdk_android: 21
 
@@ -109,9 +109,10 @@ flutter:
   assets:
     - assets/banner/premier-league-banner.jpg
     - assets/banner/premiere-league-banner2.png
-    - assets/splash.png
+    - assets/logo_2.png
     - assets/logo.png
     - assets/app_icon.png
+    - assets/app_icon_and_splash.png
     - assets/placeholder/equipment-placeholder.png
     - assets/placeholder/logoclub-placeholder.png
     - assets/background.jpg

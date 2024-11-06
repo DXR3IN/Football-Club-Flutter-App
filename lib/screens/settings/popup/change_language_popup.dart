@@ -146,7 +146,7 @@ class _ChangeLanguagePopupState extends State<ChangeLanguagePopup> {
                   shape: BoxShape.circle,
                   border: Border.all(
                     color:
-                        isSelected ? AppStyle.primaryColor : AppStyle.mainColor,
+                        isSelected ? AppStyle.primaryColor : AppStyle.thirdColor,
                     width: 2.0,
                   ),
                   color:
