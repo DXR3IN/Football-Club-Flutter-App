@@ -20,8 +20,7 @@ class LikeEquipmentController {
 
   @action
   Future<void> _checkIfLiked() async {
-    // Check if the equipment with this ID already exists in the database
-    final query = await _database.select(_database.dataEquipment)
+    final query = _database.select(_database.dataEquipment)
       ..where((tbl) => tbl.id.equals(equipment.idEquipment!));
     final result = await query.get();
     runInAction(() {

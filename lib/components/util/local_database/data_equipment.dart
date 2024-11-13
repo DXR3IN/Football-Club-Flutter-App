@@ -26,7 +26,7 @@ abstract class DataEquipmentView extends View {
 
 @DriftDatabase(tables: [DataEquipment], views: [DataEquipmentView])
 class Database extends _$Database {
-  Database(QueryExecutor e) : super(e);
+  Database(super.e);
 
   @override
   int get schemaVersion => 2;

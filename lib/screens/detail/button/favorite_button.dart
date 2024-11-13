@@ -7,7 +7,7 @@ import 'package:premiere_league_v2/screens/detail/model/club_model.dart';
 class FavoriteButton extends StatefulWidget {
   final ClubModel footbalTeam;
 
-  FavoriteButton(this.footbalTeam, {super.key});
+  const FavoriteButton(this.footbalTeam, {super.key});
 
   @override
   State<FavoriteButton> createState() => _FavoriteButtonState();

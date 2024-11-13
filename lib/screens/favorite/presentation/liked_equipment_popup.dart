@@ -1,5 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:premiere_league_v2/components/config/app_style.dart';
 import 'package:premiere_league_v2/components/widget/app_observer_builder_widget.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:premiere_league_v2/screens/favorite/controller/favorite_controller.dart';
@@ -36,47 +37,66 @@ class _LikedEquipmentPopupState extends State<LikedEquipmentPopup> {
         margin: MediaQuery.of(context).viewInsets,
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 18),
-          child: AppObserverBuilder(
-            commandQuery: widget.controller.likedEquipmentCommand,
-            onLoading: () => const Center(child: CircularProgressIndicator()),
-            child: (data) {
-              int crossAxisCount;
-              if (width > 1200) {
-                // Large screens (e.g., tablets or desktops)
-                crossAxisCount = 8;
-              } else if (width > 800) {
-                // Medium screens (e.g., large phones)
-                crossAxisCount = 5;
-              } else if (width > 600) {
-                crossAxisCount = 3;
-              } else {
-                // Small screens (e.g., regular phones)
-                crossAxisCount = 2;
-              }
-              if (data.length == 0) {
-                return SizedBox(
-                  height: 200,
-                  width: double.infinity,
-                  child: Center(
-                    child: Text(AppLocalizations.of(context)!.likedEquipment),
-                  ),
-                );
-              }
-              return GridView.builder(
-                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: crossAxisCount,
-                  childAspectRatio: 1.0,
-                  mainAxisSpacing: 8.0,
-                  crossAxisSpacing: 8.0,
+          child: Column(
+            children: [
+              Center(
+                  child: Container(
+                height: 10,
+                width: 100,
+                decoration: BoxDecoration(
+                  color: AppStyle.primaryColor,
+                  borderRadius: AppStyle.borderRadiusSmall(),
                 ),
-                padding: const EdgeInsets.all(8.0),
-                itemCount: data.length,
-                itemBuilder: (context, index) {
-                  final equipment = data[index];
-                  return _equipmentCard(equipment);
-                },
-              );
-            },
+              )),
+              const SizedBox(height: 12),
+              Expanded(
+                flex: 5,
+                child: AppObserverBuilder(
+                  commandQuery: widget.controller.likedEquipmentCommand,
+                  onLoading: () =>
+                      const Center(child: CircularProgressIndicator()),
+                  child: (data) {
+                    int crossAxisCount;
+                    if (width > 1200) {
+                      // Large screens (e.g., tablets or desktops)
+                      crossAxisCount = 8;
+                    } else if (width > 800) {
+                      // Medium screens (e.g., large phones)
+                      crossAxisCount = 5;
+                    } else if (width > 600) {
+                      crossAxisCount = 3;
+                    } else {
+                      // Small screens (e.g., regular phones)
+                      crossAxisCount = 2;
+                    }
+                    if (data.length == 0) {
+                      return SizedBox(
+                        height: 200,
+                        width: double.infinity,
+                        child: Center(
+                          child: Text(
+                              AppLocalizations.of(context)!.likedEquipment),
+                        ),
+                      );
+                    }
+                    return GridView.builder(
+                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                        crossAxisCount: crossAxisCount,
+                        childAspectRatio: 1.0,
+                        mainAxisSpacing: 8.0,
+                        crossAxisSpacing: 8.0,
+                      ),
+                      padding: const EdgeInsets.all(8.0),
+                      itemCount: data.length,
+                      itemBuilder: (context, index) {
+                        final equipment = data[index];
+                        return _equipmentCard(equipment);
+                      },
+                    );
+                  },
+                ),
+              ),
+            ],
           ),
         ),
       ),

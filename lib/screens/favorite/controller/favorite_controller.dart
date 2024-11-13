@@ -10,30 +10,26 @@ import 'package:premiere_league_v2/screens/favorite/model/fav_club_model.dart';
 import 'package:premiere_league_v2/screens/favorite/model/liked_equipment_model.dart';
 
 class FavoriteController extends ChangeNotifier {
+
+  FavoriteController();
+
   final Database _database = GetIt.instance<Database>();
   final FavoriteHandler _favoriteHandler = FavoriteHandler();
 
   List<FavClubModel> _favoriteTeams = [];
   List<FavClubModel> get favoriteTeams => _favoriteTeams;
 
-  // Accepting list of teams passed as arguments
-  FavoriteController();
-
-  // CommandQuery to handle loading favorites
   late final favoriteClubCommand =
       CommandQuery.create<Null, List<FavClubModel>>(loadFavorites);
-
   late final likedEquipmentCommand =
       CommandQuery.create(_getLikedEquipmentFromDB);
 
-  // Load favorites based on the teams already passed
   Future<List<FavClubModel>> loadFavorites() async {
     _favoriteTeams = await _favoriteHandler.getFavoriteTeams();
     notifyListeners();
     return _favoriteTeams;
   }
 
-  // Removing a team from favorites
   Future<void> removeFromFavorites(FavClubModel footbalTeam) async {
     await _favoriteHandler.removeFavoriteTeam(footbalTeam);
     await favoriteClubCommand.execute();

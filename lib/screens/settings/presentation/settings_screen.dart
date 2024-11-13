@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
-import 'package:mobx/mobx.dart';
 import 'package:premiere_league_v2/components/config/app_style.dart';
 import 'package:premiere_league_v2/screens/settings/controller/setting_controller.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -48,7 +47,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
           child: const Row(
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
-              const SizedBox(
+              SizedBox(
                 width: 80,
                 height: 80,
                 child: CircleAvatar(
@@ -133,6 +132,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
 }
 
 class TripleWaveDesign extends StatelessWidget {
+  const TripleWaveDesign({super.key});
+
   @override
   Widget build(BuildContext context) {
     return SizedBox(
@@ -152,7 +153,7 @@ class VariedTripleWavePainter extends CustomPainter {
 
     paint.color = Colors.blue[300]!;
     Path path1 = Path();
-    path1.moveTo(0, 0); 
+    path1.moveTo(0, 0);
     path1.cubicTo(
       size.width * 0.2,
       40,

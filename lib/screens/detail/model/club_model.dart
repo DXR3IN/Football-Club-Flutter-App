@@ -4,6 +4,7 @@ class ClubModel {
   String? teamAlternate;
   String? badge;
   String? banner;
+  String? location;
   String? youtube;
   String? instagram;
   String? facebook;
@@ -22,6 +23,7 @@ class ClubModel {
       this.teamAlternate,
       this.badge,
       this.banner,
+      this.location,
       this.youtube,
       this.instagram,
       this.facebook,
@@ -40,6 +42,7 @@ class ClubModel {
     teamAlternate = json['strTeamAlternate'] as String?;
     badge = json['strBadge'] as String?;
     banner = json['strBanner'] as String?;
+    location = json['strLocation'] as String?;
     youtube = json['strYoutube'] as String?;
     instagram = json['strInstagram'] as String?;
     facebook = json['strFacebook'] as String?;
@@ -60,6 +63,7 @@ class ClubModel {
     data['strTeamAlternate'] = teamAlternate;
     data['strBadge'] = badge;
     data['strBanner'] = banner;
+    data['strLocation'] = location;
     data['strYoutube'] = youtube;
     data['strInstagram'] = instagram;
     data['strFacebook'] = facebook;

@@ -7,6 +7,13 @@ plugins {
 
 apply plugin: 'com.google.gms.google-services'
 
+def localProperties = new Properties()
+def localPropertiesFile = rootProject.file("local.properties")
+
+if (localPropertiesFile.exists()) {
+    localProperties.load(new FileInputStream(localPropertiesFile))
+}
+
 android {
     namespace = "com.example.premiere_league_v2"
     compileSdk = flutter.compileSdkVersion
@@ -30,6 +37,9 @@ android {
         targetSdk = flutter.targetSdkVersion
         versionCode = flutter.versionCode
         versionName = flutter.versionName
+        manifestPlaceholders += [
+                API_KEY: "${localProperties.getProperty("API_KEY")}"
+        ]
         multiDexEnabled true
     }
 

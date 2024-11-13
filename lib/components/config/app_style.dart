@@ -30,12 +30,12 @@ class AppStyle {
 
   static TextTheme mainTextTheme = GoogleFonts.rethinkSansTextTheme();
 
-  static TextStyle rSansw500 = TextStyle(
+  static TextStyle rSansw500 = const TextStyle(
     fontWeight: FontWeight.w500,
     fontSize: 18,
   );
 
-  static TextStyle rSansw300 = TextStyle(
+  static TextStyle rSansw300 = const TextStyle(
     fontWeight: FontWeight.w300,
     fontSize: 18,
   );

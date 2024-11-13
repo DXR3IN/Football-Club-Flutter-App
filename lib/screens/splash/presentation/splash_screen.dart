@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:premiere_league_v2/screens/splash/controller/splash_controller.dart';
 
 class SplashScreen extends StatefulWidget {
-  SplashScreen({super.key});
+  const SplashScreen({super.key});
 
   @override
   State<SplashScreen> createState() => _SplashScreenState();

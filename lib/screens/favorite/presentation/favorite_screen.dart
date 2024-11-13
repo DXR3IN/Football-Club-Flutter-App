@@ -57,7 +57,7 @@ class _FavoriteScreenState extends State<FavoriteScreen> {
                 LikedEquipmentPopup(controller: _favoriteController),
           );
         },
-        child: Icon(Icons.rounded_corner_sharp),
+        child: const Icon(Icons.rounded_corner_sharp),
       ),
     );
   }

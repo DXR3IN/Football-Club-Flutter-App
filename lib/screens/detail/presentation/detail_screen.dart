@@ -1,5 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:ionicons/ionicons.dart';
@@ -14,6 +15,7 @@ import 'package:premiere_league_v2/screens/detail/controller/detail_controller.d
 import 'package:premiere_league_v2/screens/detail/button/favorite_button.dart';
 import 'package:premiere_league_v2/screens/detail/model/equipment_model.dart';
 import 'package:premiere_league_v2/screens/detail/presentation/detail_shimmer_screen.dart';
+import 'package:premiere_league_v2/screens/detail/presentation/google_maps_popup.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:logger/logger.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -232,6 +234,36 @@ class _DetailScreenState extends State<DetailScreen> {
             AppLocalizations.of(context)!.stadium(team.stadium!),
             style: const TextStyle(fontSize: 18),
           ),
+          const SizedBox(height: 8),
+          RichText(
+            text: TextSpan(
+              text: "${AppLocalizations.of(context)!.location}: ",
+              style: const TextStyle(fontSize: 18, color: Colors.black87),
+              children: [
+                TextSpan(
+                  text: team.location,
+                  style: const TextStyle(
+                      color: Colors.blueAccent, fontWeight: FontWeight.bold),
+                  recognizer: TapGestureRecognizer()
+                    ..onTap = () async {
+                      await showModalBottomSheet(
+                        context: context,
+                        isScrollControlled: true,
+                        clipBehavior: Clip.antiAlias,
+                        shape: const RoundedRectangleBorder(
+                          borderRadius: BorderRadius.only(
+                            topLeft: Radius.circular(20),
+                            topRight: Radius.circular(20),
+                          ),
+                        ),
+                        builder: (context) => GoogleMapsPopup(
+                            location: team.location ?? team.stadium),
+                      );
+                    },
+                )
+              ],
+            ),
+          )
         ],
       ),
     );

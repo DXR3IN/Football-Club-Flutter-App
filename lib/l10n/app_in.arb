@@ -22,6 +22,7 @@
             }
         }
     },
+    "location": "Lokasi",
     "equipment": "Seragam",
     "socialMedia": "Media Sosial",
     "equipmentError": "Tidak ada perlengkapan yang tersedia",
