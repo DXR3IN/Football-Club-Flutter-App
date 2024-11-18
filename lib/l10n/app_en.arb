@@ -23,6 +23,7 @@
         }
     },
     "location": "Location",
+    "locationNotFound": "Location not found",
     "equipment": "Equipment",
     "socialMedia": "Social Media",
     "equipmentError": "No equipment available",

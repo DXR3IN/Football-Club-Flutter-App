@@ -1,4 +1,3 @@
-
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
@@ -130,7 +129,7 @@ class _HomeScreenState extends State<HomeScreen>
                                 "assets/banner/premiere-league-banner2.png"),
                             fit: BoxFit.cover,
                           ),
-                          color: Colors.white,
+                          color: AppStyle.thirdColor,
                           borderRadius: BorderRadius.all(Radius.circular(10)),
                           boxShadow: [
                             BoxShadow(

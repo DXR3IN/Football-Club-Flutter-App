@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:premiere_league_v2/components/config/app_style.dart';
 
 class AppDefaultThemeData {
-  var colorPrimary50 = const Color.fromARGB(255, 238, 238, 238);
+  var colorPrimary50 = const Color.fromARGB(255, 188, 4, 127);
   var colorPrimary100 = const Color.fromARGB(255, 167, 3, 112);
   var colorPrimary200 = const Color.fromARGB(255, 161, 2, 108);
   var colorPrimary300 = const Color.fromARGB(255, 175, 2, 117);
@@ -13,8 +13,8 @@ class AppDefaultThemeData {
   var colorPrimary800 = const Color.fromARGB(255, 103, 3, 70);
   var colorPrimary900 = const Color.fromARGB(255, 106, 4, 72);
 
-  var backgroundColor1 = const Color(0xffFFFFFF);
-  var backgroundColor2 = const Color(0xfff2f2f2);
+  var backgroundColor1 = const Color.fromARGB(255, 127, 3, 85);
+  var backgroundColor2 = const Color.fromARGB(255, 103, 3, 70);
   var backgroundAlternativeColor1 = const Color(0xff0A0A0A);
   var textColor1 = const Color(0xff262626);
   var textColor2 = const Color(0xff2D2D2D);

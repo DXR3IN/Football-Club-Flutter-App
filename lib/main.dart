@@ -139,11 +139,10 @@ class _MyAppState extends State<MyApp> {
 
     if (pathSegments.isNotEmpty) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
-        // Ensure route observer is initialized
+
         final currentRoute = ModalRoute.of(AppNav.context)?.settings.name;
         logger.i('Current route: $currentRoute');
 
-        // Only navigate if the deep link route is different from the current route
         if (pathSegments.length == 1 &&
             pathSegments.first == "home" &&
             currentRoute != AppRoute.teamFcListScreen) {

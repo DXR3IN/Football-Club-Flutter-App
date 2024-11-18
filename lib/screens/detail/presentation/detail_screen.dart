@@ -2,6 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:ionicons/ionicons.dart';
 import 'package:premiere_league_v2/components/config/app_style.dart';
@@ -45,22 +46,28 @@ class _DetailScreenState extends State<DetailScreen> {
     super.dispose();
   }
 
-  _safeAreaWidget(BuildContext context) {
-    if (MediaQuery.of(context).viewPadding.top < 20.0) {
-      return const SizedBox(height: 59);
+  Widget _safeAreaWidget(BuildContext context) {
+    final topPadding = MediaQuery.of(context).viewPadding.top;
+
+    final screenHeight = MediaQuery.of(context).size.height;
+
+    double height;
+    if (topPadding < 10.0) {
+      height = screenHeight * 0.015;
     } else {
-      return Container(
-        height: 35,
-        color: AppStyle.primaryColor,
-      );
+      height = screenHeight * 0.035;
     }
+
+    return Container(
+      height: height,
+      color: AppStyle.primaryColor,
+    );
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.grey[200],
-      // appBar: _buildAppBar(),
       body: AppObserverBuilder(
         commandQuery: _controller.dummyDetailClubModel,
         onLoading: () => const DetailShimmerScreen(),
@@ -129,19 +136,6 @@ class _DetailScreenState extends State<DetailScreen> {
 
     return Stack(
       children: [
-        // CachedNetworkImage(
-        //   imageUrl: team.banner!,
-        //   placeholder: (context, url) => Shimmer.fromColors(
-        //     child: Container(
-        //       width: width,
-        //       height: 75,
-        //       color: Colors.grey[300],
-        //     ),
-        //     baseColor: Colors.grey[300]!,
-        //     highlightColor: Colors.white,
-        //   ),
-        // ),
-
         Container(
           width: width,
           height: width / 2,
@@ -471,9 +465,12 @@ class _DetailScreenState extends State<DetailScreen> {
                         CachedNetworkImage(
                           imageUrl: equipment.strEquipment!,
                           fit: BoxFit.cover,
-                          placeholder: (context, url) => Image.asset(
-                            "assets/placeholder/equipment-placeholder.png",
-                            // fit: BoxFit.fill,
+                          placeholder: (context, url) => Shimmer.fromColors(
+                            baseColor: Colors.grey[300]!,
+                            highlightColor: Colors.white,
+                            child: Container(
+                              color: Colors.grey[300],
+                            ),
                           ),
                         ),
                         Center(

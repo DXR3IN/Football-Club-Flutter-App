@@ -7,12 +7,14 @@ class MapsController {
   MapsController() {
     locationCoordinates = Observable<LatLng?>(null);
     isLoading = Observable(false);
+    locationName = Observable(null);
     errorMessage = Observable<String?>(null);
   }
 
   late final Observable<LatLng?> locationCoordinates;
   late final Observable<bool> isLoading;
   late final Observable<String?> errorMessage;
+  late final Observable<String?> locationName;
 
   late final fetchCoordinates =
       CommandQuery.createWithParam<String, void>(_fetchCoordinates);
@@ -22,6 +24,8 @@ class MapsController {
       isLoading.value = true;
       errorMessage.value = null;
       List<Location> locations = await locationFromAddress(location);
+
+      locationName.value = location;
 
       if (locations.isNotEmpty) {
         locationCoordinates.value = LatLng(
