@@ -46,11 +46,11 @@ class _MapsScreenState extends State<MapsScreen> {
           );
         }
         if (_controller.locationCoordinates.value == null) {
-          return const Center(child: Text("Location not found"));
+          return Center(
+              child: Text(AppLocalizations.of(context)!.locationNotFound));
         }
 
         return GoogleMap(
-
           initialCameraPosition: CameraPosition(
             target: _controller.locationCoordinates.value!,
             zoom: 12.0,

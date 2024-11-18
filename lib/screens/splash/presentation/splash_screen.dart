@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:premiere_league_v2/components/config/app_const.dart';
 import 'package:premiere_league_v2/screens/splash/controller/splash_controller.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -27,8 +28,7 @@ class _SplashScreenState extends State<SplashScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Center(
-        child: Image.asset(
-            width: 300, height: 300, "assets/app_icon_and_splash.png"),
+        child: Image.asset(width: 300, height: 300, AppConst.splashScreenLogo),
       ),
     );
   }

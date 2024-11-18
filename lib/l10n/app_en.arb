@@ -1,4 +1,6 @@
 {
+    "unableToLoad": "Unable to load data",
+
     "title": "Premier League",
     "searchHint": "Search team name...",
     

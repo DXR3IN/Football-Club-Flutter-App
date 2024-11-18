@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:logger/logger.dart';
 import 'package:mobx/mobx.dart';
 import 'package:premiere_league_v2/main.dart';
 import 'package:premiere_league_v2/screens/detail/model/club_model.dart';
@@ -64,5 +65,13 @@ class DetailController extends BaseController {
     return await _api.getFcEquipment(id).then((value) {
       return value?.map((e) => EquipmentModel.fromJson(e)).toList() ?? [];
     });
+  }
+
+  Future launchUrl(String url) async {
+    try {
+      await launchUrl("https://$url");
+    } catch (e) {
+      Logger().i("Failed to launch URL: $e");
+    }
   }
 }

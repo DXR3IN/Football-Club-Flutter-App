@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
+import 'package:premiere_league_v2/components/config/app_const.dart';
 import 'package:premiere_league_v2/components/config/app_style.dart';
 import 'package:premiere_league_v2/components/widget/app_observer_builder_widget.dart';
 import 'package:premiere_league_v2/main.dart';
@@ -94,7 +95,7 @@ class _HomeScreenState extends State<HomeScreen>
                 height: MediaQuery.of(context).size.width / 4,
                 decoration: const BoxDecoration(
                   image: DecorationImage(
-                      image: AssetImage("assets/background.jpg"),
+                      image: AssetImage(AppConst.imageBackground),
                       fit: BoxFit.cover),
                   borderRadius: BorderRadius.only(
                       bottomLeft: Radius.circular(8),
@@ -105,7 +106,7 @@ class _HomeScreenState extends State<HomeScreen>
                 borderRadius: const BorderRadius.only(
                     bottomLeft: Radius.circular(30),
                     bottomRight: Radius.circular(30)),
-                child: Image.asset("assets/background.jpg")),
+                child: Image.asset(AppConst.imageBackground)),
         Padding(
           padding:
               const EdgeInsets.only(top: 12, right: 12, left: 12, bottom: 5),
@@ -126,7 +127,7 @@ class _HomeScreenState extends State<HomeScreen>
                         decoration: const BoxDecoration(
                           image: DecorationImage(
                             image: AssetImage(
-                                "assets/banner/premiere-league-banner2.png"),
+                                AppConst.mainBanner),
                             fit: BoxFit.cover,
                           ),
                           color: AppStyle.thirdColor,
@@ -187,13 +188,13 @@ class _HomeScreenState extends State<HomeScreen>
 
       // Determine the grid layout based on screen width
       if (width > 1200) {
-        crossAxisCount = 8; // Large screens (e.g., tablets or desktops)
+        crossAxisCount = 8; 
       } else if (width > 800) {
-        crossAxisCount = 5; // Medium screens (e.g., large phones)
+        crossAxisCount = 5; 
       } else if (width > 600) {
         crossAxisCount = 3;
       } else {
-        crossAxisCount = 2; // Small screens (e.g., regular phones)
+        crossAxisCount = 2; 
       }
 
       final displayList = _controller.searchQuery.value.isEmpty
@@ -283,7 +284,7 @@ class _HomeScreenState extends State<HomeScreen>
                     child: CachedNetworkImage(
                       imageUrl: imageUrl,
                       placeholder: (context, url) => Image.asset(
-                        "assets/placeholder/logoclub-placeholder.png",
+                        AppConst.clubLogoPlaceHolder,
                         fit: BoxFit.fill,
                       ),
                       errorWidget: (context, url, error) =>
@@ -319,7 +320,7 @@ class _HomeScreenState extends State<HomeScreen>
         padding: const EdgeInsets.all(10),
         decoration: const BoxDecoration(
           image: DecorationImage(
-              image: AssetImage("assets/background.jpg"), fit: BoxFit.fill),
+              image: AssetImage(AppConst.imageBackground), fit: BoxFit.fill),
           color: Colors.deepPurple,
           borderRadius: BorderRadius.only(
             topLeft: Radius.circular(100),

@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:ionicons/ionicons.dart';
+import 'package:premiere_league_v2/components/config/app_const.dart';
 import 'package:premiere_league_v2/components/config/app_style.dart';
 import 'package:premiere_league_v2/components/widget/app_observer_builder_widget.dart';
 import 'package:premiere_league_v2/components/widget/hex_to_color.dart';
@@ -184,7 +185,7 @@ class _DetailScreenState extends State<DetailScreen> {
                       imageUrl: team.badge!,
                       fit: BoxFit.contain,
                       placeholder: (context, url) => Image.asset(
-                        "assets/placeholder/logoclub-placeholder.png",
+                        AppConst.clubLogoPlaceHolder,
                         fit: BoxFit.contain,
                       ),
                     ),

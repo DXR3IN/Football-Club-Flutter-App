@@ -1,5 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:premiere_league_v2/components/config/app_const.dart';
 import 'package:premiere_league_v2/components/widget/app_observer_builder_widget.dart';
 import 'package:premiere_league_v2/main.dart';
 import 'package:premiere_league_v2/screens/favorite/controller/favorite_controller.dart';
@@ -74,15 +75,12 @@ class _FavoriteScreenState extends State<FavoriteScreen> {
 
     int crossAxisCount;
     if (width > 1200) {
-      // Large screens (e.g., tablets or desktops)
       crossAxisCount = 8;
     } else if (width > 800) {
-      // Medium screens (e.g., large phones)
       crossAxisCount = 5;
     } else if (width > 600) {
       crossAxisCount = 3;
     } else {
-      // Small screens (e.g., regular phones)
       crossAxisCount = 2;
     }
     return AppObserverBuilder(
@@ -145,7 +143,7 @@ class _FavoriteScreenState extends State<FavoriteScreen> {
                         width: 120,
                         imageUrl: imageUrl,
                         placeholder: (context, url) => Image.asset(
-                          "assets/placeholder/logoclub-placeholder.png",
+                          AppConst.clubLogoPlaceHolder,
                           fit: BoxFit.fill,
                         ),
                         errorWidget: (context, url, error) =>
@@ -188,7 +186,7 @@ class _FavoriteScreenState extends State<FavoriteScreen> {
       _controller.onTapItemFootBall(team.team!);
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Unable to load team details')),
+        SnackBar(content: Text(AppLocalizations.of(context)!.unableToLoad)),
       );
     }
   }
