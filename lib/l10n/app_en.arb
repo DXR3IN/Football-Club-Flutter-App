@@ -3,6 +3,9 @@
 
     "title": "Premier League",
     "searchHint": "Search team name...",
+
+    "detailTabTitle": "Detail",
+    "eventsTabTitle": "Events", 
     
     "formedYear": "Formed Year: {year}",
     "@formedYear": {
@@ -26,7 +29,7 @@
     },
     "location": "Location",
     "locationNotFound": "Location not found",
-    "equipment": "Equipment",
+    "jersey": "Jersey",
     "socialMedia": "Social Media",
     "equipmentError": "No equipment available",
 

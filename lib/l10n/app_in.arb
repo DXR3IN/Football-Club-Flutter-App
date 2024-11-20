@@ -3,6 +3,9 @@
 
     "title": "Liga Primer",
     "searchHint": "Cari nama tim...",
+
+    "detailTabTitle": "Detail",
+    "eventsTabTitle": "Pertandingan", 
     
     "formedYear": "Tahun dibentuk: {year}",
     "@formedYear": {
@@ -26,7 +29,7 @@
     },
     "location": "Lokasi",
     "locationNotFound": "Lokasi tidak ditemukan",
-    "equipment": "Seragam",
+    "jersey": "Seragam",
     "socialMedia": "Media Sosial",
     "equipmentError": "Tidak ada perlengkapan yang tersedia",
 

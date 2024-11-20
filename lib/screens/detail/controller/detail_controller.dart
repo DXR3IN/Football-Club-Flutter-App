@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:logger/logger.dart';
 import 'package:mobx/mobx.dart';
+import 'package:premiere_league_v2/components/widget/launch_url.dart';
 import 'package:premiere_league_v2/main.dart';
 import 'package:premiere_league_v2/screens/detail/model/club_model.dart';
 import 'package:premiere_league_v2/components/api_services/api_client.dart';
@@ -69,7 +70,7 @@ class DetailController extends BaseController {
 
   Future launchUrl(String url) async {
     try {
-      await launchUrl("https://$url");
+      await launchUrlService("https://$url");
     } catch (e) {
       Logger().i("Failed to launch URL: $e");
     }

@@ -45,7 +45,13 @@ class _DetailShimmerScreenState extends State<DetailShimmerScreen> {
         appShimmer(Container(
           width: width,
           height: width / 2,
-          color: Colors.grey[300],
+          decoration: BoxDecoration(
+            borderRadius: const BorderRadius.only(
+              bottomLeft: Radius.circular(50),
+              bottomRight: Radius.circular(50),
+            ),
+            color: Colors.grey[300],
+          ),
         )),
         Padding(
           padding: const EdgeInsets.all(10),

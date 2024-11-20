@@ -16,6 +16,7 @@ class ClubModel {
   String? desc;
   String? colour1;
   String? colour2;
+  String? colour3;
 
   ClubModel(
       {this.idTeam,
@@ -34,7 +35,8 @@ class ClubModel {
       this.stadium,
       this.desc,
       this.colour1,
-      this.colour2});
+      this.colour2,
+      this.colour3});
 
   ClubModel.fromJson(Map<String, dynamic> json) {
     idTeam = json['idTeam'] as String?;
@@ -54,6 +56,7 @@ class ClubModel {
     desc = json['strDescriptionEN'] as String?;
     colour1 = json['strColour1'] as String?;
     colour2 = json['strColour2'] as String?;
+    colour3 = json['strColour3'] as String?;
   }
 
   Map<String, dynamic> toJson() {
@@ -75,6 +78,7 @@ class ClubModel {
     data['strDescriptionEN'] = desc;
     data['strColour1'] = colour1;
     data['strColour2'] = colour2;
+    data['strColour3'] = colour3;
     return data;
   }
 }

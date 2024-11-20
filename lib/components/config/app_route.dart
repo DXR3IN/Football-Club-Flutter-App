@@ -21,7 +21,7 @@ class AppRoute {
     var route = settings.name;
     switch (route) {
       case splashScreen:
-        return SplashScreen();
+        return const SplashScreen();
       case teamFcListScreen:
         return const HomeScreen();
       case teamFcDetailScreen:
