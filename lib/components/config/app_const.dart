@@ -16,4 +16,5 @@ class AppConst {
   static const String mainBanner = "assets/banner/premiere-league-banner2.png";
   static const String clubLogoPlaceHolder =
       "assets/placeholder/logoclub-placeholder.png";
+  static const String likeJerseyPlaceHolder = "assets/placeholder/equipment-placeholder.png";
 }

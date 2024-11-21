@@ -1,5 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:premiere_league_v2/components/config/app_const.dart';
 import 'package:premiere_league_v2/components/config/app_style.dart';
 import 'package:premiere_league_v2/components/widget/app_observer_builder_widget.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -125,7 +126,7 @@ class _LikedEquipmentPopupState extends State<LikedEquipmentPopup> {
             imageUrl: equipment.imageUrl!,
             fit: BoxFit.cover,
             placeholder: (context, url) => Image.asset(
-              "assets/placeholder/equipment-placeholder.png",
+              AppConst.likeJerseyPlaceHolder,
             ),
           ),
           Center(

@@ -4,6 +4,7 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:ionicons/ionicons.dart';
+import 'package:premiere_league_v2/components/config/app_style.dart';
 import 'package:premiere_league_v2/components/widget/app_observer_builder_widget.dart';
 import 'package:premiere_league_v2/components/util/hex_to_color.dart';
 import 'package:premiere_league_v2/main.dart';
@@ -270,7 +271,7 @@ class _DetailPageState extends State<DetailPage> {
                   var equipment = equipmentList[itemIndex];
 
                   return Container(
-                    padding: const EdgeInsets.all(5),
+                    // padding: const EdgeInsets.all(5),
                     decoration: const BoxDecoration(
                       color: Colors.white,
                       borderRadius: BorderRadius.all(Radius.circular(10)),
@@ -286,14 +287,17 @@ class _DetailPageState extends State<DetailPage> {
                     child: Stack(
                       fit: StackFit.expand,
                       children: [
-                        CachedNetworkImage(
-                          imageUrl: equipment.strEquipment!,
-                          fit: BoxFit.cover,
-                          placeholder: (context, url) => Shimmer.fromColors(
-                            baseColor: Colors.grey[300]!,
-                            highlightColor: Colors.white,
-                            child: Container(
-                              color: Colors.grey[300],
+                        Padding(
+                          padding: const EdgeInsets.all(5),
+                          child: CachedNetworkImage(
+                            imageUrl: equipment.strEquipment!,
+                            fit: BoxFit.cover,
+                            placeholder: (context, url) => Shimmer.fromColors(
+                              baseColor: Colors.grey[300]!,
+                              highlightColor: Colors.white,
+                              child: Container(
+                                color: Colors.grey[300],
+                              ),
                             ),
                           ),
                         ),
@@ -318,7 +322,22 @@ class _DetailPageState extends State<DetailPage> {
                         Align(
                           alignment: Alignment.topRight,
                           child: LikeEquipmentButton(equipment: equipment),
-                        )
+                        ),
+                        Align(
+                          alignment: Alignment.topLeft,
+                          child: Container(
+                            padding: const EdgeInsets.all(5),
+                            decoration: const BoxDecoration(
+                                color: AppStyle.primaryColor,
+                                borderRadius: BorderRadius.only(
+                                    bottomRight: Radius.circular(10))),
+                            child: Text(
+                              equipment.type!,
+                              style:
+                                  const TextStyle(color: AppStyle.thirdColor),
+                            ),
+                          ),
+                        ),
                       ],
                     ),
                   );

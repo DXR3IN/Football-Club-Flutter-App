@@ -94,13 +94,12 @@ class _FavoriteScreenState extends State<FavoriteScreen> {
               child: Text(AppLocalizations.of(context)!.favoriteError));
         }
 
-        return GridView.count(
-          crossAxisCount: crossAxisCount,
-          childAspectRatio: 1.0,
+        return ListView.builder(
+          itemCount: team.length,
           padding: const EdgeInsets.all(8.0),
-          mainAxisSpacing: 8.0,
-          crossAxisSpacing: 8.0,
-          children: team.map((team) => _itemCardFC(team)).toList(),
+          itemBuilder: (context, index) {
+            return _itemCardFC(team[index]);
+          },
         );
       },
     );
@@ -109,76 +108,110 @@ class _FavoriteScreenState extends State<FavoriteScreen> {
   Widget _itemCardFC(FavClubModel footballClub) {
     final imageUrl = footballClub.badge ?? '';
 
-    return GestureDetector(
-      onTap: () => _onTapItemFootball(footballClub),
-      child: Stack(
-        children: [
-          Container(
-            padding: const EdgeInsets.all(10),
-            decoration: const BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.all(Radius.circular(10)),
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black26,
-                  blurRadius: 6.0,
-                  spreadRadius: 2.0,
-                  offset: Offset(3, 3),
-                ),
-              ],
+    return Padding(
+      padding: const EdgeInsets.all(12),
+      child: ListTile(
+        onTap: () => _onTapItemFootball(footballClub),
+        leading: Hero(
+          tag: footballClub.team ?? 'default-tag',
+          child: CachedNetworkImage(
+            imageUrl: imageUrl,
+            placeholder: (context, url) => Image.asset(
+              AppConst.clubLogoPlaceHolder,
+              fit: BoxFit.fill,
             ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                Expanded(
-                  child: Container(
-                    padding: const EdgeInsets.all(10),
-                    decoration: const BoxDecoration(
-                      borderRadius: BorderRadius.all(Radius.circular(10)),
-                    ),
-                    child: Hero(
-                      tag: footballClub.team ?? 'default-tag',
-                      child: CachedNetworkImage(
-                        height: 120,
-                        width: 120,
-                        imageUrl: imageUrl,
-                        placeholder: (context, url) => Image.asset(
-                          AppConst.clubLogoPlaceHolder,
-                          fit: BoxFit.fill,
-                        ),
-                        errorWidget: (context, url, error) =>
-                            const Icon(Icons.error),
-                        fit: BoxFit.fill,
-                        fadeInDuration: const Duration(milliseconds: 300),
-                      ),
-                    ),
-                  ),
-                ),
-                const SizedBox(height: 8),
-                Text(
-                  footballClub.team!,
-                  textAlign: TextAlign.center,
-                  style: const TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.w400,
-                  ),
-                ),
-              ],
-            ),
+            errorWidget: (context, url, error) => const Icon(Icons.error),
+            fit: BoxFit.fill,
+            fadeInDuration: const Duration(milliseconds: 300),
           ),
-          Positioned(
-            right: 0,
-            top: 0,
-            child: IconButton(
-              iconSize: 30,
-              icon: const Icon(Icons.delete, color: Colors.red),
-              onPressed: () =>
-                  _favoriteController.removeFromFavorites(footballClub),
-            ),
+        ),
+        title: Text(
+          footballClub.team!,
+          textAlign: TextAlign.center,
+          style: const TextStyle(
+            fontSize: 16,
+            fontWeight: FontWeight.w400,
           ),
-        ],
+        ),
+        trailing: IconButton(
+          iconSize: 30,
+          icon: const Icon(Icons.delete, color: Colors.red),
+          onPressed: () =>
+              _favoriteController.removeFromFavorites(footballClub),
+        ),
       ),
     );
+
+    // return GestureDetector(
+    //   onTap: () => _onTapItemFootball(footballClub),
+    //   child: Stack(
+    //     children: [
+    //       Container(
+    //         padding: const EdgeInsets.all(10),
+    //         decoration: const BoxDecoration(
+    //           color: Colors.white,
+    //           borderRadius: BorderRadius.all(Radius.circular(10)),
+    //           boxShadow: [
+    //             BoxShadow(
+    //               color: Colors.black26,
+    //               blurRadius: 6.0,
+    //               spreadRadius: 2.0,
+    //               offset: Offset(3, 3),
+    //             ),
+    //           ],
+    //         ),
+    //         child: Column(
+    //           crossAxisAlignment: CrossAxisAlignment.stretch,
+    //           children: [
+    //             Expanded(
+    //               child: Container(
+    //                 padding: const EdgeInsets.all(10),
+    //                 decoration: const BoxDecoration(
+    //                   borderRadius: BorderRadius.all(Radius.circular(10)),
+    //                 ),
+    //                 child: Hero(
+    //                   tag: footballClub.team ?? 'default-tag',
+    //                   child: CachedNetworkImage(
+    //                     height: 120,
+    //                     width: 120,
+    //                     imageUrl: imageUrl,
+    //                     placeholder: (context, url) => Image.asset(
+    //                       AppConst.clubLogoPlaceHolder,
+    //                       fit: BoxFit.fill,
+    //                     ),
+    //                     errorWidget: (context, url, error) =>
+    //                         const Icon(Icons.error),
+    //                     fit: BoxFit.fill,
+    //                     fadeInDuration: const Duration(milliseconds: 300),
+    //                   ),
+    //                 ),
+    //               ),
+    //             ),
+    //             const SizedBox(height: 8),
+    //             Text(
+    //               footballClub.team!,
+    //               textAlign: TextAlign.center,
+    //               style: const TextStyle(
+    //                 fontSize: 16,
+    //                 fontWeight: FontWeight.w400,
+    //               ),
+    //             ),
+    //           ],
+    //         ),
+    //       ),
+    //       Positioned(
+    //         right: 0,
+    //         top: 0,
+    //         child: IconButton(
+    //           iconSize: 30,
+    //           icon: const Icon(Icons.delete, color: Colors.red),
+    //           onPressed: () =>
+    //               _favoriteController.removeFromFavorites(footballClub),
+    //         ),
+    //       ),
+    //     ],
+    //   ),
+    // );
   }
 
   void _onTapItemFootball(FavClubModel team) {

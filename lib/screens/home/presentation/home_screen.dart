@@ -126,8 +126,7 @@ class _HomeScreenState extends State<HomeScreen>
                         height: MediaQuery.of(context).size.width / 2 - 22,
                         decoration: const BoxDecoration(
                           image: DecorationImage(
-                            image: AssetImage(
-                                AppConst.mainBanner),
+                            image: AssetImage(AppConst.mainBanner),
                             fit: BoxFit.cover,
                           ),
                           color: AppStyle.thirdColor,
@@ -188,13 +187,13 @@ class _HomeScreenState extends State<HomeScreen>
 
       // Determine the grid layout based on screen width
       if (width > 1200) {
-        crossAxisCount = 8; 
+        crossAxisCount = 8;
       } else if (width > 800) {
-        crossAxisCount = 5; 
+        crossAxisCount = 5;
       } else if (width > 600) {
         crossAxisCount = 3;
       } else {
-        crossAxisCount = 2; 
+        crossAxisCount = 2;
       }
 
       final displayList = _controller.searchQuery.value.isEmpty
@@ -255,48 +254,38 @@ class _HomeScreenState extends State<HomeScreen>
         logger.i("id team is : ${footballClub.idTeam}");
         _controller.onTapItemFootBall(footballClub.team!);
       },
-      child: GridTile(
-        child: Container(
-          padding: const EdgeInsets.all(5),
-          decoration: const BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.all(Radius.circular(10)),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black26,
-                blurRadius: 6.0,
-                spreadRadius: 2.0,
-                offset: Offset(3, 3),
-              ),
-            ],
-          ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              Flexible(
-                child: Container(
-                  padding: const EdgeInsets.all(10),
-                  decoration: const BoxDecoration(
-                    borderRadius: BorderRadius.all(Radius.circular(10)),
-                  ),
-                  child: Hero(
-                    tag: footballClub.team!,
-                    child: CachedNetworkImage(
-                      imageUrl: imageUrl,
-                      placeholder: (context, url) => Image.asset(
-                        AppConst.clubLogoPlaceHolder,
-                        fit: BoxFit.fill,
-                      ),
-                      errorWidget: (context, url, error) =>
-                          const Icon(Icons.error),
+      child: Card(
+        shadowColor: Colors.black26,
+        shape: RoundedRectangleBorder(
+          side: const BorderSide(width: 2, color: AppStyle.primaryColor),
+          borderRadius: BorderRadius.circular(10),
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Expanded(
+              flex: 5,
+              child: Padding(
+                padding: const EdgeInsets.all(10),
+                child: Hero(
+                  tag: footballClub.team!,
+                  child: CachedNetworkImage(
+                    imageUrl: imageUrl,
+                    placeholder: (context, url) => Image.asset(
+                      AppConst.clubLogoPlaceHolder,
                       fit: BoxFit.fill,
-                      fadeInDuration: const Duration(milliseconds: 300),
                     ),
+                    errorWidget: (context, url, error) =>
+                        const Icon(Icons.error),
+                    fit: BoxFit.fill,
+                    fadeInDuration: const Duration(milliseconds: 300),
                   ),
                 ),
               ),
-              const SizedBox(height: 8),
-              Text(
+            ),
+            Expanded(
+              flex: 1,
+              child: Text(
                 footballClub.team!,
                 textAlign: TextAlign.center,
                 style: const TextStyle(
@@ -304,8 +293,8 @@ class _HomeScreenState extends State<HomeScreen>
                   fontWeight: FontWeight.w400,
                 ),
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );

@@ -3,15 +3,21 @@ class EquipmentModel {
   String? idTeam;
   String? strSeason;
   String? strEquipment;
+  String? type;
 
   EquipmentModel(
-      {this.idEquipment, this.idTeam, this.strSeason, this.strEquipment});
+      {this.idEquipment,
+      this.idTeam,
+      this.strSeason,
+      this.strEquipment,
+      this.type});
 
   EquipmentModel.fromJson(Map<String, dynamic> json) {
     idEquipment = json['idEquipment'];
     idTeam = json['idTeam'];
     strSeason = json['strSeason'];
     strEquipment = json['strEquipment'];
+    type = json['strType'];
   }
 
   Map<String, dynamic> toJson() {
@@ -20,6 +26,7 @@ class EquipmentModel {
     data['idTeam'] = idTeam;
     data['strSeason'] = strSeason;
     data['strEquipment'] = strEquipment;
+    data['strType'] = type;
     return data;
   }
 }
