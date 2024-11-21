@@ -48,9 +48,11 @@ class _HomeScreenState extends State<HomeScreen>
       height = screenHeight * 0.035;
     }
 
-    return Container(
-      height: height,
-      color: AppStyle.primaryColor,
+    return SliverToBoxAdapter(
+      child: Container(
+        height: height,
+        color: AppStyle.primaryColor,
+      ),
     );
   }
 
@@ -65,118 +67,165 @@ class _HomeScreenState extends State<HomeScreen>
   }
 
   Widget _body() {
-    return SingleChildScrollView(
-      padding: MediaQuery.of(context).viewInsets,
-      child: Column(
-        children: [
-          _safeAreaWidget(context),
-          _navBar(),
-          Padding(
-            padding: AppStyle.mainPadding,
-            child: AppObserverBuilder(
-              commandQuery: _controller.listFootballClubCommand,
-              onLoading: () => const HomeShimmerScreen(),
-              child: (data) {
-                return _contentBody(data);
-              },
-            ),
+    return CustomScrollView(
+      slivers: <Widget>[
+        _safeAreaWidget(context),
+        _navBar(),
+        SliverPadding(
+          padding: AppStyle.mainPadding,
+          sliver: AppObserverBuilder(
+            commandQuery: _controller.listFootballClubCommand,
+            onLoading: () =>
+                SliverToBoxAdapter(child: const HomeShimmerScreen()),
+            child: (data) {
+              return _contentBody(data);
+            },
           ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 
   Widget _navBar() {
-    return Stack(
-      children: [
-        _controller.isSearchBarFocused.value
-            ? Container(
-                width: MediaQuery.of(context).size.width,
-                height: MediaQuery.of(context).size.width / 4,
-                decoration: const BoxDecoration(
-                  image: DecorationImage(
-                      image: AssetImage(AppConst.imageBackground),
-                      fit: BoxFit.cover),
-                  borderRadius: BorderRadius.only(
-                      bottomLeft: Radius.circular(8),
-                      bottomRight: Radius.circular(8)),
-                ),
-              )
-            : ClipRRect(
-                borderRadius: const BorderRadius.only(
-                    bottomLeft: Radius.circular(30),
-                    bottomRight: Radius.circular(30)),
-                child: Image.asset(AppConst.imageBackground)),
-        Padding(
-          padding:
-              const EdgeInsets.only(top: 12, right: 12, left: 12, bottom: 5),
-          child: Column(
+    return Observer(
+      builder: (context) => SliverAppBar(
+        automaticallyImplyLeading: false,
+        toolbarHeight: 60,
+        pinned: true,
+        snap: false,
+        floating: false,
+        expandedHeight: _controller.isSearchBarFocused.value
+            ? MediaQuery.of(context).size.height / 6
+            : MediaQuery.of(context).size.height / 2.3,
+        title: Padding(
+          padding: const EdgeInsets.symmetric(vertical: 20),
+          child: Row(
+            children: [_searchBar(), _settingsButton()],
+          ),
+        ),
+        flexibleSpace: FlexibleSpaceBar(
+          background: Stack(
             children: [
-              const SizedBox(
-                height: 12,
+              Container(
+                color: Colors.white,
               ),
-              Row(
-                children: [_searchBar(), _settingsButton()],
-              ),
-              Padding(
-                padding: const EdgeInsets.only(left: 30, right: 30, top: 40),
-                child: _controller.isSearchBarFocused.value
-                    ? const SizedBox()
-                    : Container(
-                        height: MediaQuery.of(context).size.width / 2 - 22,
-                        decoration: const BoxDecoration(
-                          image: DecorationImage(
-                            image: AssetImage(AppConst.mainBanner),
-                            fit: BoxFit.cover,
-                          ),
-                          color: AppStyle.thirdColor,
-                          borderRadius: BorderRadius.all(Radius.circular(10)),
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.black26,
-                              blurRadius: 6.0,
-                              spreadRadius: 2.0,
-                              offset: Offset(3, 3),
-                            ),
-                          ],
-                        ),
-                        child: Stack(
-                          children: [
-                            Align(
-                              alignment: Alignment.bottomCenter,
-                              child: Container(
-                                  padding: const EdgeInsets.all(8),
-                                  color: Colors.white,
-                                  height: MediaQuery.sizeOf(context).width / 12,
-                                  width: MediaQuery.sizeOf(context).width / 3,
-                                  child: Row(
-                                    children: [
-                                      Expanded(
-                                        flex: 2,
-                                        child: Observer(
-                                            builder: (context) => _controller
-                                                    .isLoading.value
-                                                ? const Text("0")
-                                                : Text(
-                                                    "${_controller.totalTeam.value}")),
-                                      ),
-                                      Expanded(
-                                        flex: 6,
-                                        child: Text(
-                                            AppLocalizations.of(context)!
-                                                .title),
-                                      )
-                                    ],
-                                  )),
-                            ),
-                          ],
-                        ),
+              _controller.isSearchBarFocused.value
+                  ? Container(
+                      width: MediaQuery.of(context).size.width,
+                      height: MediaQuery.of(context).size.width / 4,
+                      decoration: const BoxDecoration(
+                        image: DecorationImage(
+                            image: AssetImage(AppConst.imageBackground),
+                            fit: BoxFit.cover),
+                        borderRadius: BorderRadius.only(
+                            bottomLeft: Radius.circular(8),
+                            bottomRight: Radius.circular(8)),
                       ),
+                    )
+                  : ClipRRect(
+                      borderRadius: const BorderRadius.only(
+                          bottomLeft: Radius.circular(30),
+                          bottomRight: Radius.circular(30)),
+                      child: Image.asset(AppConst.imageBackground)),
+              Padding(
+                padding: const EdgeInsets.only(
+                    top: 50, right: 12, left: 12, bottom: 5),
+                child: Column(
+                  children: [
+                    // SizedBox(
+                    //   width: MediaQuery.sizeOf(context).height / 2,
+                    // ),
+                    Padding(
+                      padding:
+                          const EdgeInsets.only(left: 30, right: 30, top: 40),
+                      child: _controller.isSearchBarFocused.value
+                          ? const SizedBox()
+                          : Container(
+                              height:
+                                  MediaQuery.of(context).size.width / 2 - 22,
+                              decoration: const BoxDecoration(
+                                image: DecorationImage(
+                                  image: AssetImage(AppConst.mainBanner),
+                                  fit: BoxFit.cover,
+                                ),
+                                color: AppStyle.thirdColor,
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(10)),
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Colors.black26,
+                                    blurRadius: 6.0,
+                                    spreadRadius: 2.0,
+                                    offset: Offset(3, 3),
+                                  ),
+                                ],
+                              ),
+                              child: Stack(
+                                children: [
+                                  Align(
+                                    alignment: Alignment.bottomCenter,
+                                    child: Container(
+                                        padding: const EdgeInsets.all(8),
+                                        color: Colors.white,
+                                        height:
+                                            MediaQuery.sizeOf(context).width /
+                                                12,
+                                        width:
+                                            MediaQuery.sizeOf(context).width /
+                                                3,
+                                        child: Row(
+                                          children: [
+                                            Expanded(
+                                              flex: 2,
+                                              child: Observer(
+                                                  builder: (context) => _controller
+                                                          .isLoading.value
+                                                      ? const Text("0")
+                                                      : Text(
+                                                          "${_controller.totalTeam.value}")),
+                                            ),
+                                            Expanded(
+                                              flex: 6,
+                                              child: Text(
+                                                  AppLocalizations.of(context)!
+                                                      .title),
+                                            )
+                                          ],
+                                        )),
+                                  ),
+                                ],
+                              ),
+                            ),
+                    ),
+                    const Spacer()
+                  ],
+                ),
               ),
             ],
           ),
         ),
-      ],
+        bottom: PreferredSize(
+          preferredSize: Size.fromHeight(0),
+          child: Container(
+            height: 20,
+            width: double.infinity,
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: const BorderRadius.vertical(
+                top: Radius.circular(50),
+              ),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withOpacity(0.2),
+                  blurRadius: 10,
+                  spreadRadius: 2,
+                  offset: const Offset(0, -4),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
     );
   }
 
@@ -199,15 +248,13 @@ class _HomeScreenState extends State<HomeScreen>
       final displayList = _controller.searchQuery.value.isEmpty
           ? listFootballClub
           : _controller.filteredTeams;
-      return GridView.builder(
+      return SliverGrid.builder(
         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
           crossAxisCount: crossAxisCount,
           childAspectRatio: 1.0,
           mainAxisSpacing: 8.0,
           crossAxisSpacing: 8.0,
         ),
-        shrinkWrap: true,
-        physics: const NeverScrollableScrollPhysics(),
         itemCount: displayList.length,
         itemBuilder: (BuildContext context, int index) {
           return _itemCardFC(displayList[index]);

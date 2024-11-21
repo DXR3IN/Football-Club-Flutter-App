@@ -207,6 +207,8 @@ class _DetailScreenState extends State<DetailScreen>
         controller: _tabController,
         dividerColor: hexToColor(team.colour1!),
         labelColor: hexToColor(team.colour1!),
+        automaticIndicatorColorAdjustment: true,
+        unselectedLabelColor: AppStyle.primaryColor,
         tabs: [
           Tab(text: AppLocalizations.of(context)!.detailTabTitle),
           Tab(text: AppLocalizations.of(context)!.eventsTabTitle),
