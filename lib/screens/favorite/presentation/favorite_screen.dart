@@ -72,18 +72,7 @@ class _FavoriteScreenState extends State<FavoriteScreen> {
   }
 
   Widget _contentBody() {
-    final width = MediaQuery.of(context).size.width;
 
-    int crossAxisCount;
-    if (width > 1200) {
-      crossAxisCount = 8;
-    } else if (width > 800) {
-      crossAxisCount = 5;
-    } else if (width > 600) {
-      crossAxisCount = 3;
-    } else {
-      crossAxisCount = 2;
-    }
     return AppObserverBuilder(
       commandQuery: _favoriteController.favoriteClubCommand,
       onLoading: () => const Center(child: CircularProgressIndicator()),

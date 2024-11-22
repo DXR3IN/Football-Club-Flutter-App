@@ -7,7 +7,6 @@ import 'package:premiere_league_v2/components/widget/app_observer_builder_widget
 import 'package:premiere_league_v2/main.dart';
 import 'package:premiere_league_v2/screens/detail/controller/history_controller.dart';
 import 'package:premiere_league_v2/screens/detail/model/history_model.dart';
-import 'package:premiere_league_v2/screens/detail/presentation/detail_shimmer_screen.dart';
 import 'package:shimmer/shimmer.dart';
 
 class HistoryPage extends StatefulWidget {
