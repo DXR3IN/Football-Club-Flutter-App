@@ -7,10 +7,12 @@ import 'package:premiere_league_v2/components/widget/app_observer_builder_widget
 import 'package:premiere_league_v2/main.dart';
 import 'package:premiere_league_v2/screens/detail/controller/history_controller.dart';
 import 'package:premiere_league_v2/screens/detail/model/history_model.dart';
+import 'package:premiere_league_v2/screens/detail/presentation/detail_shimmer_screen.dart';
+import 'package:shimmer/shimmer.dart';
 
 class HistoryPage extends StatefulWidget {
   final String idTeam;
-  HistoryPage({super.key, required this.idTeam});
+  const HistoryPage({super.key, required this.idTeam});
 
   @override
   State<HistoryPage> createState() => _HistoryPageState();
@@ -39,9 +41,7 @@ class _HistoryPageState extends State<HistoryPage> {
   Widget build(BuildContext context) {
     return AppObserverBuilder(
         commandQuery: _controller.getLastEventByIdCommand,
-        onLoading: () => const Center(
-              child: CircularProgressIndicator(),
-            ),
+        onLoading: () => buildShimmer(),
         child: (events) {
           events = events as List<HistoryModel>;
           return ListView.builder(
@@ -88,7 +88,10 @@ class _HistoryPageState extends State<HistoryPage> {
                             child: Stack(
                               children: [
                                 CachedNetworkImage(
-                                    imageUrl: event.homeTeamBadge!),
+                                  imageUrl: event.homeTeamBadge!,
+                                  placeholder: (context, url) =>
+                                      _appShimmer(child: Container()),
+                                ),
                                 Align(
                                   alignment: Alignment.topRight,
                                   child: num.parse(event.homeScore!) <=
@@ -100,7 +103,7 @@ class _HistoryPageState extends State<HistoryPage> {
                                           decoration: BoxDecoration(
                                               shape: BoxShape.circle,
                                               color: AppStyle.primaryColor),
-                                          child: const Padding(
+                                          child: Padding(
                                             padding: EdgeInsets.all(5),
                                             child: Icon(
                                               Ionicons.trophy,
@@ -175,7 +178,7 @@ class _HistoryPageState extends State<HistoryPage> {
                                           decoration: BoxDecoration(
                                               shape: BoxShape.circle,
                                               color: AppStyle.primaryColor),
-                                          child: const Padding(
+                                          child: Padding(
                                             padding: EdgeInsets.all(5),
                                             child: Icon(
                                               Ionicons.trophy,
@@ -196,5 +199,53 @@ class _HistoryPageState extends State<HistoryPage> {
             },
           );
         });
+  }
+
+  Widget buildShimmer() {
+    return ListView.builder(
+      itemCount: 2,
+      itemBuilder: (context, index) {
+        return Padding(
+          padding: const EdgeInsets.symmetric(vertical: 10),
+          child: Column(
+            children: [
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Center(
+                    child: _appShimmer(
+                  child: Container(
+                      width: 120,
+                      height: 20,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(10),
+                        color: Colors.grey[300],
+                      )),
+                )),
+              ),
+              _appShimmer(
+                child: Container(
+                  width: MediaQuery.sizeOf(context).width,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(10),
+                    color: Colors.grey[300],
+                  ),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 10, vertical: 20),
+                  height: 150,
+                ),
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+  Shimmer _appShimmer({required Widget child}) {
+    return Shimmer.fromColors(
+      baseColor: Colors.grey[300]!,
+      highlightColor: Colors.white,
+      child: child,
+    );
   }
 }

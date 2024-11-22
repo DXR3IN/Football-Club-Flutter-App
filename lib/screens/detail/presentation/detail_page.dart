@@ -44,9 +44,12 @@ class _DetailPageState extends State<DetailPage> {
 
   Widget _buildInfo(ClubModel team) {
     return Padding(
-      padding: const EdgeInsets.all(10),
-      child: Container(
+      padding: const EdgeInsets.all(20),
+      child: SizedBox(
+        width: MediaQuery.sizeOf(context).width / 1.3,
         child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Text(
               AppLocalizations.of(context)!.formedYear(team.formedYear!),
@@ -66,7 +69,9 @@ class _DetailPageState extends State<DetailPage> {
                   TextSpan(
                     text: team.location,
                     style: const TextStyle(
-                        color: Colors.blueAccent, fontWeight: FontWeight.bold),
+                        overflow: TextOverflow.fade,
+                        color: Colors.blueAccent,
+                        fontWeight: FontWeight.bold),
                     recognizer: TapGestureRecognizer()
                       ..onTap = () async {
                         await showModalBottomSheet(

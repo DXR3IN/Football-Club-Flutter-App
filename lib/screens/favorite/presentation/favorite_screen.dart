@@ -1,5 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:ionicons/ionicons.dart';
 import 'package:premiere_league_v2/components/config/app_const.dart';
 import 'package:premiere_league_v2/components/widget/app_observer_builder_widget.dart';
 import 'package:premiere_league_v2/main.dart';
@@ -58,7 +59,7 @@ class _FavoriteScreenState extends State<FavoriteScreen> {
                 LikedEquipmentPopup(controller: _favoriteController),
           );
         },
-        child: const Icon(Icons.rounded_corner_sharp),
+        child: const Icon(Ionicons.shirt),
       ),
     );
   }

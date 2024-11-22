@@ -25,7 +25,7 @@ class _GoogleMapsPopupState extends State<GoogleMapsPopup> {
                   child: Container(
                 height: 10,
                 width: 100,
-                decoration: BoxDecoration( 
+                decoration: BoxDecoration(
                   color: AppStyle.primaryColor,
                   borderRadius: AppStyle.borderRadiusSmall(),
                 ),
@@ -34,6 +34,7 @@ class _GoogleMapsPopupState extends State<GoogleMapsPopup> {
               Expanded(
                   flex: 5,
                   child: Container(
+                    color: Colors.grey,
                     child: MapsScreen(location: widget.location),
                   )),
             ],

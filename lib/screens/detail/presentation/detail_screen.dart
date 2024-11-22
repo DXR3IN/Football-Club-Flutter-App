@@ -1,7 +1,5 @@
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:ionicons/ionicons.dart';
 import 'package:premiere_league_v2/components/config/app_const.dart';
@@ -78,17 +76,12 @@ class _DetailScreenState extends State<DetailScreen>
           final loading = _controller.isLoading.value;
 
           if (loading) {
-            return FloatingActionButton(
-              child: Shimmer.fromColors(
-                baseColor: Colors.grey[200]!,
-                highlightColor: AppStyle.primaryColor,
-                child: Icon(
-                  Ionicons.star,
-                  color: Colors.grey[200],
-                  size: 40,
-                ),
+            return Shimmer.fromColors(
+              baseColor: Colors.grey[200]!,
+              highlightColor: AppStyle.thirdColor,
+              child: FloatingActionButton(
+                onPressed: () {},
               ),
-              onPressed: () {},
             );
           }
 
@@ -206,9 +199,9 @@ class _DetailScreenState extends State<DetailScreen>
       bottom: TabBar(
         controller: _tabController,
         dividerColor: hexToColor(team.colour1!),
-        labelColor: hexToColor(team.colour1!),
+        labelColor: AppStyle.primaryColor,
         automaticIndicatorColorAdjustment: true,
-        unselectedLabelColor: AppStyle.primaryColor,
+        unselectedLabelColor: hexToColor(team.colour1!),
         tabs: [
           Tab(text: AppLocalizations.of(context)!.detailTabTitle),
           Tab(text: AppLocalizations.of(context)!.eventsTabTitle),

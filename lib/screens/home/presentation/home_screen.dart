@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
+import 'package:ionicons/ionicons.dart';
 import 'package:premiere_league_v2/components/config/app_const.dart';
 import 'package:premiere_league_v2/components/config/app_style.dart';
 import 'package:premiere_league_v2/components/widget/app_observer_builder_widget.dart';
@@ -76,7 +77,7 @@ class _HomeScreenState extends State<HomeScreen>
           sliver: AppObserverBuilder(
             commandQuery: _controller.listFootballClubCommand,
             onLoading: () =>
-                SliverToBoxAdapter(child: const HomeShimmerScreen()),
+                const SliverToBoxAdapter(child: HomeShimmerScreen()),
             child: (data) {
               return _contentBody(data);
             },
@@ -90,13 +91,14 @@ class _HomeScreenState extends State<HomeScreen>
     return Observer(
       builder: (context) => SliverAppBar(
         automaticallyImplyLeading: false,
+        elevation: 0.0,
         toolbarHeight: 60,
         pinned: true,
         snap: false,
         floating: false,
         expandedHeight: _controller.isSearchBarFocused.value
-            ? MediaQuery.of(context).size.height / 6
-            : MediaQuery.of(context).size.height / 2.3,
+            ? MediaQuery.of(context).size.width / 4
+            : MediaQuery.of(context).size.width / 1.3,
         title: Padding(
           padding: const EdgeInsets.symmetric(vertical: 20),
           child: Row(
@@ -107,12 +109,12 @@ class _HomeScreenState extends State<HomeScreen>
           background: Stack(
             children: [
               Container(
-                color: Colors.white,
+                color: Colors.grey[200],
               ),
               _controller.isSearchBarFocused.value
                   ? Container(
                       width: MediaQuery.of(context).size.width,
-                      height: MediaQuery.of(context).size.width / 4,
+                      // height: MediaQuery.of(context).size.width / 4,
                       decoration: const BoxDecoration(
                         image: DecorationImage(
                             image: AssetImage(AppConst.imageBackground),
@@ -132,9 +134,6 @@ class _HomeScreenState extends State<HomeScreen>
                     top: 50, right: 12, left: 12, bottom: 5),
                 child: Column(
                   children: [
-                    // SizedBox(
-                    //   width: MediaQuery.sizeOf(context).height / 2,
-                    // ),
                     Padding(
                       padding:
                           const EdgeInsets.only(left: 30, right: 30, top: 40),
@@ -154,44 +153,9 @@ class _HomeScreenState extends State<HomeScreen>
                                 boxShadow: [
                                   BoxShadow(
                                     color: Colors.black26,
-                                    blurRadius: 6.0,
-                                    spreadRadius: 2.0,
-                                    offset: Offset(3, 3),
-                                  ),
-                                ],
-                              ),
-                              child: Stack(
-                                children: [
-                                  Align(
-                                    alignment: Alignment.bottomCenter,
-                                    child: Container(
-                                        padding: const EdgeInsets.all(8),
-                                        color: Colors.white,
-                                        height:
-                                            MediaQuery.sizeOf(context).width /
-                                                12,
-                                        width:
-                                            MediaQuery.sizeOf(context).width /
-                                                3,
-                                        child: Row(
-                                          children: [
-                                            Expanded(
-                                              flex: 2,
-                                              child: Observer(
-                                                  builder: (context) => _controller
-                                                          .isLoading.value
-                                                      ? const Text("0")
-                                                      : Text(
-                                                          "${_controller.totalTeam.value}")),
-                                            ),
-                                            Expanded(
-                                              flex: 6,
-                                              child: Text(
-                                                  AppLocalizations.of(context)!
-                                                      .title),
-                                            )
-                                          ],
-                                        )),
+                                    blurRadius: 3,
+                                    spreadRadius: 1.0,
+                                    offset: Offset(-3, 3),
                                   ),
                                 ],
                               ),
@@ -205,23 +169,49 @@ class _HomeScreenState extends State<HomeScreen>
           ),
         ),
         bottom: PreferredSize(
-          preferredSize: Size.fromHeight(0),
+          preferredSize: const Size.fromHeight(40),
           child: Container(
-            height: 20,
+            height: 40,
             width: double.infinity,
-            decoration: BoxDecoration(
+            decoration: const BoxDecoration(
               color: Colors.white,
-              borderRadius: const BorderRadius.vertical(
+              borderRadius: BorderRadius.vertical(
                 top: Radius.circular(50),
               ),
               boxShadow: [
                 BoxShadow(
-                  color: Colors.black.withOpacity(0.2),
-                  blurRadius: 10,
-                  spreadRadius: 2,
-                  offset: const Offset(0, -4),
+                  color: Colors.black26,
+                  blurRadius: 3,
+                  spreadRadius: 0,
+                  offset: Offset(-3, -3),
                 ),
               ],
+            ),
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Center(
+                child: Observer(
+                  builder: (context) => RichText(
+                    text: TextSpan(
+                        style:
+                            const TextStyle(fontSize: 18, color: Colors.black),
+                        children: [
+                          TextSpan(
+                            text: _controller.totalTeam.value.toString(),
+                            style: const TextStyle(
+                              fontSize: 20,
+                              fontWeight: FontWeight.w700,
+                              color: AppStyle.primaryColor,
+                            ),
+                          ),
+                          const TextSpan(text: " "),
+                          TextSpan(
+                            text: AppLocalizations.of(context)!.title,
+                          ),
+                        ]),
+                  ),
+                ),
+              ),
             ),
           ),
         ),
@@ -304,23 +294,23 @@ class _HomeScreenState extends State<HomeScreen>
       child: Card(
         shadowColor: Colors.black26,
         shape: RoundedRectangleBorder(
-          side: const BorderSide(width: 2, color: AppStyle.primaryColor),
+          side: const BorderSide(width: 1, color: AppStyle.primaryColor),
           borderRadius: BorderRadius.circular(10),
         ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            Expanded(
-              flex: 5,
-              child: Padding(
-                padding: const EdgeInsets.all(10),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 18),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Flexible(
+                // flex: 5,
                 child: Hero(
                   tag: footballClub.team!,
                   child: CachedNetworkImage(
                     imageUrl: imageUrl,
                     placeholder: (context, url) => Image.asset(
                       AppConst.clubLogoPlaceHolder,
-                      fit: BoxFit.fill,
+                      fit: BoxFit.cover,
                     ),
                     errorWidget: (context, url, error) =>
                         const Icon(Icons.error),
@@ -329,19 +319,19 @@ class _HomeScreenState extends State<HomeScreen>
                   ),
                 ),
               ),
-            ),
-            Expanded(
-              flex: 1,
-              child: Text(
-                footballClub.team!,
-                textAlign: TextAlign.center,
-                style: const TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.w400,
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Text(
+                  footballClub.team!,
+                  textAlign: TextAlign.center,
+                  style: const TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w400,
+                  ),
                 ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
@@ -364,7 +354,7 @@ class _HomeScreenState extends State<HomeScreen>
           ),
         ),
         child: const Icon(
-          Icons.star_border,
+          Ionicons.heart,
           color: Colors.white,
           size: 35,
         ),
