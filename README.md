@@ -85,6 +85,7 @@ The app includes notification functionality using Firebase Cloud Messaging. User
 - **Permissions**: Permission Handler is used to manage runtime permissions.
 - **Device Info**: Package Info Plus is used to retrieve app information.
 - **Other**: UUID, Logger, Image Picker, and URL Launcher are used for various utility tasks.
+- **Localizations**: This app is supported for English and Indonesian Language.
 
 ## Requirements
 
