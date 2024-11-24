@@ -79,13 +79,14 @@ The app includes notification functionality using Firebase Cloud Messaging. User
 - **State Management**: Uses MobX and Flutter MobX for reactive state management.
 - **Networking**: Uses Dio for making API requests and handling responses.
 - **Image Handling**: Cached Network Image is used for efficient image loading and caching.
-- **Storage**: Flutter Secure Storage and Shared Preferences are utilized for securely storing data and simple key-value storage.
+- **Storage**: Flutter Secure Storage, Shared Preferences, and SQLite are utilized for securely storing data and simple key-value storage.
 - **Notifications**: Firebase Cloud Messaging and Flutter Local Notifications are used for push notifications.
 - **UI**: Includes SVG support, internationalization, and custom icons using Ionicons.
 - **Permissions**: Permission Handler is used to manage runtime permissions.
 - **Device Info**: Package Info Plus is used to retrieve app information.
 - **Other**: UUID, Logger, Image Picker, and URL Launcher are used for various utility tasks.
 - **Localizations**: This app is supported for English and Indonesian Language.
+- **Google maps**
 
 ## Requirements
 
