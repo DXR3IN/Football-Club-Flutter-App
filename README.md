@@ -33,19 +33,30 @@ This is a demo Flutter app that demonstrates various features including a main s
 The main screen displays a grid of football teams fetched from an API. Users can search for teams, view team details, and navigate to the favorite screen.
 
 <div align="center" style="display: flex; align-items: center; justify-content: center;">
+  <h2 style="margin: 0 20px;">First look ></h2>
   <img src="https://github.com/user-attachments/assets/6b07bf1b-e04b-4f3f-9bae-d7102b7c15fe" alt="Main Screen" width="300"/>
-  <h2 style="margin: 0 20px;">New Look></h2>
+  <h2 style="margin: 0 20px;">New Look 1.0 ></h2>
   <img src="https://github.com/user-attachments/assets/97e0333b-74c1-47ba-a6c7-7ffbc5ac9cf1" alt="Main Screen" width="300"/>
+  <h2 style="margin: 0 20px;">New Look 2.0 ></h2>
+  <img src="https://github.com/user-attachments/assets/3aadcec3-a592-4855-9b4e-7f92afd747f6" alt="Main Screen" width="300"/>
+
 </div>
 
 
 ### Detail Screen
 
 On the detail screen, users can view more information about a selected football team, including its stats and other details. Users can also add the team to their favorites.
+
 <div align="center" style="display: flex; align-items: center; justify-content: center;">
+  <h2 style="margin: 0 20px;">First look ></h2>
    <img src="https://github.com/user-attachments/assets/47ae9db4-9ec0-4bfd-bee5-49796748c226" alt="Detail Screen" width="300"/>
-   <h2 style="margin: 0 20px;">New Look></h2>
+  <br/>
+   <h2 style="margin: 0 20px;">New Look 1.0 ></h2>
    <img src="https://github.com/user-attachments/assets/5563b929-d510-4caa-9bb3-8b6dbbde51e2" alt="Detail Screen" width="300"/>
+  <br/>
+  <h2 style="margin: 0 20px;">New Look 2.0 ></h2>
+  <img src="https://github.com/user-attachments/assets/210829a8-dda6-4b7a-b187-c26ef1065be4" alt="Detail Screen" width="300"/>
+  <img src="https://github.com/user-attachments/assets/1a199ae8-2044-46d4-b182-8c46f6ba74b6" alt="Detail Screen" width="300"/>
 </div>
 ### Favorite Screen
 

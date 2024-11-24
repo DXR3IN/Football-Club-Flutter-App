@@ -1,15 +1,11 @@
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
-import 'package:ionicons/ionicons.dart';
 import 'package:premiere_league_v2/components/config/app_const.dart';
 import 'package:premiere_league_v2/components/config/app_style.dart';
 import 'package:premiere_league_v2/components/widget/app_observer_builder_widget.dart';
 import 'package:premiere_league_v2/components/util/hex_to_color.dart';
 import 'package:premiere_league_v2/screens/detail/model/club_model.dart';
-import 'package:premiere_league_v2/main.dart';
 import 'package:premiere_league_v2/screens/detail/controller/detail_controller.dart';
 import 'package:premiere_league_v2/screens/detail/button/favorite_button.dart';
 import 'package:premiere_league_v2/screens/detail/presentation/detail_page.dart';
@@ -36,7 +32,7 @@ class _DetailScreenState extends State<DetailScreen>
   @override
   void initState() {
     super.initState();
-    _controller = DetailController(getIt.get());
+    _controller = DetailController();
     _tabController = TabController(length: 2, vsync: this);
     _pageController = PageController();
     _scrollController = ScrollController();
@@ -49,7 +45,7 @@ class _DetailScreenState extends State<DetailScreen>
     });
 
     // Fetch team and equipment details
-    _controller.fetchTeamAndEquipment(widget.team);
+    _controller.getTeamAndEquipment(widget.team);
   }
 
   @override
@@ -78,17 +74,12 @@ class _DetailScreenState extends State<DetailScreen>
           final loading = _controller.isLoading.value;
 
           if (loading) {
-            return FloatingActionButton(
-              child: Shimmer.fromColors(
-                baseColor: Colors.grey[200]!,
-                highlightColor: AppStyle.primaryColor,
-                child: Icon(
-                  Ionicons.star,
-                  color: Colors.grey[200],
-                  size: 40,
-                ),
+            return Shimmer.fromColors(
+              baseColor: Colors.grey[200]!,
+              highlightColor: AppStyle.thirdColor,
+              child: FloatingActionButton(
+                onPressed: () {},
               ),
-              onPressed: () {},
             );
           }
 
@@ -206,7 +197,9 @@ class _DetailScreenState extends State<DetailScreen>
       bottom: TabBar(
         controller: _tabController,
         dividerColor: hexToColor(team.colour1!),
-        labelColor: hexToColor(team.colour1!),
+        labelColor: AppStyle.primaryColor,
+        automaticIndicatorColorAdjustment: true,
+        unselectedLabelColor: hexToColor(team.colour1!),
         tabs: [
           Tab(text: AppLocalizations.of(context)!.detailTabTitle),
           Tab(text: AppLocalizations.of(context)!.eventsTabTitle),

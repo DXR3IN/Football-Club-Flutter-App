@@ -38,7 +38,7 @@ class _FavoriteButtonState extends State<FavoriteButton> {
             await _controller.favoriteCommand.execute(context);
           },
           child: Icon(
-            isFavorite ? Ionicons.star : Ionicons.star_outline,
+            isFavorite ? Ionicons.heart_circle : Ionicons.heart_circle_outline,
             color: isFavorite ? Colors.red : null,
             size: 40,
           ),

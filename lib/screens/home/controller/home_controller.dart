@@ -1,74 +1,95 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:mobx/mobx.dart';
-
+import 'package:premiere_league_v2/components/api_services/api_client.dart';
+import 'package:premiere_league_v2/components/base/base_controller.dart';
+import 'package:premiere_league_v2/components/util/command_query.dart';
 import 'package:premiere_league_v2/screens/home/model/home_club_model.dart';
+import 'package:premiere_league_v2/screens/home/service/home_service.dart';
 
-import '../../../components/api_services/api_client.dart';
-import '../../../components/base/base_controller.dart';
 import '../../../components/config/app_route.dart';
-import '../../../components/util/command_query.dart';
 import '../../../main.dart';
 
 class HomeController extends BaseController {
-  final ApiClient _api;
+  final HomeService _homeService = HomeService(getIt.get<ApiClient>());
   late final listFootballClubCommand = CommandQuery.create(_getListTeamFC);
+  final ScrollController scrollController = ScrollController();
 
-  // for total team on the API
+  // Total teams from API
   final totalTeam = Observable<int>(0);
 
-  // checking if the function _getListTeamFC still processing
+  // Loading state
   final isLoading = Observable<bool>(false);
 
-  // variable for searching
+  // Search functionality
   final searchQuery = Observable<String>('');
   List<HomeClubModel> _filteredTeams = [];
 
-  // variable to check if the search is being focused
-  var isSearchBarFocused = Observable<bool>(false);
+  // Search bar focus state
+  final isSearchBarFocused = Observable<bool>(false);
   final FocusNode searchBarFocusNode = FocusNode();
 
-  HomeController(this._api) {
+  HomeController() {
     searchBarFocusNode.addListener(() {
-      isSearchBarFocused.value = searchBarFocusNode.hasFocus;
+      final isFocused = searchBarFocusNode.hasFocus;
+      isSearchBarFocused.value = isFocused;
+
+      if (isFocused) {
+        scrollToTop(); // Scroll to top when search bar is focused
+      }
     });
   }
 
-  // Code to get all the FootBall Club in Premiere League
+  // Fetch Football Clubs from API using the service
   FutureOr<List<HomeClubModel>> _getListTeamFC() async {
     isLoading.value = true;
-    final List<HomeClubModel> teamList =
-        await _api.getApiFootballClubs().then((value) {
-      return value?.map((e) => HomeClubModel.fromJson(e)).toList() ?? [];
-    });
+    final List<HomeClubModel> teamList = await _homeService.getFootballClubs();
     totalTeam.value = teamList.length;
     _filteredTeams = teamList;
     isLoading.value = false;
     return teamList;
   }
 
+  // Update search query
   @action
   void updateSearchQuery(String query) {
     searchQuery.value = query.toLowerCase();
     _filterTeams();
   }
 
+  // Filter teams based on search query
   void _filterTeams() {
-    final List<HomeClubModel> allTeams = listFootballClubCommand.onData ?? [];
-    _filteredTeams = allTeams
-        .where((team) =>
-            team.team?.toLowerCase().contains(searchQuery.value) ?? false)
-        .toList();
+    if (listFootballClubCommand.onData == null) {
+      _filteredTeams = [];
+      return;
+    }
+
+    final List<HomeClubModel> allTeams = listFootballClubCommand.onData!;
+    _filteredTeams = searchQuery.value.isEmpty
+        ? allTeams
+        : allTeams.where((team) {
+            return team.team?.toLowerCase().contains(searchQuery.value) ??
+                false;
+          }).toList();
   }
 
-  // go to Favorite Page
+  // Scroll to top safely
+  void scrollToTop() {
+    if (scrollController.hasClients) {
+      scrollController.animateTo(
+        0,
+        duration: const Duration(milliseconds: 300),
+        curve: Curves.easeInOut,
+      );
+    }
+  }
+
+  // Navigate to Favorite Page
   void onTapFavScreen() {
-    AppNav.navigator.pushNamed(
-      AppRoute.favTeamFcScreen,
-    );
+    AppNav.navigator.pushNamed(AppRoute.favTeamFcScreen);
   }
 
-  //  go to detail page
+  // Navigate to Detail Page
   void onTapItemFootBall(String team) {
     AppNav.navigator.pushNamed(
       AppRoute.teamFcDetailScreen,
@@ -76,15 +97,17 @@ class HomeController extends BaseController {
     );
   }
 
-  // got to settings page
+  // Navigate to Settings Page
   void onTapSettingsScreen() {
     AppNav.navigator.pushNamed(AppRoute.settingsScreen);
   }
 
+  // Dispose resources
   void dispose() {
     searchBarFocusNode.dispose();
+    scrollController.dispose();
   }
 
-  // Getter to access filtered teams
+  // Getter for filtered teams
   List<HomeClubModel> get filteredTeams => _filteredTeams;
 }

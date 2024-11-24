@@ -8,11 +8,12 @@ import 'package:premiere_league_v2/components/api_services/api_client.dart';
 import 'package:premiere_league_v2/components/base/base_controller.dart';
 import 'package:premiere_league_v2/components/util/command_query.dart';
 import 'package:premiere_league_v2/screens/detail/model/equipment_model.dart';
+import 'package:premiere_league_v2/screens/detail/service/detail_service.dart';
 
 class DetailController extends BaseController {
-  final ApiClient _api;
+  DetailController();
 
-  DetailController(this._api);
+  final DetailService _service = DetailService(getIt.get<ApiClient>());
 
   final teamFc = Observable<ClubModel>(ClubModel());
   final isLoading = Observable<bool>(false);
@@ -27,7 +28,7 @@ class DetailController extends BaseController {
           _fetchEquipment);
 
   // This method will be called to fetch equipment after team details are loaded
-  Future<void> fetchTeamAndEquipment(String team) async {
+  Future<void> getTeamAndEquipment(String team) async {
     isLoading.value = true;
     // Start loading for team details
     await dummyDetailClubModel.execute(team);
@@ -48,24 +49,11 @@ class DetailController extends BaseController {
 
   // Private methods to handle API and business logic
   Future<ClubModel> _fetchTeamByName(String team) async {
-    try {
-      final response = await _api.getApiFootballClubById(team);
-      if (response != null && response.isNotEmpty) {
-        final teamData = response[0];
-
-        return ClubModel.fromJson(teamData);
-      } else {
-        throw Exception("No teams found.");
-      }
-    } catch (e) {
-      throw Exception("Error fetching team: $e");
-    }
+    return await _service.getTeamByName(team);
   }
 
   FutureOr<List<EquipmentModel>> _fetchEquipment(String id) async {
-    return await _api.getFcEquipment(id).then((value) {
-      return value?.map((e) => EquipmentModel.fromJson(e)).toList() ?? [];
-    });
+    return await _service.getEquipment(id);
   }
 
   Future launchUrl(String url) async {

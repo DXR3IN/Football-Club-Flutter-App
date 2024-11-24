@@ -2,14 +2,6 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:shimmer/shimmer.dart';
 
-Shimmer appShimmer(Widget child) {
-  return Shimmer.fromColors(
-    baseColor: Colors.grey[300]!,
-    highlightColor: Colors.white,
-    child: child,
-  );
-}
-
 class DetailShimmerScreen extends StatefulWidget {
   const DetailShimmerScreen({super.key});
 
@@ -42,7 +34,7 @@ class _DetailShimmerScreenState extends State<DetailShimmerScreen> {
 
     return Stack(
       children: [
-        appShimmer(Container(
+        _appShimmer(Container(
           width: width,
           height: width / 2,
           decoration: BoxDecoration(
@@ -62,7 +54,7 @@ class _DetailShimmerScreenState extends State<DetailShimmerScreen> {
                 height: width / 15,
               ),
               Center(
-                child: appShimmer(
+                child: _appShimmer(
                   Container(
                     width: width / 1.5,
                     height: height / 2.5,
@@ -72,7 +64,7 @@ class _DetailShimmerScreenState extends State<DetailShimmerScreen> {
                 ),
               ),
               const SizedBox(height: 5),
-              appShimmer(
+              _appShimmer(
                 Container(
                   width: width / 2,
                   height: width / 5,
@@ -91,7 +83,7 @@ class _DetailShimmerScreenState extends State<DetailShimmerScreen> {
       padding: const EdgeInsets.all(10),
       child: Column(
         children: [
-          appShimmer(
+          _appShimmer(
             Container(
               width: 50,
               height: 18,
@@ -101,7 +93,7 @@ class _DetailShimmerScreenState extends State<DetailShimmerScreen> {
           const SizedBox(
             height: 20,
           ),
-          appShimmer(
+          _appShimmer(
             Container(
               width: 50,
               height: 18,
@@ -157,7 +149,7 @@ class _DetailShimmerScreenState extends State<DetailShimmerScreen> {
       padding: const EdgeInsets.all(10),
       child: Column(
         children: [
-          appShimmer(
+          _appShimmer(
             Container(
               width: double.infinity,
               height: 30,
@@ -167,7 +159,7 @@ class _DetailShimmerScreenState extends State<DetailShimmerScreen> {
           const SizedBox(
             height: 12,
           ),
-          appShimmer(
+          _appShimmer(
             Container(
               width: double.infinity,
               height: 30,
@@ -177,7 +169,7 @@ class _DetailShimmerScreenState extends State<DetailShimmerScreen> {
           const SizedBox(
             height: 12,
           ),
-          appShimmer(
+          _appShimmer(
             Container(
               width: double.infinity,
               height: 30,
@@ -186,6 +178,14 @@ class _DetailShimmerScreenState extends State<DetailShimmerScreen> {
           ),
         ],
       ),
+    );
+  }
+
+  Shimmer _appShimmer(Widget child) {
+    return Shimmer.fromColors(
+      baseColor: Colors.grey[300]!,
+      highlightColor: Colors.white,
+      child: child,
     );
   }
 }
