@@ -18,7 +18,6 @@ import 'components/config/app_theme.dart';
 import 'components/util/network.dart';
 import 'components/util/storage_util.dart';
 
-
 final getIt = GetIt.instance;
 // initialize firebase handler
 final FirebaseHandler firebaseHandler = FirebaseHandler();
@@ -74,7 +73,8 @@ Future _dependencyInjection() async {
   getIt.registerLazySingleton<IStorage>(() => SecureStorage());
   getIt.registerLazySingleton(() => Network.dioClient());
   getIt.registerLazySingleton(() => ApiClient(getIt()));
-  getIt.registerLazySingleton<Database>(() => Database(NativeDatabase.memory()));
+  getIt
+      .registerLazySingleton<Database>(() => Database(NativeDatabase.memory()));
 
   await firebaseHandler.initializeNotifications();
   await firebaseHandler.firebaseListener();
@@ -139,7 +139,6 @@ class _MyAppState extends State<MyApp> {
 
     if (pathSegments.isNotEmpty) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
-
         final currentRoute = ModalRoute.of(AppNav.context)?.settings.name;
         logger.i('Current route: $currentRoute');
 

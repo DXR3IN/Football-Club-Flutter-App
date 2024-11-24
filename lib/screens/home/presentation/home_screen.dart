@@ -38,20 +38,11 @@ class _HomeScreenState extends State<HomeScreen>
   }
 
   Widget _safeAreaWidget(BuildContext context) {
-    final topPadding = MediaQuery.of(context).viewPadding.top;
-
-    final screenHeight = MediaQuery.of(context).size.height;
-
-    double height;
-    if (topPadding < 10.0) {
-      height = screenHeight * 0.015;
-    } else {
-      height = screenHeight * 0.035;
-    }
+    final topPadding = MediaQuery.paddingOf(context).top;
 
     return SliverToBoxAdapter(
       child: Container(
-        height: height,
+        height: topPadding,
         color: AppStyle.primaryColor,
       ),
     );

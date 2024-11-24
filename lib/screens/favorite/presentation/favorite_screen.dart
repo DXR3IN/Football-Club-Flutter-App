@@ -40,7 +40,7 @@ class _FavoriteScreenState extends State<FavoriteScreen> {
     return Scaffold(
       appBar: _appBar(),
       body: _contentBody(),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       floatingActionButtonAnimator: FloatingActionButtonAnimator.scaling,
       floatingActionButton: FloatingActionButton(
         onPressed: () async {
@@ -58,7 +58,23 @@ class _FavoriteScreenState extends State<FavoriteScreen> {
                 LikedEquipmentPopup(controller: _favoriteController),
           );
         },
-        child: const Icon(Ionicons.shirt),
+        child: Container(
+          padding: const EdgeInsets.all(10),
+          decoration: const BoxDecoration(
+            image: DecorationImage(
+                image: AssetImage(AppConst.imageBackground), fit: BoxFit.fill),
+            color: Colors.deepPurple,
+            borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(100),
+              topRight: Radius.circular(100),
+            ),
+          ),
+          child: const Icon(
+            Ionicons.shirt,
+            color: Colors.white,
+            size: 35,
+          ),
+        ),
       ),
     );
   }

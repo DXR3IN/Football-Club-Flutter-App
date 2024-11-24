@@ -21,9 +21,8 @@ class _HistoryPageState extends State<HistoryPage> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
-    _controller = HistoryController( widget.idTeam);
+    _controller = HistoryController(widget.idTeam);
   }
 
   String formatDate(String date) {
