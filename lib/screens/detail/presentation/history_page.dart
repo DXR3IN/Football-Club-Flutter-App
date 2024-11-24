@@ -4,7 +4,6 @@ import 'package:intl/intl.dart';
 import 'package:ionicons/ionicons.dart';
 import 'package:premiere_league_v2/components/config/app_style.dart';
 import 'package:premiere_league_v2/components/widget/app_observer_builder_widget.dart';
-import 'package:premiere_league_v2/main.dart';
 import 'package:premiere_league_v2/screens/detail/controller/history_controller.dart';
 import 'package:premiere_league_v2/screens/detail/model/history_model.dart';
 import 'package:shimmer/shimmer.dart';
@@ -24,7 +23,7 @@ class _HistoryPageState extends State<HistoryPage> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    _controller = HistoryController(getIt.get(), widget.idTeam);
+    _controller = HistoryController( widget.idTeam);
   }
 
   String formatDate(String date) {

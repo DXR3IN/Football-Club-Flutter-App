@@ -6,7 +6,6 @@ import 'package:premiere_league_v2/components/config/app_style.dart';
 import 'package:premiere_league_v2/components/widget/app_observer_builder_widget.dart';
 import 'package:premiere_league_v2/components/util/hex_to_color.dart';
 import 'package:premiere_league_v2/screens/detail/model/club_model.dart';
-import 'package:premiere_league_v2/main.dart';
 import 'package:premiere_league_v2/screens/detail/controller/detail_controller.dart';
 import 'package:premiere_league_v2/screens/detail/button/favorite_button.dart';
 import 'package:premiere_league_v2/screens/detail/presentation/detail_page.dart';
@@ -33,7 +32,7 @@ class _DetailScreenState extends State<DetailScreen>
   @override
   void initState() {
     super.initState();
-    _controller = DetailController(getIt.get());
+    _controller = DetailController();
     _tabController = TabController(length: 2, vsync: this);
     _pageController = PageController();
     _scrollController = ScrollController();
@@ -46,7 +45,7 @@ class _DetailScreenState extends State<DetailScreen>
     });
 
     // Fetch team and equipment details
-    _controller.fetchTeamAndEquipment(widget.team);
+    _controller.getTeamAndEquipment(widget.team);
   }
 
   @override

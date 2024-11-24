@@ -74,19 +74,8 @@ class _DetailPageState extends State<DetailPage> {
                         fontWeight: FontWeight.bold),
                     recognizer: TapGestureRecognizer()
                       ..onTap = () async {
-                        await showModalBottomSheet(
-                          context: context,
-                          isScrollControlled: true,
-                          clipBehavior: Clip.antiAlias,
-                          shape: const RoundedRectangleBorder(
-                            borderRadius: BorderRadius.only(
-                              topLeft: Radius.circular(20),
-                              topRight: Radius.circular(20),
-                            ),
-                          ),
-                          builder: (context) => GoogleMapsPopup(
-                              location: team.location ?? team.stadium),
-                        );
+                        await GoogleMapsPopup.show(
+                            context, team.location ?? team.stadium);
                       },
                   )
                 ],
