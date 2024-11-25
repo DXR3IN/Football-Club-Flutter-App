@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:ionicons/ionicons.dart';
 import 'package:premiere_league_v2/main.dart';
-import 'package:premiere_league_v2/screens/detail/controller/favorite_button_controller.dart';
+import 'package:premiere_league_v2/screens/detail/widget/favorite_button_controller.dart';
 import 'package:premiere_league_v2/screens/detail/model/club_model.dart';
 
 class FavoriteButton extends StatefulWidget {

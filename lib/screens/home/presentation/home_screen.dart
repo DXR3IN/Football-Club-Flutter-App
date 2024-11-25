@@ -62,7 +62,7 @@ class _HomeScreenState extends State<HomeScreen>
     return CustomScrollView(
       controller: _controller.scrollController,
       slivers: <Widget>[
-        _safeAreaWidget(context),
+        // _safeAreaWidget(context),
         _navBar(),
         SliverPadding(
           padding: AppStyle.mainPadding,
@@ -84,13 +84,13 @@ class _HomeScreenState extends State<HomeScreen>
         builder: (context) => SliverAppBar(
               automaticallyImplyLeading: false,
               elevation: 0.0,
-              toolbarHeight: 60,
+              toolbarHeight: (MediaQuery.of(context).size.width / 1.3) * 0.32,
               pinned: true,
               snap: false,
               floating: false,
               expandedHeight: _controller.isSearchBarFocused.value
                   ? MediaQuery.of(context).size.width / 4
-                  : MediaQuery.of(context).size.width / 1.3,
+                  : MediaQuery.of(context).size.width / 1.2,
               title: Row(
                 children: [_searchBar(), _settingsButton()],
               ),
@@ -103,7 +103,6 @@ class _HomeScreenState extends State<HomeScreen>
                     _controller.isSearchBarFocused.value
                         ? Container(
                             width: MediaQuery.of(context).size.width,
-                            // height: MediaQuery.of(context).size.width / 4,
                             decoration: const BoxDecoration(
                               image: DecorationImage(
                                   image: AssetImage(AppConst.imageBackground),
@@ -113,17 +112,29 @@ class _HomeScreenState extends State<HomeScreen>
                                   bottomRight: Radius.circular(8)),
                             ),
                           )
-                        : ClipRRect(
-                            borderRadius: const BorderRadius.only(
-                                bottomLeft: Radius.circular(30),
-                                bottomRight: Radius.circular(30)),
-                            child: Image.asset(AppConst.imageBackground)),
+                        : Container(
+                            width: MediaQuery.of(context).size.width,
+                            height: ((MediaQuery.of(context).size.width / 1.2) *
+                                    0.6) +
+                                MediaQuery.paddingOf(context).top,
+                            decoration: const BoxDecoration(
+                              image: DecorationImage(
+                                  image: AssetImage(AppConst.imageBackground),
+                                  fit: BoxFit.cover),
+                              borderRadius: BorderRadius.only(
+                                  bottomLeft: Radius.circular(30),
+                                  bottomRight: Radius.circular(30)),
+                            ),
+                          ),
                     Column(
                       children: [
-                        const Spacer(),
+                        SizedBox(
+                          height: _controller.isSearchBarFocused.value
+                              ? (MediaQuery.of(context).size.width / 4) * 0.4
+                              : (MediaQuery.of(context).size.width / 1.3) * 0.4,
+                        ),
                         Padding(
-                          padding: const EdgeInsets.only(
-                              left: 30, right: 30, top: 40),
+                          padding: const EdgeInsets.only(left: 30, right: 30),
                           child: _controller.isSearchBarFocused.value
                               ? const SizedBox()
                               : Container(

@@ -35,7 +35,7 @@ class HomeController extends BaseController {
       isSearchBarFocused.value = isFocused;
 
       if (isFocused) {
-        scrollToTop(); // Scroll to top when search bar is focused
+        scrollToTop(); 
       }
     });
   }

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:premiere_league_v2/components/config/app_style.dart';
-import 'package:premiere_league_v2/screens/detail/controller/like_equipment_controller.dart';
+import 'package:premiere_league_v2/screens/detail/widget/like_equipment_controller.dart';
 import 'package:premiere_league_v2/screens/detail/model/equipment_model.dart';
 
 class LikeEquipmentButton extends StatefulWidget {
