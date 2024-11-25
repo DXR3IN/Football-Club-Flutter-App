@@ -7,7 +7,7 @@ import 'package:premiere_league_v2/components/widget/app_observer_builder_widget
 import 'package:premiere_league_v2/components/util/hex_to_color.dart';
 import 'package:premiere_league_v2/screens/detail/model/club_model.dart';
 import 'package:premiere_league_v2/screens/detail/controller/detail_controller.dart';
-import 'package:premiere_league_v2/screens/detail/button/favorite_button.dart';
+import 'package:premiere_league_v2/screens/detail/widget/favorite_button.dart';
 import 'package:premiere_league_v2/screens/detail/presentation/detail_page.dart';
 import 'package:premiere_league_v2/screens/detail/presentation/detail_shimmer_screen.dart';
 import 'package:premiere_league_v2/screens/detail/presentation/history_page.dart';

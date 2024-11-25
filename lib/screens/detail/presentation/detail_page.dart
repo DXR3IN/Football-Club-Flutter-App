@@ -8,7 +8,7 @@ import 'package:premiere_league_v2/components/config/app_style.dart';
 import 'package:premiere_league_v2/components/widget/app_observer_builder_widget.dart';
 import 'package:premiere_league_v2/components/util/hex_to_color.dart';
 import 'package:premiere_league_v2/main.dart';
-import 'package:premiere_league_v2/screens/detail/button/like_equipment_button.dart';
+import 'package:premiere_league_v2/screens/detail/widget/like_equipment_button.dart';
 import 'package:premiere_league_v2/screens/detail/controller/detail_controller.dart';
 import 'package:premiere_league_v2/screens/detail/model/club_model.dart';
 import 'package:premiere_league_v2/screens/detail/model/equipment_model.dart';

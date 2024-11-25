@@ -44,8 +44,8 @@
     "indonesian": "Indonesian",
     "english": "English",
 
-    "notifNotFav": "Your Favorite",
-    "bodyNotifNotFav": "{notFav} is your favorite anymore",
+    "notifNotFav": "Not Your Favorite",
+    "bodyNotifNotFav": "{notFav} is not your favorite anymore",
     "@bodyNotifNotFav": {
         "placehoolders": {
             "notFav": {
@@ -53,8 +53,8 @@
             }
         }
     },
-    "notifFav": "Not Your Favorite",
-    "bodyNotifFav": "{fav} is not your favorite anymore",
+    "notifFav": "Your Favorite",
+    "bodyNotifFav": "{fav} is your favorite",
     "@bodyNotifFav": {
         "placehoolders": {
             "fav": {

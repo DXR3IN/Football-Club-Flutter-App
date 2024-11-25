@@ -91,11 +91,8 @@ class _HomeScreenState extends State<HomeScreen>
               expandedHeight: _controller.isSearchBarFocused.value
                   ? MediaQuery.of(context).size.width / 4
                   : MediaQuery.of(context).size.width / 1.3,
-              title: Padding(
-                padding: const EdgeInsets.symmetric(vertical: 20),
-                child: Row(
-                  children: [_searchBar(), _settingsButton()],
-                ),
+              title: Row(
+                children: [_searchBar(), _settingsButton()],
               ),
               flexibleSpace: FlexibleSpaceBar(
                 background: Stack(
@@ -121,42 +118,39 @@ class _HomeScreenState extends State<HomeScreen>
                                 bottomLeft: Radius.circular(30),
                                 bottomRight: Radius.circular(30)),
                             child: Image.asset(AppConst.imageBackground)),
-                    Padding(
-                      padding: const EdgeInsets.only(
-                          top: 50, right: 12, left: 12, bottom: 5),
-                      child: Column(
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.only(
-                                left: 30, right: 30, top: 40),
-                            child: _controller.isSearchBarFocused.value
-                                ? const SizedBox()
-                                : Container(
-                                    height:
-                                        MediaQuery.of(context).size.width / 2 -
-                                            22,
-                                    decoration: const BoxDecoration(
-                                      image: DecorationImage(
-                                        image: AssetImage(AppConst.mainBanner),
-                                        fit: BoxFit.cover,
-                                      ),
-                                      color: AppStyle.thirdColor,
-                                      borderRadius:
-                                          BorderRadius.all(Radius.circular(10)),
-                                      boxShadow: [
-                                        BoxShadow(
-                                          color: Colors.black26,
-                                          blurRadius: 3,
-                                          spreadRadius: 1.0,
-                                          offset: Offset(-3, 3),
-                                        ),
-                                      ],
+                    Column(
+                      children: [
+                        const Spacer(),
+                        Padding(
+                          padding: const EdgeInsets.only(
+                              left: 30, right: 30, top: 40),
+                          child: _controller.isSearchBarFocused.value
+                              ? const SizedBox()
+                              : Container(
+                                  height:
+                                      MediaQuery.of(context).size.width / 2 -
+                                          22,
+                                  decoration: const BoxDecoration(
+                                    image: DecorationImage(
+                                      image: AssetImage(AppConst.mainBanner),
+                                      fit: BoxFit.cover,
                                     ),
+                                    color: AppStyle.thirdColor,
+                                    borderRadius:
+                                        BorderRadius.all(Radius.circular(10)),
+                                    boxShadow: [
+                                      BoxShadow(
+                                        color: Colors.black26,
+                                        blurRadius: 3,
+                                        spreadRadius: 1.0,
+                                        offset: Offset(-3, 3),
+                                      ),
+                                    ],
                                   ),
-                          ),
-                          const Spacer()
-                        ],
-                      ),
+                                ),
+                        ),
+                        const Spacer()
+                      ],
                     ),
                   ],
                 ),
