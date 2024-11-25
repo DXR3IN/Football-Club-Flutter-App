@@ -35,6 +35,10 @@ class _FavoriteScreenState extends State<FavoriteScreen> {
     super.dispose();
   }
 
+  Future<void> _refresh() async {
+    _favoriteController.favoriteClubCommand.execute();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -98,12 +102,15 @@ class _FavoriteScreenState extends State<FavoriteScreen> {
               child: Text(AppLocalizations.of(context)!.favoriteError));
         }
 
-        return ListView.builder(
-          itemCount: team.length,
-          padding: const EdgeInsets.all(8.0),
-          itemBuilder: (context, index) {
-            return _itemCardFC(team[index]);
-          },
+        return RefreshIndicator(
+          onRefresh: _refresh,
+          child: ListView.builder(
+            itemCount: team.length,
+            padding: const EdgeInsets.all(8.0),
+            itemBuilder: (context, index) {
+              return _itemCardFC(team[index]);
+            },
+          ),
         );
       },
     );

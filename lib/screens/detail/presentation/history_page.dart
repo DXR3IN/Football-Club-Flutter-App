@@ -44,7 +44,6 @@ class _HistoryPageState extends State<HistoryPage> {
           return ListView.builder(
             cacheExtent: 2,
             addAutomaticKeepAlives: true,
-            // itemExtent: 5,
             padding: const EdgeInsets.all(10),
             itemCount: events.length,
             itemBuilder: (context, index) {

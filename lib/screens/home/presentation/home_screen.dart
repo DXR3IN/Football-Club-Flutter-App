@@ -37,17 +37,6 @@ class _HomeScreenState extends State<HomeScreen>
     _controller.dispose();
   }
 
-  Widget _safeAreaWidget(BuildContext context) {
-    final topPadding = MediaQuery.paddingOf(context).top;
-
-    return SliverToBoxAdapter(
-      child: Container(
-        height: topPadding,
-        color: AppStyle.primaryColor,
-      ),
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     super.build(context);
@@ -62,7 +51,6 @@ class _HomeScreenState extends State<HomeScreen>
     return CustomScrollView(
       controller: _controller.scrollController,
       slivers: <Widget>[
-        // _safeAreaWidget(context),
         _navBar(),
         SliverPadding(
           padding: AppStyle.mainPadding,
@@ -90,7 +78,7 @@ class _HomeScreenState extends State<HomeScreen>
               floating: false,
               expandedHeight: _controller.isSearchBarFocused.value
                   ? MediaQuery.of(context).size.width / 4
-                  : MediaQuery.of(context).size.width / 1.2,
+                  : MediaQuery.of(context).size.width / 1.1,
               title: Row(
                 children: [_searchBar(), _settingsButton()],
               ),
@@ -114,7 +102,7 @@ class _HomeScreenState extends State<HomeScreen>
                           )
                         : Container(
                             width: MediaQuery.of(context).size.width,
-                            height: ((MediaQuery.of(context).size.width / 1.2) *
+                            height: ((MediaQuery.of(context).size.width / 1.1) *
                                     0.6) +
                                 MediaQuery.paddingOf(context).top,
                             decoration: const BoxDecoration(
@@ -131,7 +119,7 @@ class _HomeScreenState extends State<HomeScreen>
                         SizedBox(
                           height: _controller.isSearchBarFocused.value
                               ? (MediaQuery.of(context).size.width / 4) * 0.4
-                              : (MediaQuery.of(context).size.width / 1.3) * 0.4,
+                              : (MediaQuery.of(context).size.width / 1.1) * 0.4,
                         ),
                         Padding(
                           padding: const EdgeInsets.only(left: 30, right: 30),
@@ -170,7 +158,7 @@ class _HomeScreenState extends State<HomeScreen>
                 preferredSize: const Size.fromHeight(40),
                 child: Container(
                   height: 40,
-                  width: double.infinity,
+                  width: MediaQuery.sizeOf(context).width,
                   decoration: const BoxDecoration(
                     color: Colors.white,
                     borderRadius: BorderRadius.vertical(
@@ -218,20 +206,6 @@ class _HomeScreenState extends State<HomeScreen>
 
   Widget _contentBody(List<HomeClubModel> listFootballClub) {
     return Observer(builder: (_) {
-      final width = MediaQuery.of(context).size.width;
-      int crossAxisCount;
-
-      // Determine the grid layout based on screen width
-      if (width > 1200) {
-        crossAxisCount = 8;
-      } else if (width > 800) {
-        crossAxisCount = 5;
-      } else if (width > 600) {
-        crossAxisCount = 3;
-      } else {
-        crossAxisCount = 2;
-      }
-
       final displayList = _controller.searchQuery.value.isEmpty
           ? listFootballClub
           : _controller.filteredTeams;
@@ -242,8 +216,8 @@ class _HomeScreenState extends State<HomeScreen>
                 child: const Center(child: Text('No data'))));
       }
       return SliverGrid.builder(
-        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: crossAxisCount,
+        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+          crossAxisCount: 2,
           childAspectRatio: 1.0,
           mainAxisSpacing: 8.0,
           crossAxisSpacing: 8.0,

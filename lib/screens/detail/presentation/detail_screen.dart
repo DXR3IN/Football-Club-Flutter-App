@@ -70,7 +70,6 @@ class _DetailScreenState extends State<DetailScreen>
       ),
       floatingActionButton: Observer(
         builder: (context) {
-          // Check the loading state from the controller
           final loading = _controller.isLoading.value;
 
           if (loading) {
@@ -85,7 +84,6 @@ class _DetailScreenState extends State<DetailScreen>
 
           final team = _controller.teamFc.value;
 
-          // Check if the team is loaded
           if (team == ClubModel()) {
             return const SizedBox();
           }
@@ -151,7 +149,8 @@ class _DetailScreenState extends State<DetailScreen>
               color: Colors.grey[200],
             ),
             Container(
-              height: MediaQuery.sizeOf(context).width / 2,
+              height: (MediaQuery.sizeOf(context).width / 1.8) +
+                  MediaQuery.paddingOf(context).top,
               decoration: BoxDecoration(
                 gradient: LinearGradient(
                   begin: Alignment.topCenter,
@@ -194,24 +193,28 @@ class _DetailScreenState extends State<DetailScreen>
           ],
         ),
       ),
-      bottom: TabBar(
-        controller: _tabController,
-        dividerColor: hexToColor(team.colour1!),
-        labelColor: AppStyle.primaryColor,
-        automaticIndicatorColorAdjustment: true,
-        unselectedLabelColor: hexToColor(team.colour1!),
-        tabs: [
-          Tab(text: AppLocalizations.of(context)!.detailTabTitle),
-          Tab(text: AppLocalizations.of(context)!.eventsTabTitle),
-        ],
-        onTap: (index) {
-          _pageController.animateToPage(
-            index,
-            duration: const Duration(milliseconds: 300),
-            curve: Curves.easeInOut,
-          );
-        },
-      ),
+      bottom: _bottomTabBar(team),
+    );
+  }
+
+  PreferredSizeWidget _bottomTabBar(ClubModel team) {
+    return TabBar(
+      controller: _tabController,
+      dividerColor: hexToColor(team.colour1!),
+      labelColor: AppStyle.primaryColor,
+      automaticIndicatorColorAdjustment: true,
+      unselectedLabelColor: hexToColor(team.colour1!),
+      tabs: [
+        Tab(text: AppLocalizations.of(context)!.detailTabTitle),
+        Tab(text: AppLocalizations.of(context)!.eventsTabTitle),
+      ],
+      onTap: (index) {
+        _pageController.animateToPage(
+          index,
+          duration: const Duration(milliseconds: 300),
+          curve: Curves.easeInOut,
+        );
+      },
     );
   }
 }
