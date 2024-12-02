@@ -28,7 +28,7 @@ class SplashController extends BaseController {
     final pathSegments = uri.pathSegments;
 
     logger.i('Handling deep link: $uri');
-   
+
     if (pathSegments.isNotEmpty) {
       if (pathSegments.length == 1 && pathSegments.first == "home") {
         logger.i('Navigating to home');
@@ -50,7 +50,7 @@ class SplashController extends BaseController {
 
   void _delay() {
     logger.i("splash 2");
-    Future.delayed(const Duration(seconds: 4)).then((_) =>
-        AppNav.navigator.pushReplacementNamed(AppRoute.teamFcListScreen));
+    Future.delayed(const Duration(seconds: 4))
+        .then((_) => AppNav.navigator.pushReplacementNamed(AppRoute.main));
   }
 }

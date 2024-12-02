@@ -11,6 +11,8 @@ import 'package:premiere_league_v2/components/util/local_database/data_equipment
 import 'package:premiere_league_v2/firebase_handler.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:premiere_league_v2/localization_provider.dart';
+import 'package:provider/provider.dart';
 
 import 'components/api_services/api_client.dart';
 import 'components/config/app_const.dart';
@@ -80,6 +82,8 @@ Future _dependencyInjection() async {
   getIt.registerLazySingleton(() => ApiClient(getIt()));
   getIt
       .registerLazySingleton<Database>(() => Database(NativeDatabase.memory()));
+  getIt.registerLazySingleton<LocalizationProvider>(
+      () => LocalizationProvider());
 
   await firebaseHandler.initializeNotifications();
   await firebaseHandler.firebaseListener();
@@ -92,28 +96,26 @@ class MyApp extends StatefulWidget {
   @override
   State<MyApp> createState() => _MyAppState();
 
-  static void setLocale(BuildContext context, Locale value) {
-    _MyAppState? state = context.findAncestorStateOfType<_MyAppState>();
-    //ignore: invalid_use_of_protected_member
-    state?.setState(() {
-      state._locale = value;
-    });
-  }
+  // static void setLocale(BuildContext context, Locale value) {
+  //   _MyAppState? state = context.findAncestorStateOfType<_MyAppState>();
+  //   //ignore: invalid_use_of_protected_member
+  //   state?.setState(() {
+  //     state._locale = value;
+  //   });
+  // }
 }
 
 class _MyAppState extends State<MyApp> {
-  Locale _locale = const Locale('en');
   final _storage = getIt.get<IStorage>();
+  final localizationProvider = getIt.get<LocalizationProvider>();
 
   @override
   void initState() {
     super.initState();
     logger.i('MyApp initState');
-    _fetchLocale().then((locale) {
-      setState(() {
-        _locale = locale;
-      });
-    });
+    _fetchLocale().then(
+      (locale) => localizationProvider.setLocale(locale),
+    );
 
     _checkForDeepLinkingWhenAppIsOpened();
   }
@@ -173,25 +175,34 @@ class _MyAppState extends State<MyApp> {
   Widget build(BuildContext context) {
     logger.i("MyApp build");
     final appTheme = AppDefaultThemeData();
-    return AppTheme(
-      themeData: appTheme,
-      child: MaterialApp(
-        locale: _locale,
-        localizationsDelegates: const [
-          AppLocalizations.delegate,
-          GlobalMaterialLocalizations.delegate,
-          GlobalWidgetsLocalizations.delegate,
-          GlobalCupertinoLocalizations.delegate,
-        ],
-        localeListResolutionCallback: (_, __) {
-          return _locale;
+
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider(
+          create: (_) => getIt.get<LocalizationProvider>(),
+        ),
+      ],
+      child: Consumer<LocalizationProvider>(
+        builder: (context, localizationProvider, child) {
+          return AppTheme(
+            themeData: appTheme,
+            child: MaterialApp(
+              locale: localizationProvider.locale,
+              localizationsDelegates: const [
+                AppLocalizations.delegate,
+                GlobalMaterialLocalizations.delegate,
+                GlobalWidgetsLocalizations.delegate,
+                GlobalCupertinoLocalizations.delegate,
+              ],
+              supportedLocales: AppLocalizations.supportedLocales,
+              title: AppConst.appName,
+              theme: appTheme.themeData(),
+              initialRoute: AppRoute.splashScreen,
+              onGenerateRoute: AppRoute.generateRoute,
+              navigatorKey: AppNav._navigatorKey,
+            ),
+          );
         },
-        supportedLocales: AppLocalizations.supportedLocales,
-        title: AppConst.appName,
-        theme: appTheme.themeData(),
-        initialRoute: AppRoute.splashScreen,
-        onGenerateRoute: AppRoute.generateRoute,
-        navigatorKey: AppNav._navigatorKey,
       ),
     );
   }

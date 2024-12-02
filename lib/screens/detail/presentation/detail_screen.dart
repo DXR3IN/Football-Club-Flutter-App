@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
+import 'package:ionicons/ionicons.dart';
 import 'package:premiere_league_v2/components/config/app_const.dart';
 import 'package:premiere_league_v2/components/config/app_style.dart';
 import 'package:premiere_league_v2/components/widget/app_observer_builder_widget.dart';
@@ -73,12 +74,13 @@ class _DetailScreenState extends State<DetailScreen>
           final loading = _controller.isLoading.value;
 
           if (loading) {
-            return Shimmer.fromColors(
-              baseColor: Colors.grey[200]!,
-              highlightColor: AppStyle.thirdColor,
-              child: FloatingActionButton(
-                onPressed: () {},
+            return FloatingActionButton(
+              child: Shimmer.fromColors(
+                baseColor: Colors.grey[200]!,
+                highlightColor: AppStyle.thirdColor,
+                child: Icon(Ionicons.heart),
               ),
+              onPressed: () {},
             );
           }
 

@@ -84,22 +84,12 @@ class HomeController extends BaseController {
     }
   }
 
-  // Navigate to Favorite Page
-  void onTapFavScreen() {
-    AppNav.navigator.pushNamed(AppRoute.favTeamFcScreen);
-  }
-
   // Navigate to Detail Page
   void onTapItemFootBall(String team) {
     AppNav.navigator.pushNamed(
       AppRoute.teamFcDetailScreen,
       arguments: team,
     );
-  }
-
-  // Navigate to Settings Page
-  void onTapSettingsScreen() {
-    AppNav.navigator.pushNamed(AppRoute.settingsScreen);
   }
 
   // Dispose resources

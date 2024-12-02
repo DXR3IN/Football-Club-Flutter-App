@@ -1,7 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
-import 'package:ionicons/ionicons.dart';
 import 'package:premiere_league_v2/components/config/app_const.dart';
 import 'package:premiere_league_v2/components/config/app_style.dart';
 import 'package:premiere_league_v2/components/widget/app_observer_builder_widget.dart';
@@ -20,7 +19,7 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen>
     with AutomaticKeepAliveClientMixin {
-  final _controller = HomeController();
+  late final HomeController _controller;
 
   @override
   bool get wantKeepAlive => true;
@@ -28,6 +27,7 @@ class _HomeScreenState extends State<HomeScreen>
   @override
   void initState() {
     super.initState();
+    _controller = HomeController();
     _controller.listFootballClubCommand.execute();
   }
 
@@ -40,11 +40,7 @@ class _HomeScreenState extends State<HomeScreen>
   @override
   Widget build(BuildContext context) {
     super.build(context);
-    return Scaffold(
-      body: _body(),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-      floatingActionButton: _favoriteCaller(),
-    );
+    return Scaffold(body: _body());
   }
 
   Widget _body() {
@@ -79,9 +75,7 @@ class _HomeScreenState extends State<HomeScreen>
               expandedHeight: _controller.isSearchBarFocused.value
                   ? MediaQuery.of(context).size.width / 4
                   : MediaQuery.of(context).size.width / 1.1,
-              title: Row(
-                children: [_searchBar(), _settingsButton()],
-              ),
+              title: _searchBar(),
               flexibleSpace: FlexibleSpaceBar(
                 background: Stack(
                   children: [
@@ -232,31 +226,29 @@ class _HomeScreenState extends State<HomeScreen>
 
   Widget _searchBar() {
     return Observer(
-      builder: (_) => Expanded(
-        child: TextField(
-          focusNode: _controller.searchBarFocusNode,
-          onChanged: (value) {
-            _controller.updateSearchQuery(value);
-          },
-          decoration: InputDecoration(
-            hintText: AppLocalizations.of(context)!.searchHint,
-            hintStyle: const TextStyle(color: AppStyle.thirdColor),
-            fillColor: AppStyle.thirdColor,
-            iconColor: AppStyle.thirdColor,
-            focusColor: AppStyle.thirdColor,
-            prefixIcon: const Icon(
-              Icons.search,
-              color: AppStyle.thirdColor,
-            ),
-            focusedBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(8.0),
-              borderSide:
-                  const BorderSide(color: AppStyle.thirdColor, width: 2.0),
-            ),
+      builder: (_) => TextField(
+        focusNode: _controller.searchBarFocusNode,
+        onChanged: (value) {
+          _controller.updateSearchQuery(value);
+        },
+        decoration: InputDecoration(
+          hintText: AppLocalizations.of(context)!.searchHint,
+          hintStyle: const TextStyle(color: AppStyle.thirdColor),
+          fillColor: AppStyle.thirdColor,
+          iconColor: AppStyle.thirdColor,
+          focusColor: AppStyle.thirdColor,
+          prefixIcon: const Icon(
+            Icons.search,
+            color: AppStyle.thirdColor,
           ),
-          cursorColor: AppStyle.thirdColor,
-          style: const TextStyle(color: AppStyle.thirdColor),
+          focusedBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(8.0),
+            borderSide:
+                const BorderSide(color: AppStyle.thirdColor, width: 2.0),
+          ),
         ),
+        cursorColor: AppStyle.thirdColor,
+        style: const TextStyle(color: AppStyle.thirdColor),
       ),
     );
   }
@@ -310,46 +302,6 @@ class _HomeScreenState extends State<HomeScreen>
               ),
             ],
           ),
-        ),
-      ),
-    );
-  }
-
-  Widget _favoriteCaller() {
-    return GestureDetector(
-      onTap: () {
-        _controller.onTapFavScreen();
-      },
-      child: Container(
-        padding: const EdgeInsets.all(10),
-        decoration: const BoxDecoration(
-          image: DecorationImage(
-              image: AssetImage(AppConst.imageBackground), fit: BoxFit.fill),
-          color: Colors.deepPurple,
-          borderRadius: BorderRadius.only(
-            topLeft: Radius.circular(100),
-            topRight: Radius.circular(100),
-          ),
-        ),
-        child: const Icon(
-          Ionicons.heart,
-          color: Colors.white,
-          size: 35,
-        ),
-      ),
-    );
-  }
-
-  Widget _settingsButton() {
-    return Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: GestureDetector(
-        onTap: () {
-          _controller.onTapSettingsScreen();
-        },
-        child: const Icon(
-          Icons.settings,
-          color: Colors.white,
         ),
       ),
     );
