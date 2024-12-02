@@ -95,14 +95,6 @@ class MyApp extends StatefulWidget {
 
   @override
   State<MyApp> createState() => _MyAppState();
-
-  // static void setLocale(BuildContext context, Locale value) {
-  //   _MyAppState? state = context.findAncestorStateOfType<_MyAppState>();
-  //   //ignore: invalid_use_of_protected_member
-  //   state?.setState(() {
-  //     state._locale = value;
-  //   });
-  // }
 }
 
 class _MyAppState extends State<MyApp> {
@@ -116,8 +108,7 @@ class _MyAppState extends State<MyApp> {
     _fetchLocale().then(
       (locale) => localizationProvider.setLocale(locale),
     );
-
-    _checkForDeepLinkingWhenAppIsOpened();
+    Future.delayed(Duration.zero, () => _checkForDeepLinkingWhenAppIsOpened());
   }
 
   Future<Locale> _fetchLocale() async {
@@ -138,7 +129,23 @@ class _MyAppState extends State<MyApp> {
     });
   }
 
+  bool isRouteActive(String routeName) {
+    bool isActive = false;
+    AppNav.navigator.popUntil((route) {
+      if (route.settings.name == routeName) {
+        isActive = true;
+      }
+      return true;
+    });
+    return isActive;
+  }
+
+  bool _navigationTriggered = false;
+
   void _handleDeepLink(String link) {
+    if (_navigationTriggered) return;
+    _navigationTriggered = true;
+
     final uri = Uri.parse(link);
     final pathSegments = uri.pathSegments;
 
@@ -151,19 +158,19 @@ class _MyAppState extends State<MyApp> {
 
         if (pathSegments.length == 1 &&
             pathSegments.first == "home" &&
-            currentRoute != AppRoute.teamFcListScreen) {
+            !isRouteActive(AppRoute.teamFcListScreen)) {
           logger.i('Navigating to home');
           AppNav.navigator.pushNamed(AppRoute.teamFcListScreen);
         } else if (pathSegments.length > 1 && pathSegments.first == "detail") {
           final teamName = pathSegments.last;
-          if (currentRoute != AppRoute.teamFcDetailScreen) {
+          if (!isRouteActive(AppRoute.teamFcDetailScreen)) {
             logger.i('Navigating to detail: $teamName');
             AppNav.navigator
                 .pushNamed(AppRoute.teamFcDetailScreen, arguments: teamName);
           }
         } else if (pathSegments.length == 1 &&
             pathSegments.first == "favorite" &&
-            currentRoute != AppRoute.favTeamFcScreen) {
+            !isRouteActive(AppRoute.favTeamFcScreen)) {
           logger.i("Navigating to favorite");
           AppNav.navigator.pushNamed(AppRoute.favTeamFcScreen);
         }
@@ -198,6 +205,12 @@ class _MyAppState extends State<MyApp> {
               title: AppConst.appName,
               theme: appTheme.themeData(),
               initialRoute: AppRoute.splashScreen,
+              onGenerateInitialRoutes: (String initialRoute) {
+                return [
+                  AppRoute.generateRoute(
+                      const RouteSettings(name: AppRoute.splashScreen)),
+                ];
+              },
               onGenerateRoute: AppRoute.generateRoute,
               navigatorKey: AppNav._navigatorKey,
             ),

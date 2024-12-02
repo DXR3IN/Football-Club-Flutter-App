@@ -66,7 +66,7 @@ class _HomeScreenState extends State<HomeScreen>
   Widget _navBar() {
     return Observer(
         builder: (context) => SliverAppBar(
-              automaticallyImplyLeading: false,
+              // automaticallyImplyLeading: false,
               elevation: 0.0,
               toolbarHeight: (MediaQuery.of(context).size.width / 1.3) * 0.32,
               pinned: true,
