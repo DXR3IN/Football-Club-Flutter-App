@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:ionicons/ionicons.dart';
 import 'package:premiere_league_v2/components/config/app_style.dart';
-import 'package:premiere_league_v2/navigation/controller/navigation_controller.dart';
+import 'package:premiere_league_v2/screens/navigation/controller/navigation_controller.dart';
 import 'package:premiere_league_v2/screens/home/presentation/home_screen.dart';
 import 'package:premiere_league_v2/screens/settings/presentation/settings_screen.dart';
 

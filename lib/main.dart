@@ -25,7 +25,7 @@ final getIt = GetIt.instance;
 // initialize firebase handler
 final FirebaseHandler firebaseHandler = FirebaseHandler();
 
-final logger = Logger(
+final Logger logger = Logger(
   level: kDebugMode ? Level.all : Level.warning,
   output: MultiOutput([
     ConsoleOutput(),

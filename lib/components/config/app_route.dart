@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:premiere_league_v2/navigation/navigation_widget.dart';
+import 'package:premiere_league_v2/screens/navigation/navigation_widget.dart';
 import 'package:premiere_league_v2/screens/detail/presentation/detail_screen.dart';
 import 'package:premiere_league_v2/screens/favorite/presentation/favorite_screen.dart';
 import 'package:premiere_league_v2/screens/home/presentation/home_screen.dart';
