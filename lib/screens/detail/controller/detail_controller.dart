@@ -63,4 +63,8 @@ class DetailController extends BaseController {
       Logger().i("Failed to launch URL: $e");
     }
   }
+
+  void errorBackButton() {
+    AppNav.navigator.pop();
+  }
 }

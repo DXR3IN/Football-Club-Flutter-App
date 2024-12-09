@@ -4,6 +4,7 @@ import 'package:premiere_league_v2/components/base/base_controller.dart';
 import 'package:premiere_league_v2/components/notification_service/local_notification_service.dart';
 import 'package:premiere_league_v2/components/util/command_query.dart';
 import 'package:premiere_league_v2/favorite_handler.dart';
+import 'package:premiere_league_v2/main.dart';
 import 'package:premiere_league_v2/screens/detail/model/club_model.dart';
 import 'package:premiere_league_v2/screens/favorite/model/fav_club_model.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -43,7 +44,7 @@ class FavoriteButtonController extends BaseController {
         isFavorite.value = favoriteStatus;
       });
     } catch (e) {
-      print('Error initializing favorite status: $e');
+      logger.i('Error initializing favorite status: $e');
     }
   }
 
@@ -73,7 +74,7 @@ class FavoriteButtonController extends BaseController {
         isFavorite.value = !currentStatus;
       });
     } catch (e) {
-      print('Error toggling favorite status: $e');
+      logger.i('Error toggling favorite status: $e');
     }
   }
 

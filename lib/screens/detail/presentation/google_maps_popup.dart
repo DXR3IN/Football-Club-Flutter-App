@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:premiere_league_v2/components/config/app_style.dart';
-import 'package:premiere_league_v2/screens/maps/maps_screen.dart';
+import 'package:premiere_league_v2/components/util/maps/maps_screen.dart';
 
 class GoogleMapsPopup {
   static Future<void> show(BuildContext context, String? location) async {

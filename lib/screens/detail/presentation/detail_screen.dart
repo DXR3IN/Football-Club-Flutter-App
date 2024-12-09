@@ -63,7 +63,15 @@ class _DetailScreenState extends State<DetailScreen>
       body: AppObserverBuilder(
         commandQuery: _controller.dummyDetailClubModel,
         onLoading: () => const DetailShimmerScreen(),
-        onError: (error) => Center(child: Text('Error: $error')),
+        onError: (error) => Center(
+            child: Column(
+          children: [
+            Text('Error: $error'),
+            IconButton(
+                onPressed: () => _controller.errorBackButton,
+                icon: const Icon(Ionicons.arrow_back_circle_outline))
+          ],
+        )),
         child: (team) {
           _controller.teamFc.value = team;
           return _buildContent(team);

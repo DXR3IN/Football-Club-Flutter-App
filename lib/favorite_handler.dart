@@ -55,8 +55,8 @@ class FavoriteHandler {
 
     // Check if any team in favoriteTeams has the same idTeam
     return favoriteTeams.any((teamJson) {
-      Map<String, dynamic> teamMap = jsonDecode(teamJson); // Decode each item
-      return teamMap['idTeam'] == footballTeam.idTeam; // Compare the idTeam
+      Map<String, dynamic> teamMap = jsonDecode(teamJson); 
+      return teamMap['idTeam'] == footballTeam.idTeam; 
     });
   }
 }
